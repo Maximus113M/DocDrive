@@ -18,7 +18,7 @@ class ValidityController extends Controller
      */
     public function index()
     {
-        return Inertia::render("Validity/Index", [
+        return Inertia::render('Validity/Index', [
             "validities" => Validity::all(),
             "role" => AuthServiceProvider::getRole(),
             "isAuthenticated" => AuthServiceProvider::checkAuthenticated()
