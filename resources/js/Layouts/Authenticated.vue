@@ -7,7 +7,14 @@ import BreezeNavLink from '@/Components/NavLink.vue';
 import BreezeResponsiveNavLink from '@/Components/ResponsiveNavLink.vue';
 import { Link } from '@inertiajs/inertia-vue3';
 
+
 const showingNavigationDropdown = ref(false);
+
+defineProps({
+    role: String,
+})
+
+
 </script>
 
 <template>
@@ -20,15 +27,20 @@ const showingNavigationDropdown = ref(false);
                         <div class="flex">
                             <!-- Logo -->
                             <div class="shrink-0 flex items-center">
-                                <Link :href="route('dashboard')">
+                                <Link :href="route('validity.index')">
                                     <BreezeApplicationLogo class="block h-9 w-auto" />
                                 </Link>
                             </div>
 
-                            <!-- Navigation Links -->
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <BreezeNavLink :href="route('dashboard')" :active="route().current('dashboard')">
-                                    Dashboard
+                                <BreezeNavLink :href="route('validity.index')" :active="route().current('dashboard')">
+                                    Vigencias
+                                </BreezeNavLink>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <BreezeNavLink v-if="role === 'admin'" :href="route('investigator.index')" :active="route().current('dashboard')">
+                                    Investigadores
                                 </BreezeNavLink>
                             </div>
                         </div>

@@ -27,9 +27,6 @@ use Inertia\Inertia;
 //     ]);
 // });
 
-// Route::get('/dashboard', function () {
-//     return Inertia::render('Dashboard');
-// })->middleware(['auth', 'verified'])->name('dashboard');
 
 // RUTA PAGINA DE INICIO
 Route::get('/dashboard', function () {
@@ -43,7 +40,7 @@ Route::get('/', [AuthenticatedSessionController::class, 'create']);
 Route::get('/validity', [ValidityController::class, "index"])->name('validity.index');
 
 // RUTA PARA MOSTRAR LOS PROYECTOS DE UNA VIGENCIA
-Route::get('/{validityYear}/index', [ValidityController::class, "projects"])->name('validity.projects');
+Route::get('/{validityYear}/projects', [ValidityController::class, "projects"])->name('validity.projects');
 
 
 // RUTAS PROTEGIDAS PARA EL ADMIN
@@ -58,7 +55,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->name('validity.update');
 
     // RUTA PARA MOSTRAR LOS INVESTIGADORES
-    Route::post('/investigator/index', [InvestigatorController::class, 'index'])
+    Route::get('/investigator/index', [InvestigatorController::class, 'index'])
         ->name('investigator.index');
 
     // RUTA PARA CREAR UN INVESTIGADOR

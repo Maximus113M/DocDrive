@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Validity;
 use App\Providers\AuthServiceProvider;
 use App\Providers\RoleServiceProvider;
+use App\Rules\SingleYearValidity;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
 class ValidityController extends Controller
@@ -21,7 +23,7 @@ class ValidityController extends Controller
         return Inertia::render('Validity/Index', [
             "validities" => Validity::all(),
             "role" => AuthServiceProvider::getRole(),
-            "isAuthenticated" => AuthServiceProvider::checkAuthenticated()
+            "isAuthenticated" => AuthServiceProvider::checkAuthenticated(),
         ]);
     }
 
@@ -31,9 +33,13 @@ class ValidityController extends Controller
      */
     public function store()
     {
-        $this->validate(request(), [
-            "year" => "required",
+        $validator = Validator::make(request()->all(), [
+            'year' => ['required', 'numeric', new SingleYearValidity()],
         ]);
+
+        if ($validator->fails()) {
+            return redirect()->route("validity.index")->withErrors($validator)->withInput();
+        }
 
         Validity::create([
             "year" => request("year"),
@@ -62,13 +68,15 @@ class ValidityController extends Controller
     }
 
     /**
-     @TODO = Falta crear la vista para este metodo.
      * 
      * Muestra los proyectos de una Vigencia segun el rol de visualización y el rol
      * del usuario
      */
     public function projects($validityYear)
     {
+        if(!Validity::where('year', $validityYear)->exists()) {
+            return Inertia::render("PageNotFound");
+        }
         $userRole = AuthServiceProvider::getRole();
         $projects = Validity::where('year', $validityYear)->first()->projects;
         $data = array();

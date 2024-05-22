@@ -5,22 +5,22 @@ namespace App\Http\Controllers;
 use App\Models\User;
 use App\Providers\AuthServiceProvider;
 use App\Providers\RoleServiceProvider;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 
 class InvestigatorController extends Controller
 {
     /**
-     @TODO = Falta crear la vista para este metodo.
      *
      * Muestra todos los investigadores
      */
     public function index()
     {
         $query = DB::table("users AS u")
+            ->select('u.name AS name', 'u.id AS id', 'u.email AS email')
             ->join("roles AS r", "u.role_id", "=", "r.id")
             ->where("r.name", "=", RoleServiceProvider::INVESTIGATOR)
             ->get();
@@ -38,19 +38,23 @@ class InvestigatorController extends Controller
      */
     public function store()
     {
-        
-        $this->validate(request(), [
+        $validator = Validator::make(request()->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => ['required', Password::defaults()],
         ]);
 
-        $user = User::create([
-            'name' => request("name"),
-            'email' => request("email"),
-            'password' => Hash::make(request("password")),
-            'role_id' => RoleServiceProvider::INVESTIGATOR_ID
-        ]);
+        if ($validator->fails()) {
+            return redirect()->route("investigator.index")->withErrors($validator)->withInput();
+        }
+
+        $user = new User();
+        $user->name = request("name");
+        $user->email = request("email");
+        $user->password = Hash::make(request("password"));
+        $user->role_id = RoleServiceProvider::INVESTIGATOR_ID;
+
+        $user->save();
 
         $user->assignRole("investigator");
 

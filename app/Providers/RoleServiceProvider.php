@@ -28,8 +28,8 @@ class RoleServiceProvider extends ServiceProvider
      * ID de los Roles de los usuarios
      */
     public const ADMIN_ID = 1;
-    public const COLLABORATOR_ID = 3;
     public const INVESTIGATOR_ID = 2;
+    public const COLLABORATOR_ID = 3;
 
 
 }

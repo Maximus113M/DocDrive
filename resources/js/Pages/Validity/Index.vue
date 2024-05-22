@@ -1,21 +1,29 @@
 <script setup>
-import Layout from '@/Layouts/Layout.vue';
+import AuthLayout from '@/Layouts/Authenticated.vue';
+import GuestLayout from '@/Layouts/Guest.vue';
+import ContentIndex from '@/Pages/Validity/Components/ContentIndex.vue';
+
 
 defineProps({
-    validities:Object,
-    isAuthenticated:Boolean,
-    role:String,
-    message:String,
+    validities: Object,
+    isAuthenticated: Boolean,
+    role: String,
 })
+
 
 </script>
 
 <template>
-    <Layout :isAuthenticated=this.isAuthenticated>
-        <div v-for="v in validities">
-            v.name
-        </div>
-    </Layout>
-</template>
 
+
+    <AuthLayout :role="role" v-if="isAuthenticated">
+        <ContentIndex :message="message" :isAuthenticated="isAuthenticated" :validities="validities" :role="role"/> 
+    </AuthLayout>
+
+
+    <GuestLayout v-if="!isAuthenticated">
+        <ContentIndex :message="message" :isAuthenticated="isAuthenticated" :validities="validities" :role="role"/> 
+    </GuestLayout>
+
+</template>
 
