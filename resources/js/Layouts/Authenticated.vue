@@ -11,7 +11,7 @@ import { Link } from '@inertiajs/inertia-vue3';
 const showingNavigationDropdown = ref(false);
 
 defineProps({
-    role: String,
+    role:String
 })
 
 
@@ -33,14 +33,20 @@ defineProps({
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <BreezeNavLink :href="route('validity.index')" :active="route().current('dashboard')">
+                                <BreezeNavLink :href="route('validity.index')">
                                     Vigencias
                                 </BreezeNavLink>
                             </div>
 
                             <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-                                <BreezeNavLink v-if="role === 'admin'" :href="route('investigator.index')" :active="route().current('dashboard')">
+                                <BreezeNavLink v-if="role === 'admin'" :href="route('investigator.index')">
                                     Investigadores
+                                </BreezeNavLink>
+                            </div>
+
+                            <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
+                                <BreezeNavLink v-if="role === 'admin' || role === 'investigator'" :href="route('collaborator.index')">
+                                    Colaboradores
                                 </BreezeNavLink>
                             </div>
                         </div>

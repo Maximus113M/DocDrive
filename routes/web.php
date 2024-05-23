@@ -1,5 +1,6 @@
 <?php
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\CollaboratorController;
 use App\Http\Controllers\InvestigatorController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ValidityController;
@@ -62,14 +63,26 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/investigator/store', [InvestigatorController::class,'store'])
         ->name('investigator.store');
 
-    // RUTA PARA EDITAR UN INVESTIGADOR
-    Route::put('/investigator/{userID}/update', [InvestigatorController::class, 'update'])
-        ->name('investigator.update');
-
     // RUTA PARA ELIMINAR UN INVESTIGADOR
     Route::delete('/investigator/{userID}/destroy', [InvestigatorController::class, 'destroy'])
         ->name('investigator.destroy');
+});
 
+
+// RUTAS PROTEGIDAS EN COMUN DEL ADMIN Y EL INVESTIGADOR
+Route::middleware(['auth', 'role:admin|investigator'])->group(function () {
+
+    // RUTA PARA MOSTRAR LOS COLABORADORES
+    Route::get('/collaborator/index', [CollaboratorController::class, 'index'])
+        ->name('collaborator.index');
+
+    // RUTA PARA CREAR UN COLABORADOR
+    Route::post('/collaborator/store', [CollaboratorController::class,'store'])
+        ->name('collaborator.store');
+
+    // RUTA PARA ELIMINAR UN COLABORADOR
+    Route::delete('/collaborator/{userID}/destroy', [CollaboratorController::class, 'destroy'])
+        ->name('collaborator.destroy');
 });
 
 require __DIR__.'/auth.php';

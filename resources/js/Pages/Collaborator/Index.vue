@@ -10,13 +10,13 @@ const form = useForm({
 })
 
 defineProps({
-    investigators: Object,
+    collaborators: Object,
     isAuthenticated: Boolean,
     role:String,
 })
 
-const saveInvestigator = () => {
-    form.post(route('investigator.store'))
+const saveCollaborator = () => {
+    form.post(route('collaborator.store'))
 }
 
 
@@ -31,12 +31,12 @@ const saveInvestigator = () => {
 
             <div class="py-10 w-50 m-auto relative overflow-x-auto shadow-md sm:rounded-lg">
                 <button type="button" class="my-4 btn btn-primary" data-bs-toggle="modal"
-                    data-bs-target="#modalSaveInvestigator">
-                    Crear Investigador
+                    data-bs-target="#modalSaveCollaborator">
+                    Crear Colaborador
                 </button>
-                <h3 v-if="investigators < 1">¡No hay investigadores creados!</h3>
+                <h3 v-if="collaborators < 1">¡No hay colaboradores creados!</h3>
 
-                <Table v-else :users="investigators" :isCollaborator="false" />
+                <Table v-else :users="collaborators" :isCollaborator="true" />
                
             </div>
         </div>
@@ -48,16 +48,16 @@ const saveInvestigator = () => {
 
     <!-- Modal -->
 
-    <div class="modal fade" id="modalSaveInvestigator" tabindex="-1" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" id="modalSaveCollaborator" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Crear nuevo investigador</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">Crear nuevo colaborador</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <form @submit.prevent="saveInvestigator">
+                    <form @submit.prevent="saveCollaborator">
                         <div class="mb-3">
                             <label for="name" class="form-label">Nombre</label>
                             <input v-model="form.name" type="text" class="form-control" id="name">
@@ -74,7 +74,7 @@ const saveInvestigator = () => {
                             <div v-if="form.errors.password">{{ form.errors.password }}</div>
                         </div>
                         <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="ml-4 btn btn-primary">Crear investigador</button>
+                        <button type="submit" class="ml-4 btn btn-primary">Crear colaborador</button>
                     </form>
                 </div>
             </div>
