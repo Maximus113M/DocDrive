@@ -26,8 +26,10 @@ const submit = () => {
 </script>
 
 <template>
-    <BreezeGuestLayout>
+    <div class="w-3/12 pt-32 m-auto">
         <Head title="Log in" />
+
+        <h3 class="font-bold pb-10">Log in</h3>
 
         <BreezeValidationErrors class="mb-4" />
 
@@ -63,5 +65,5 @@ const submit = () => {
                 </BreezeButton>
             </div>
         </form>
-    </BreezeGuestLayout>
+    </div>
 </template>
