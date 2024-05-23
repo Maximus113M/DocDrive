@@ -1,11 +1,11 @@
 <script setup>
 import AuthLayout from '@/Layouts/Authenticated.vue';
-import GuestLayout from '@/Layouts/Guest.vue';
-import ContentIndex from '@/Pages/Validity/Components/ContentIndex.vue';
 
 
 defineProps({
-
+    role:String,
+    prjects:Object,
+    isAuthenticated:Boolean
 })
 
 
@@ -14,7 +14,7 @@ defineProps({
 <template>
 
 
-    <AuthLayout>
+    <AuthLayout :role="role">
         <h1>PROJECTS</h1>
     </AuthLayout>
 
