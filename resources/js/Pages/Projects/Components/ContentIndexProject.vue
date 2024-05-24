@@ -1,5 +1,5 @@
 <script setup>
-import Card from '@/Pages/Validity/Components/CardValidity.vue';
+import Card from '@/Pages/Projects/Components/CardProject.vue';
 import { useForm } from '@inertiajs/inertia-vue3'
 import { ref } from 'vue';
 
@@ -17,8 +17,9 @@ defineProps({
 
 
 const saveValidity = () => {
-    form.post(route('validity.store'))
-    closeModal()
+    form.post(route('validity.store'), {
+        onSuccess: () => closeModal()
+    })
 }
 
 const closeModal = () => {
@@ -29,9 +30,7 @@ const closeModal = () => {
 </script>
 
 <template>
-    <div class="pt-16 w-11/12 float-right">
-
-
+    <div class="pt-16 w-10/12 float-right">
         <div id="title">
             <h2>Proyectos</h2>
         </div>
@@ -45,7 +44,7 @@ const closeModal = () => {
             </button>
             <div class="mt-auto mb-auto" v-if="projects.length < 1"><h1>No hay proyectos</h1></div>
             <div v-for="p in projects">
-                <Card :id="p.id" :year="p.year" />
+                <Card class="w-full" :id="p.id" :name="p.name" />
             </div>
         </div>
     </div>
