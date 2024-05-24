@@ -3,24 +3,22 @@ import Card from '@/Pages/Validity/Components/CardValidity.vue';
 import { useForm } from '@inertiajs/inertia-vue3'
 import { ref } from 'vue';
 
-
-const modal = ref(null)
-
 const form = useForm({
     year: null,
 })
 
+const modal = ref(null)
+
 defineProps({
-    validities: Object,
+    projects: Object,
     isAuthenticated: Boolean,
     role: String,
 })
 
 
 const saveValidity = () => {
-    form.post(route('validity.store'), {
-        onSuccess: () => closeModal()
-    })
+    form.post(route('validity.store'))
+    closeModal()
 }
 
 const closeModal = () => {
@@ -31,22 +29,23 @@ const closeModal = () => {
 </script>
 
 <template>
-    <div class="pt-16 w-10/12 float-right">
+    <div class="pt-16 w-11/12 float-right">
+
 
         <div id="title">
-            <h2>Vigencias</h2>
+            <h2>Proyectos</h2>
         </div>
-        <div class="w-10/12 grid grid-cols-4 gap-0 text-center place-items-center m-auto gap-4">
+        <div class="validities-cards">
             <button v-if="role == 'admin' && isAuthenticated" type="button"
-                class="btn-add btn btn-primary mt-auto mb-auto" data-bs-toggle="modal"
-                data-bs-target="#modalSaveValidity">
+                class="btn-add btn btn-dark mt-auto mb-auto" data-bs-toggle="modal"
+                data-bs-target="#modalSaveProject">
                 <svg xmlns="http://www.w3.org/2000/svg" width="50px" height="50px" viewBox="0 0 24 24">
                     <path fill="currentColor" d="M11 13H5v-2h6V5h2v6h6v2h-6v6h-2z" />
                 </svg>
             </button>
-            <div class="mt-auto mb-auto" v-if="validities.length < 1"><h1>No hay vigencias</h1></div>
-            <div v-for="v in validities">
-                <Card :id="v.id" :year="v.year" />
+            <div class="mt-auto mb-auto" v-if="projects.length < 1"><h1>No hay proyectos</h1></div>
+            <div v-for="p in projects">
+                <Card :id="p.id" :year="p.year" />
             </div>
         </div>
     </div>
@@ -55,7 +54,7 @@ const closeModal = () => {
     <!-- Modal -->
 
 
-    <div ref="modal" class="modal fade" id="modalSaveValidity" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div ref="modal" class="modal fade" id="modalSaveProject" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -88,6 +87,11 @@ const closeModal = () => {
 
 #title {
     padding-bottom: 40px;
+}
+
+.validities-cards {
+    justify-content: center;
+    display: flex;
 }
 
 .btn-add {

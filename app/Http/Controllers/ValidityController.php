@@ -99,7 +99,7 @@ class ValidityController extends Controller
             $data = $projects;
         }
 
-        return Inertia::render("Validity/Projects", [
+        return Inertia::render("Projects/Index", [
             "projects" => $data,
             "role" => AuthServiceProvider::getRole(),
             "isAuthenticated" => AuthServiceProvider::checkAuthenticated()

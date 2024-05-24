@@ -1,7 +1,13 @@
 <script setup>
 import AuthLayout from '@/Layouts/Authenticated.vue';
 import { useForm } from '@inertiajs/inertia-vue3'
-import Table  from '@/Components/UsersTable.vue'
+import Table from '@/Components/UsersTable.vue'
+import { ref } from 'vue';
+
+
+const modal = ref(null)
+
+
 
 const form = useForm({
     name: null,
@@ -12,11 +18,19 @@ const form = useForm({
 defineProps({
     investigators: Object,
     isAuthenticated: Boolean,
-    role:String,
+    role: String,
 })
 
 const saveInvestigator = () => {
-    form.post(route('investigator.store'))
+    form.post(route('investigator.store'), {
+        onSuccess: () => closeModal()
+    })
+}
+
+
+const closeModal = () => {
+    const modalBootstrap = bootstrap.Modal.getInstance(modal.value)
+    modalBootstrap.hide()
 }
 
 
@@ -27,9 +41,9 @@ const saveInvestigator = () => {
 
     <AuthLayout :role="role" v-if="isAuthenticated">
 
-        <div class="container">
+        <div class="w-10/12 py-10 float-right m-auto relative overflow-x-auto sm:rounded-lg">
 
-            <div class="py-10 w-50 m-auto relative overflow-x-auto shadow-md sm:rounded-lg">
+            <div class="m-auto w-9/12">
                 <button type="button" class="my-4 btn btn-primary" data-bs-toggle="modal"
                     data-bs-target="#modalSaveInvestigator">
                     Crear Investigador
@@ -37,18 +51,15 @@ const saveInvestigator = () => {
                 <h3 v-if="investigators < 1">¡No hay investigadores creados!</h3>
 
                 <Table v-else :users="investigators" :isCollaborator="false" />
-               
             </div>
         </div>
-
-
 
     </AuthLayout>
 
 
     <!-- Modal -->
 
-    <div class="modal fade" id="modalSaveInvestigator" tabindex="-1" aria-labelledby="exampleModalLabel"
+    <div ref="modal" class="modal fade" id="modalSaveInvestigator" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">

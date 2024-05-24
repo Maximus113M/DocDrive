@@ -1,10 +1,11 @@
 <script setup>
 import AuthLayout from '@/Layouts/Authenticated.vue';
+import ContentIndex from './Components/ContentIndexProject.vue';
 
 
 defineProps({
     role:String,
-    prjects:Object,
+    projects:Object,
     isAuthenticated:Boolean
 })
 
@@ -15,7 +16,7 @@ defineProps({
 
 
     <AuthLayout :role="role">
-        <h1>PROJECTS</h1>
+        <ContentIndex :projects="projects" :isAuthenticated="isAuthenticated" :role="role" />   
     </AuthLayout>
 
 

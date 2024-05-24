@@ -18,7 +18,7 @@ defineProps({
 
 <template>
     <aside id="default-sidebar"
-        class="fixed top-0 left-0 z-40 w-45 h-screen transition-transform -translate-x-full sm:translate-x-0"
+        class="fixed top-0 left-0 z-40 w-1/6 h-screen transition-transform -translate-x-full sm:translate-x-0"
         aria-label="Sidebar">
         <div class="h-full px-3 py-4 overflow-y-auto bg-lime-600">
             <ul class="space-y-2 pl-0 font-medium">
@@ -98,11 +98,11 @@ defineProps({
         </div>
     </aside>
 
-    <nav class="bg-white border-b border-gray-100 w-11/12 float-right">
+    <nav class="bg-white border-b border-gray-100 w-10/12 float-right">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between h-16">
-                <div class="flex ml-10">
-                    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex py-2 flex-col">
+                <div class="flex">
+                    <div class="hidden space-x-8 sm:-my-px sm:flex py-2 flex-col">
                         <h4 class="text-lime-600 font-bold my-0">DocDrive</h4>
                         <h6 class="text-black font-medium mx-0">Hola {{ !isGuest ? $page.props.auth.user.name : "visitante" }}</h6>
                     </div>
