@@ -1,5 +1,7 @@
 <script setup>
 import Card from '@/Pages/Validity/Components/CardValidity.vue';
+import FoldersDropdown from '@/Shared/FoldersDropdown.vue';
+import BreezeDropdownLink from '@/Components/DropdownLink.vue';
 import { useForm } from '@inertiajs/inertia-vue3'
 import { ref } from 'vue';
 
@@ -28,23 +30,37 @@ const closeModal = () => {
     modalBootstrap.hide()
 }
 
+const onClicks = (event) => {
+    event.preventDefault();
+}
+
 </script>
 
 <template>
-    <div class="pt-16 w-10/12 float-right">
+    <div class="pt-10 w-10/12 float-right px-5">
 
         <div id="title">
             <h2>Vigencias</h2>
         </div>
-        <div class="w-10/12 grid grid-cols-4 gap-0 text-center place-items-center m-auto gap-4">
-            <button v-if="role == 'admin' && isAuthenticated" type="button"
-                class="btn-add btn btn-primary mt-auto mb-auto" data-bs-toggle="modal"
+
+        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-5">
+
+            <button v-if="role == 'admin' && isAuthenticated" class="col" data-bs-toggle="modal"
                 data-bs-target="#modalSaveValidity">
-                <svg xmlns="http://www.w3.org/2000/svg" width="50px" height="50px" viewBox="0 0 24 24">
-                    <path fill="currentColor" d="M11 13H5v-2h6V5h2v6h6v2h-6v6h-2z" />
-                </svg>
+                <div class="folder border-3 rounded-4 py-3 bg-white">
+                    <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
+                        fill="#000000">
+                        <path
+                            d="M453-280h60v-166h167v-60H513v-174h-60v174H280v60h173v166Zm27.27 200q-82.74 0-155.5-31.5Q252-143 197.5-197.5t-86-127.34Q80-397.68 80-480.5t31.5-155.66Q143-709 197.5-763t127.34-85.5Q397.68-880 480.5-880t155.66 31.5Q709-817 763-763t85.5 127Q880-563 880-480.27q0 82.74-31.5 155.5Q817-252 763-197.68q-54 54.31-127 86Q563-80 480.27-80Z" />
+                    </svg>
+                    <h6 class="py-1 text-gray-400"><strong>Nueva Vigencia</strong></h6>
+                </div>
             </button>
-            <div class="mt-auto mb-auto" v-if="validities.length < 1"><h1>No hay vigencias</h1></div>
+
+            <div class="mt-auto mb-auto" v-if="validities.length < 1">
+                <h1>No hay vigencias</h1>
+            </div>
+
             <div v-for="v in validities">
                 <Card :id="v.id" :year="v.year" />
             </div>
@@ -55,22 +71,26 @@ const closeModal = () => {
     <!-- Modal -->
 
 
-    <div ref="modal" class="modal fade" id="modalSaveValidity" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">Crear nueva vigencia</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+    <div ref="modal" class="modal fade" id="modalSaveValidity" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" style="width: 350px; height: 600px;">
+            <div class="modal-content position-relative p-3" style="height: 300px;">
+                <div class="d-flex flex-row justify-center px-3">
+                    <h4 class="text-success my-3"><strong>Crear nueva vigencia</strong></h4>
+
+                    <button type="button" class="btn-close position-absolute top-1 end-3" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
+                <div class="modal-body px-3">
                     <form @submit.prevent="saveValidity">
                         <div class="mb-3">
                             <label for="year" class="form-label">Año</label>
                             <input v-model="form.year" type="number" class="form-control" id="year">
                             <div v-if="form.errors.year">{{ form.errors.year }}</div>
                         </div>
-                        <button type="button" class="btn btn-danger" data-bs-dismiss="modal">Cancelar</button>
-                        <button type="submit" class="ml-4 btn btn-primary">Crear vigencia</button>
+                        <div class="row justify-center p-3 mt-5">
+                            <button type="submit" class="btn" style="background-color: #39A900; color: white; "><strong>Crear vigencia</strong></button>
+                        </div>
                     </form>
                 </div>
             </div>
@@ -95,5 +115,17 @@ const closeModal = () => {
     margin-right: 60px;
     width: 75px;
     border-radius: 50%;
+}
+
+.folder {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    max-width: 300px;
+}
+
+.validity-font {
+    color: #9E9E9E;
+    font-size: 15px;
 }
 </style>
