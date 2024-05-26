@@ -2,7 +2,7 @@
   <div>
     <div class="mb-4">
       <Link class="group flex items-center py-3" href="/validity.index">
-      <Icon name="dashboard" class="mr-2 w-4 h-4"
+      <Icon name="dashboard" class="mr-2 w-5 h-5"
         :class="isUrl('validity.index') ? 'fill-white' : 'fill-indigo-400 group-hover:fill-white'" />
       <div :class="isUrl('validity.index') ? 'text-white' : 'text-indigo-300 group-hover:text-white'">Dashboard</div>
       </Link>
@@ -10,7 +10,7 @@
 
     <div v-if="role === 'admin'" class="mb-4">
       <Link class="group flex items-center py-3" href="/collaborator.index">
-      <Icon name="office" class="mr-2 w-4 h-4"
+      <Icon name="collaborators" class="mr-2 w-5 h-5"
         :class="isUrl('collaborator.index') ? 'fill-white' : 'fill-indigo-400 group-hover:fill-white'" />
       <div :class="isUrl('collaborator.index') ? 'text-white' : 'text-indigo-300 group-hover:text-white'">Colaboradores
       </div>
@@ -19,7 +19,7 @@
 
     <div v-if="role === 'admin' || role === 'investigator'" class="mb-4">
       <Link class="group flex items-center py-3" href="/investigator.index">
-      <Icon name="users" class="mr-2 w-4 h-4"
+      <Icon name="investigators" class="mr-2 w-5 h-5"
         :class="isUrl('investigator.index') ? 'fill-white' : 'fill-indigo-400 group-hover:fill-white'" />
       <div :class="isUrl('investigator.index') ? 'text-white' : 'text-indigo-300 group-hover:text-white'">Investigadores
       </div>
@@ -38,7 +38,7 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Icon from '@/Shared/Icon.vue'
 import { Link } from '@inertiajs/inertia-vue3';
 
@@ -49,11 +49,11 @@ defineProps({
 })
 
 const isUrl = (...urls) => {
-  let currentUrl = this.$page.url.substr(1)
+ /* let currentUrl = this.$page.url.substr(1)
   if (urls[0] === '') {
     return currentUrl === ''
   }
-  return urls.filter((url) => currentUrl.startsWith(url)).length
+  return urls.filter((url) => currentUrl.startsWith(url)).length*/
 }
 
 </script>
