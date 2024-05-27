@@ -37,14 +37,13 @@ const onClicks = (event) => {
 </script>
 
 <template>
-    <!-- <div class="pt-10 w-10/12 px-5"> -->
-    <div class="px-5">
-
-        <div id="title">
-            <h2>Vigencias</h2>
+    <div class="p-5 relative">
+        <!-- Buscador -->
+        <div class="absolute top-1 right-20">
+            
         </div>
 
-        <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
+        <div class="pt-3 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
 
             <button v-if="role == 'admin' && isAuthenticated" class="col" data-bs-toggle="modal"
                 data-bs-target="#modalSaveValidity">
@@ -75,9 +74,9 @@ const onClicks = (event) => {
     <div ref="modal" class="modal fade" id="modalSaveValidity" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" style="width: 350px; height: 600px;">
-            <div class="modal-content position-relative p-3" style="height: 300px;">
+            <div class="modal-content position-relative p-3" style="max-height: 400px;">
                 <div class="d-flex flex-row justify-center px-3">
-                    <h4 class="text-success my-3"><strong>Crear nueva vigencia</strong></h4>
+                    <h4 class="my-3" style="color: #39A900;"><strong>Nueva vigencia</strong></h4>
 
                     <button type="button" class="btn-close position-absolute top-1 end-3" data-bs-dismiss="modal"
                         aria-label="Close"></button>
@@ -85,12 +84,14 @@ const onClicks = (event) => {
                 <div class="modal-body px-3">
                     <form @submit.prevent="saveValidity">
                         <div class="mb-3">
-                            <label for="year" class="form-label">Año</label>
+                            <label for="year" class="form-label">Ingrese el año:</label>
                             <input v-model="form.year" type="number" class="form-control" id="year">
                             <div v-if="form.errors.year">{{ form.errors.year }}</div>
                         </div>
                         <div class="row justify-center p-3 mt-5">
-                            <button type="submit" class="btn" style="background-color: #39A900; color: white; "><strong>Crear vigencia</strong></button>
+                            <button type="submit" class="btn py-2"
+                                style="background-color: #39A900; color: white; "><strong>Crear
+                                    vigencia</strong></button>
                         </div>
                     </form>
                 </div>
