@@ -26,7 +26,7 @@
       </Link>
     </div>
 
-    <div v-if="role === 'admin' || role === 'investigator'" class="mb-3">
+    <div v-if="role === 'admin'" class="mb-3">
       <Link class="group flex items-center py-3 text-decoration-none" :href="route('investigator.index')"
         @click="selectedIndex = 1">
       <Icon name="investigators" class="mr-2 w-7 h-7"
@@ -37,8 +37,8 @@
       </Link>
     </div>
 
-    <div v-if="role === 'admin'" class="mb-3">
-      <Link class="group flex items-center py-3 text-decoration-none" href="/collaborator.index"
+    <div v-if="role === 'admin' || role === 'investigator'" class="mb-3">
+      <Link class="group flex items-center py-3 text-decoration-none" :href="route('collaborator.index')"
         @click="selectedIndex = 2">
       <Icon name="collaborators" class="mr-2 w-7 h-7"
         :class="selectedIndex === 2 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
@@ -62,7 +62,7 @@
     </div>
 
     <div v-if="!isGuest" class="md:mt-5">
-      <Link class="group flex items-center py-3 text-decoration-none" href="/logout" @click="selectedIndex = 4">
+      <Link class="group flex items-center py-3 text-decoration-none" method="post" href="/logout" @click="selectedIndex = 4">
       <Icon name="logout" class="mr-2 w-7 h-7"
         :class="selectedIndex === 4 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
       <div :class="selectedIndex === 4 ? 'text-white text-lg font-bold' : 'text-gray-300 group-hover:text-white'">Cerrar

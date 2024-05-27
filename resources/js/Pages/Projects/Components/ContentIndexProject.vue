@@ -1,5 +1,5 @@
 <script setup>
-import Card from '@/Pages/Validity/Components/CardValidity.vue';
+import Card from '@/Pages/Projects/Components/CardProject.vue';
 import { useForm } from '@inertiajs/inertia-vue3'
 import { ref } from 'vue';
 
@@ -45,7 +45,7 @@ const closeModal = () => {
             </button>
             <div class="mt-auto mb-auto" v-if="projects.length < 1"><h1>No hay proyectos</h1></div>
             <div v-for="p in projects">
-                <Card :id="p.id" :year="p.year" />
+                <Card :id="p.id" :name="p.name" />
             </div>
         </div>
     </div>

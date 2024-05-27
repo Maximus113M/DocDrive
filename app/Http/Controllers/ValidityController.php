@@ -81,23 +81,22 @@ class ValidityController extends Controller
         $projects = Validity::where('year', $validityYear)->first()->projects;
         $data = array();
         if ($userRole == RoleServiceProvider::INVESTIGATOR || $userRole == RoleServiceProvider::COLLABORATOR) {
-            $data = array_filter($projects->toArray(), function ($project) {
-                $usersID = $project->users()->pluck('id')->toArray();
-                
-                $visualizationRole = $project->visualizationRole->first()->name;
-
+            $data = $projects->filter(function ($project) {
+                $usersID = $project->users->pluck('id')->toArray();
+                $visualizationRole = $project->visualizationRole()->first()->name;
                 return $visualizationRole == RoleServiceProvider::PUBLIC || $visualizationRole == 
                     RoleServiceProvider::GENERAL_PUBLIC || ($visualizationRole == RoleServiceProvider::PRIVATE
-                    && in_array(Auth::user()->id, $usersID));
+                    && in_array(Auth::user()->id, $usersID)); 
             });
         } else if ($userRole == RoleServiceProvider::GUEST) {
-            $data = array_filter($projects->toArray(), function ($project) {
-                $visualizationRole = $project->visualizationRole->first()->name;
-                return $visualizationRole == RoleServiceProvider::GENERAL_PUBLIC;
+            $data = $projects->filter(function ($project) {
+                $visualizationRole = $project->visualizationRole()->first()->name;
+                return $visualizationRole == RoleServiceProvider::GENERAL_PUBLIC; 
             });
         } else {
             $data = $projects;
         }
+
 
         return Inertia::render("Projects/Index", [
             "projects" => $data,
