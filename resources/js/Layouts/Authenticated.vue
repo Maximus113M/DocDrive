@@ -2,9 +2,7 @@
 import NavMenu from '@/Components/SideMenu.vue'
 import LayoutDropdown from '@/Shared/LayoutDropdown.vue';
 import MainMenu from '@/Shared/MainMenu.vue';
-import { Link } from '@inertiajs/inertia-vue3';
 import Icon from '@/Shared/Icon.vue';
-import FoldersDropdown from '@/Shared/FoldersDropdown.vue';
 import BreezeDropdownLink from '@/Components/DropdownLink.vue';
 import BreezeDropdown from '@/Components/Dropdown.vue';
 
@@ -20,10 +18,19 @@ defineProps({
     <div>
         <div class="md:flex md:flex-col">
             <div class="md:flex md:flex-col md:h-screen">
-                <div class="md:flex md:shrink-0">
-
-                    <div class="flex items-center justify-between px-6 py-4 md:shrink-0 md:justify-center md:w-56"
+                <!-- BARRA SUPERIOR -->
+                <div class="md:flex md:shrink-0 max-h-28">
+                    <!-- Barra izquierda -->
+                    <div class="flex items-center justify-between px-6 py-4 md:shrink-0 md:justify-center md:w-56 md:py-0"
                         style="background-color: #39A900;">
+
+                        <!-- TODO INSERTAR IMAGEN o dejar Icon, definir -->
+                        <div class="hidden flex-col md:block">
+                            <div class="bg-white rounded-full p-3">
+                                <Icon :name=" role "/>
+                            </div>
+                     
+                        </div>
                         <h2 class="md:hidden" style="color: white;"><strong>DocDrive</strong></h2>
 
                         <LayoutDropdown class="md:hidden" placement="bottom-end">
@@ -32,28 +39,30 @@ defineProps({
                             </template>
                             <template #dropdown>
 
-                                <div class="mt-2 px-8 py-4 bg-indigo-800 rounded shadow-lg">
-                                    <MainMenu :isGuest="false" :role="role" />
+                                <div class="md:hidden mt-2 px-8 py-4 rounded shadow-lg"
+                                    style="background-color: #39A900;">
+                                    <MainMenu :isGuest="false" :role="role" :is-side-menu="false"/>
                                 </div>
                             </template>
                         </LayoutDropdown>
                     </div>
 
+                    <!-- Barra central -->
                     <div
-                        class="hidden md:text-md md:flex items-center justify-between p-4 w-full text-sm bg-white border-b md:px-12 md:py-0">
+                        class="hidden md:flex items-center justify-between w-full text-sm bg-white border-b md:px-12 md:py-4">
                         <div>
                             <h2 style="color: #39A900;"><strong>DocDrive</strong></h2>
-                            <div>
+                        <!-- TODO Pasar usuario o nombre -->
+                            <div class="text-sm">
                                 Hola Camilo
                             </div>
                         </div>
-                        
                         <div class="flex items-center ml-6">
                             <div class="ml-3 relative">
                                 <BreezeDropdown align="right" width="48">
                                     <template #trigger>
                                         <span class="inline-flex rounded-md">
-                                            <Icon :name=" isGuest ? 'guest': role " />
+                                            <Icon :name="isGuest ? 'guest' : role" />
                                             <button type="button"
                                                 class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
                                                 {{ !isGuest ? role : "Visitante" }}
@@ -76,7 +85,19 @@ defineProps({
                                 </BreezeDropdown>
                             </div>
                         </div>
+                    </div>
+                </div>
 
+                <div class="md:flex md:grow md:overflow-hidden">
+                    <MainMenu :isGuest="false" :role="role" :is-side-menu="true" class="hidden shrink-0 p-4 w-56 overflow-y-auto md:block"
+                        style="background-color: #39A900;" />
+
+                    <!-- CONTENT -->
+                    <div class="w-full overflow-y-auto pt-3 px-3" style="background-color: #EBEBEB;" scroll-region>
+                        <div class="bg-white h-full w-full overflow-y-auto rounded-t-2xl" >
+                            <slot :isGuest="false" :role="role" class="shrink-0 md:flex"
+                             to="content"/>
+                        </div>
                     </div>
 
                 </div>

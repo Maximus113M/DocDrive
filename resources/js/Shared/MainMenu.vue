@@ -1,33 +1,38 @@
 <template>
-  <div>
-    <div class="mb-4">
-      <Link class="group flex items-center py-3" href="/validity.index">
-      <Icon name="dashboard" class="mr-2 w-5 h-5"
-        :class="isUrl('validity.index') ? 'fill-white' : 'fill-indigo-400 group-hover:fill-white'" />
-      <div :class="isUrl('validity.index') ? 'text-white' : 'text-indigo-300 group-hover:text-white'">Dashboard</div>
+  <div class="flex-col relative h-full">
+    <div class="mb-3">
+      <Link class="group flex items-center py-3 text-decoration-none" href="/validity.index" @click="selectedIndex = 0">
+      <Icon name="dashboard" class="mr-2 w-7 h-7"
+        :class="selectedIndex === 0 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
+      <div :class="selectedIndex === 0 ? 'text-white text-lg font-bold' : 'text-gray-300 group-hover:text-white'">
+        Dashboard</div>
       </Link>
     </div>
 
-    <div v-if="role === 'admin'" class="mb-4">
-      <Link class="group flex items-center py-3" href="/collaborator.index">
-      <Icon name="collaborators" class="mr-2 w-5 h-5"
-        :class="isUrl('collaborator.index') ? 'fill-white' : 'fill-indigo-400 group-hover:fill-white'" />
-      <div :class="isUrl('collaborator.index') ? 'text-white' : 'text-indigo-300 group-hover:text-white'">Colaboradores
+    <div v-if="role === 'admin' || role === 'investigator'" class="mb-3">
+      <Link class="group flex items-center py-3 text-decoration-none" href="/investigator.index"
+        @click="selectedIndex = 1">
+      <Icon name="investigators" class="mr-2 w-7 h-7"
+        :class="selectedIndex === 1 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
+      <div :class="selectedIndex === 1 ? 'text-white text-lg font-bold' : 'text-gray-300 group-hover:text-white '">
+        Investigadores
       </div>
       </Link>
     </div>
 
-    <div v-if="role === 'admin' || role === 'investigator'" class="mb-4">
-      <Link class="group flex items-center py-3" href="/investigator.index">
-      <Icon name="investigators" class="mr-2 w-5 h-5"
-        :class="isUrl('investigator.index') ? 'fill-white' : 'fill-indigo-400 group-hover:fill-white'" />
-      <div :class="isUrl('investigator.index') ? 'text-white' : 'text-indigo-300 group-hover:text-white'">Investigadores
+    <div v-if="role === 'admin'" class="mb-3">
+      <Link class="group flex items-center py-3 text-decoration-none" href="/collaborator.index"
+        @click="selectedIndex = 2">
+      <Icon name="collaborators" class="mr-2 w-7 h-7"
+        :class="selectedIndex === 2 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
+      <div :class="selectedIndex === 2 ? 'text-white text-lg font-bold' : 'text-gray-300 group-hover:text-white'">
+        Colaboradores
       </div>
       </Link>
     </div>
 
-    <div v-if="isGuest" class="mb-4">
-      <Link class="group flex items-center py-3" href="/login">
+    <div v-if="isGuest" class="mb-3">
+      <Link class="group flex items-center py-3 text-decoration-none" href="/login">
       <div class="lg:ml-2 hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
         <Link class="font-bold no-underline cursor-pointer text-lime-600 bg-white px-5 py-2" :href="route('login')">
         Ingresar</Link>
@@ -35,25 +40,45 @@
       </Link>
     </div>
 
+    <div v-if="isSideMenu" class="flex justify-center opacity-30 lg:mt-4 lg:mb-5  xxl:my-5">
+      <img src="/images/logos/logo-sena-blanco-fix.png" width="140px" alt="logo-sena" >
+    </div>
+
+    <div v-if="!isGuest" class="md:mt-5">
+      <Link class="group flex items-center py-3 text-decoration-none" href="/logout" @click="selectedIndex = 4">
+      <Icon name="logout" class="mr-2 w-7 h-7"
+        :class="selectedIndex === 4 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
+      <div :class="selectedIndex === 4 ? 'text-white text-lg font-bold' : 'text-gray-300 group-hover:text-white'">Cerrar
+        Sesión
+      </div>
+      </Link>
+    </div>
   </div>
 </template>
 
 <script setup>
 import Icon from '@/Shared/Icon.vue'
 import { Link } from '@inertiajs/inertia-vue3';
+import { ref } from 'vue';
 
+//const 
 
 defineProps({
   role: String,
-  isGuest: Boolean
+  isGuest: Boolean,
+  isSideMenu: Boolean
 })
 
-const isUrl = (...urls) => {
- /* let currentUrl = this.$page.url.substr(1)
-  if (urls[0] === '') {
-    return currentUrl === ''
-  }
-  return urls.filter((url) => currentUrl.startsWith(url)).length*/
-}
+const selectedIndex = ref(0)
 
 </script>
+
+<style scoped>
+.container {
+  width: 130px;
+  background-image: url('/images/logos/logo-sena-blanco-fix.png');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+</style>

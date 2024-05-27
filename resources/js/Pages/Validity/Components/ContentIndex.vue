@@ -37,13 +37,14 @@ const onClicks = (event) => {
 </script>
 
 <template>
-    <div class="pt-10 w-10/12 float-right px-5">
+    <!-- <div class="pt-10 w-10/12 px-5"> -->
+    <div class="px-5">
 
         <div id="title">
             <h2>Vigencias</h2>
         </div>
 
-        <div class="row row-cols-2 row-cols-md-3 row-cols-lg-4 row-cols-xl-5 g-5">
+        <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
 
             <button v-if="role == 'admin' && isAuthenticated" class="col" data-bs-toggle="modal"
                 data-bs-target="#modalSaveValidity">
