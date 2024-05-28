@@ -1,8 +1,9 @@
 <script setup>
 import AuthLayout from '@/Layouts/Authenticated.vue';
 import { useForm } from '@inertiajs/inertia-vue3'
-import Table from '@/Components/UsersTable.vue'
+import Table from '@/Shared/UsersTable.vue'
 import { ref } from 'vue';
+import Icon from '@/Shared/Icon.vue';
 
 const modal = ref(null)
 
@@ -38,19 +39,19 @@ const closeModal = () => {
 
     <AuthLayout :role="role" v-if="isAuthenticated">
 
-        <div class="w-10/12 py-10 float-right m-auto relative overflow-x-auto sm:rounded-lg">
+        <div class="w-full m-auto relative overflow-y-auto px-4">
 
-            <div class="m-auto w-9/12">
-                <button type="button" class="my-4 btn btn-primary" data-bs-toggle="modal"
+            <div>
+                <button type="button" class="flex items-center justify-center my-4 px-3 rounded-3xl"
+                    style="background-color: #FF6624; color: white;" data-bs-toggle="modal"
                     data-bs-target="#modalSaveCollaborator">
-                    Crear Colaborador
+                    <Icon name="add" class="w-7 pr-1" />
+                    Colaborador
                 </button>
-                <h3 v-if="investigators < 1">¡No hay colaboraodres creados!</h3>
-
-                <Table v-else :users="collaborators" :isCollaborator="true" />
             </div>
-        </div>
 
+            <Table :users="collaborators" :isCollaborator="true" />
+        </div>
 
 
     </AuthLayout>
