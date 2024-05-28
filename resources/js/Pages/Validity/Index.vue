@@ -16,14 +16,9 @@ defineProps({
 <template>
 
 
-    <AuthLayout :role="role" v-if="isAuthenticated">
+    <AuthLayout :role="role">
         <ContentIndex :message="message" :isAuthenticated="isAuthenticated" :validities="validities" :role="role" #content/> 
     </AuthLayout>
-
-
-    <GuestLayout v-if="!isAuthenticated">
-        <ContentIndex :message="message" :isAuthenticated="isAuthenticated" :validities="validities" :role="role"/> 
-    </GuestLayout>
 
 </template>
 
