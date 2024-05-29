@@ -54,8 +54,6 @@ class ValidityController extends Controller
      */
     public function update($validityID)
     {
-        return $validityID;
-        
         $this->validate(request(), [
             "year" => "required",
         ]);

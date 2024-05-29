@@ -1,9 +1,67 @@
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link, usePage } from '@inertiajs/inertia-vue3';
 import FoldersDropdown from '@/Shared/FoldersDropdown.vue';
 import BreezeDropdownLink from '@/Components/DropdownLink.vue';
+import { useForm } from '@inertiajs/inertia-vue3'
 
-defineProps(['year', 'id']);
+const props = defineProps(['year', 'id']);
+
+const form = useForm({
+    year: props.year,
+})
+
+
+const openModal = () => {
+    const modal = document.getElementById("modal-" + props.id)
+    const modalBootstrap = new bootstrap.Modal(modal)
+    modalBootstrap.show()
+}
+
+const openModalDelete = () => {
+    const modal = document.getElementById("modal-delete-" + props.id)
+    const modalBootstrap = new bootstrap.Modal(modal)
+    modalBootstrap.show()
+}
+
+const updateValidity = () => {
+    form.put(route("validity.update", { "validityID": props.id }), {
+        onSuccess: () => closeModal()
+    })
+}
+
+const closeModalDelete = () => {
+    const modal = document.getElementById("modal-delete-" + props.id)
+    if (modal) {
+        const modalBootstrap = bootstrap.Modal.getInstance(modal)
+        modalBootstrap.hide()
+    }
+
+}
+
+const closeModal = () => {
+    const modal = document.getElementById("modal-" + props.id)
+    const modalBootstrap = bootstrap.Modal.getInstance(modal)
+    modalBootstrap.hide()
+}
+
+const deleteValidity = () => {
+    closeModalDelete()
+    form.delete(route("validity.destroy", { "validityID": props.id }), {
+        onSuccess: () => {
+            showErrorMessage()
+        },
+    })
+
+
+}
+
+const showErrorMessage = () => {
+    const flashMessage = usePage().props.value.flash.message;
+
+    if (flashMessage) {
+        alert(flashMessage);
+    }
+}
 
 const onClicks = (event) => {
     event.preventDefault();
@@ -33,14 +91,16 @@ const onClicks = (event) => {
                     </template>
 
                     <template #content>
-                        <!-- TODO PENDIENTE AJUSTAR RUTA DE EDITAR -->
-                        <BreezeDropdownLink method="post" as="button">
+                        <button
+                            class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+                            data-bs-toggle="modal" data-bs-target="#modal" @click="openModal">
                             Editar
-                        </BreezeDropdownLink>
-                        <!-- TODO PENDIENTE AJUSTAR RUTA DE ELIMINAR -->
-                        <BreezeDropdownLink method="post" as="button">
+                        </button>
+                        <button
+                            class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
+                            data-bs-toggle="modal" data-bs-target="#modal" @click="openModalDelete">
                             Eliminar
-                        </BreezeDropdownLink>
+                        </button>
                     </template>
                 </FoldersDropdown>
             </div>
@@ -57,6 +117,59 @@ const onClicks = (event) => {
         </Link>
     </div>
     <!-- FOLDER DESIGN -->
+
+
+    <!-- MODAL EDITAR-->
+    <div class="modal fade" :id="`modal-${id}`" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" style="width: 350px; height: 600px;">
+            <div class="modal-content position-relative p-3" style="max-height: 400px;">
+                <div class="d-flex flex-row justify-center px-3">
+                    <h4 class="my-3" style="color: #39A900;"><strong>Actualizar vigencia</strong></h4>
+
+                    <button type="button" class="btn-close position-absolute top-1 end-3" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-3">
+                    <form @submit.prevent="updateValidity">
+                        <div class="mb-3">
+                            <label for="year" class="form-label">Ingrese el año:</label>
+                            <input v-model="form.year" type="number" class="form-control" id="year">
+                            <div v-if="form.errors.year">{{ form.errors.year }}</div>
+                        </div>
+                        <div class="row justify-center p-3 mt-5">
+                            <button type="submit" class="btn py-2"
+                                style="background-color: #39A900; color: white; "><strong>Actualizar
+                                    vigencia</strong></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+
+    <!-- MODAL ELIMINAR-->
+    <div class="modal fade" :id="`modal-delete-${id}`" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" style="width: 350px; height: 600px;">
+            <div class="modal-content position-relative p-3" style="max-height: 400px;">
+                <div class="d-flex flex-row justify-center px-3">
+                    <h4 class="my-3"><strong>Eliminar vigencia</strong></h4>
+
+                    <button type="button" class="btn-close position-absolute top-1 end-3" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Confirmar eliminación de la vigencia</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button @click="deleteValidity" type="button" class="btn btn-primary">Eliminar</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
 
 <style scoped>
