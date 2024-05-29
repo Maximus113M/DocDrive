@@ -103,22 +103,6 @@ const onClicks = (event) => {
 </template>
 
 <style scoped>
-#title>h2 {
-    font-weight: bold;
-    text-align: center;
-}
-
-#title {
-    padding-bottom: 40px;
-}
-
-.btn-add {
-    height: 75px;
-    margin-right: 60px;
-    width: 75px;
-    border-radius: 50%;
-}
-
 .folder {
     display: flex;
     flex-direction: column;
