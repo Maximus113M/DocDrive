@@ -54,6 +54,8 @@ class ValidityController extends Controller
      */
     public function update($validityID)
     {
+        return $validityID;
+        
         $this->validate(request(), [
             "year" => "required",
         ]);
@@ -66,6 +68,25 @@ class ValidityController extends Controller
         
         return redirect()->route("validity.index")->with("message", "¡La vigencia se ha actualizado correctamente!");
     }
+
+    /**
+     * 
+     * ELimina una vigencia
+     */
+
+    public function destroy($validityID)
+    {
+        $validity = Validity::find($validityID);
+
+        if ($validity->projects->count() > 0) {
+            return redirect()->route("validity.index")->with("message", "¡No se puede eliminar una vigencia con proyectos asociados!");
+        }
+
+        $validity->delete();
+
+        return redirect()->route("validity.index")->with("message", "¡La vigencia se ha eliminado correctamente!");
+    }
+
 
     /**
      * 

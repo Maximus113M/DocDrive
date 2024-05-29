@@ -22991,7 +22991,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     role: $props.role,
     "class": "shrink-0 md:flex",
     to: "content"
-  })])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div>\r\n        <div class=\"min-h-screen bg-gray-100\">      \r\n            <NavMenu :isGuest=\"false\" :role=\"role\"/>\r\n            <header class=\"bg-white shadow\" v-if=\"$slots.header\">\r\n                <div class=\"max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8\">\r\n                    <slot name=\"header\" />\r\n                </div>\r\n            </header>\r\n\r\n            <main>\r\n                <slot />\r\n            </main>\r\n        </div>\r\n    </div> ")], 2112 /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */);
+  })])])])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div>\n        <div class=\"min-h-screen bg-gray-100\">      \n            <NavMenu :isGuest=\"false\" :role=\"role\"/>\n            <header class=\"bg-white shadow\" v-if=\"$slots.header\">\n                <div class=\"max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8\">\n                    <slot name=\"header\" />\n                </div>\n            </header>\n\n            <main>\n                <slot />\n            </main>\n        </div>\n    </div> ")], 2112 /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */);
 }
 
 /***/ }),
@@ -25071,7 +25071,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.folder[data-v-a2ac2cea] {\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\n}\n.validity-font[data-v-a2ac2cea] {\r\n    color: #9E9E9E;\r\n    font-size: 15px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.folder[data-v-a2ac2cea] {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n}\n.validity-font[data-v-a2ac2cea] {\n    color: #9E9E9E;\n    font-size: 15px;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -25095,7 +25095,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n#title>h2[data-v-e7aaa9ba] {\r\n    font-weight: bold;\r\n    text-align: center;\n}\n#title[data-v-e7aaa9ba] {\r\n    padding-bottom: 40px;\n}\n.validities-cards[data-v-e7aaa9ba] {\r\n    justify-content: center;\r\n    display: flex;\n}\n.btn-add[data-v-e7aaa9ba] {\r\n    height: 75px;\r\n    margin-right: 60px;\r\n    width: 75px;\r\n    border-radius: 50%;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n#title>h2[data-v-e7aaa9ba] {\n    font-weight: bold;\n    text-align: center;\n}\n#title[data-v-e7aaa9ba] {\n    padding-bottom: 40px;\n}\n.validities-cards[data-v-e7aaa9ba] {\n    justify-content: center;\n    display: flex;\n}\n.btn-add[data-v-e7aaa9ba] {\n    height: 75px;\n    margin-right: 60px;\n    width: 75px;\n    border-radius: 50%;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -25119,7 +25119,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.validity-font[data-v-5731d587] {\r\n    color: #9E9E9E;\r\n    font-size: 15px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.validity-font[data-v-5731d587] {\n    color: #9E9E9E;\n    font-size: 15px;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -25143,7 +25143,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n#title>h2[data-v-a957b904] {\r\n    font-weight: bold;\r\n    text-align: center;\n}\n#title[data-v-a957b904] {\r\n    padding-bottom: 40px;\n}\n.btn-add[data-v-a957b904] {\r\n    height: 75px;\r\n    margin-right: 60px;\r\n    width: 75px;\r\n    border-radius: 50%;\n}\n.folder[data-v-a957b904] {\r\n    display: flex;\r\n    flex-direction: column;\r\n    align-items: center;\r\n    max-width: 300px;\n}\n.validity-font[data-v-a957b904] {\r\n    color: #9E9E9E;\r\n    font-size: 15px;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n#title>h2[data-v-a957b904] {\n    font-weight: bold;\n    text-align: center;\n}\n#title[data-v-a957b904] {\n    padding-bottom: 40px;\n}\n.btn-add[data-v-a957b904] {\n    height: 75px;\n    margin-right: 60px;\n    width: 75px;\n    border-radius: 50%;\n}\n.folder[data-v-a957b904] {\n    display: flex;\n    flex-direction: column;\n    align-items: center;\n    max-width: 300px;\n}\n.validity-font[data-v-a957b904] {\n    color: #9E9E9E;\n    font-size: 15px;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 
@@ -25191,7 +25191,7 @@ __webpack_require__.r(__webpack_exports__);
 
 var ___CSS_LOADER_EXPORT___ = _node_modules_css_loader_dist_runtime_api_js__WEBPACK_IMPORTED_MODULE_0___default()(function(i){return i[1]});
 // Module
-___CSS_LOADER_EXPORT___.push([module.id, "\n.container[data-v-fb328fd8] {\r\n  width: 130px;\r\n  background-image: url('/images/logos/logo-sena-blanco-fix.png');\r\n  background-size: cover;\r\n  background-position: center;\r\n  background-repeat: no-repeat;\n}\r\n", ""]);
+___CSS_LOADER_EXPORT___.push([module.id, "\n.container[data-v-fb328fd8] {\n  width: 130px;\n  background-image: url('/images/logos/logo-sena-blanco-fix.png');\n  background-size: cover;\n  background-position: center;\n  background-repeat: no-repeat;\n}\n", ""]);
 // Exports
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = (___CSS_LOADER_EXPORT___);
 

@@ -55,6 +55,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::put('/{validityID}/update', [ValidityController::class, 'update'])
         ->name('validity.update');
 
+    // RUTA PARA ELIMINAR UNA VIGENCIA
+    Route::delete('/{validityID}/destroy', [ValidityController::class, 'destroy'])
+        ->name('validity.destroy');
+
     // RUTA PARA MOSTRAR LOS INVESTIGADORES
     Route::get('/investigator/index', [InvestigatorController::class, 'index'])
         ->name('investigator.index');
