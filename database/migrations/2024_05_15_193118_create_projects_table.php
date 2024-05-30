@@ -16,15 +16,15 @@ class CreateProjectsTable extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string("name");
-            $table->date("startDate");
-            $table->date("endDate");
-            $table->json("target");
-            $table->string("description");
+            $table->date("startDate")->nullable();
+            $table->date("endDate")->nullable();
+            $table->json("target")->nullable();
+            $table->string("description")->nullable();
             $table->unsignedBigInteger('visualization_role_id');
             $table->foreign('visualization_role_id')->references('id')->on('visualization_roles');
             $table->unsignedBigInteger('validity_id');
             $table->foreign('validity_id')->references('id')->on('validities');
-            //$table->timestamps();
+            $table->timestamps();
         });
     }
 

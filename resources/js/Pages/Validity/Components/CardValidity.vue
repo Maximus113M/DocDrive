@@ -74,7 +74,7 @@ const onClicks = (event) => {
     <div class="col position-relative" style="max-width: 300px;">
         <Link :href="route('validity.projects', { 'validityYear': year })" class="text-decoration-none">
         <div class="d-flex flex-column align-items-center border-3 rounded-4 py-1 bg-white">
-            <div class="position-absolute top-1 end-1" @click="onClicks">
+            <div v-if="$page.props.auth.user != null && $page.props.auth.user.role.name == 'admin'" class="position-absolute top-1 end-1" @click="onClicks">
                 <FoldersDropdown align="right" width="45">
                     <template #trigger>
                         <span class="inline-flex rounded-md">

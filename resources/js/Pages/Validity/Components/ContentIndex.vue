@@ -61,7 +61,7 @@ const onClicks = (event) => {
                 <h1>No hay vigencias</h1>
             </div>
 
-            <div v-for="v in validities">
+            <div v-for="v in validities" :key="v.id">
                 <Card :id="v.id" :year="v.year" />
             </div>
         </div>

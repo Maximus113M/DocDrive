@@ -16,19 +16,27 @@ use Inertia\Inertia;
 class InvestigatorController extends Controller
 {
     /**
-     *
-     * Muestra todos los investigadores
+     * Obtener los investigadores
+     * 
      */
-    public function index()
+    static public function getInvestigators()
     {
         $query = DB::table("users AS u")
             ->select('u.name AS name', 'u.id AS id', 'u.email AS email')
             ->join("roles AS r", "u.role_id", "=", "r.id")
             ->where("r.name", "=", RoleServiceProvider::INVESTIGATOR)
             ->get();
-        
+        return $query;
+    }
+
+    /**
+     *
+     * Muestra todos los investigadores
+     */
+    public function index()
+    {
         return Inertia::render("Investigator/Index", [
-            "investigators" => $query,
+            "investigators" => InvestigatorController::getInvestigators(),
             "isAuthenticated" => AuthServiceProvider::checkAuthenticated(),
             "role" => AuthServiceProvider::getRole()
         ]);

@@ -20,7 +20,7 @@
                         <path
                             d="M453-280h60v-166h167v-60H513v-174h-60v174H280v60h173v166Zm27.27 200q-82.74 0-155.5-31.5Q252-143 197.5-197.5t-86-127.34Q80-397.68 80-480.5t31.5-155.66Q143-709 197.5-763t127.34-85.5Q397.68-880 480.5-880t155.66 31.5Q709-817 763-763t85.5 127Q880-563 880-480.27q0 82.74-31.5 155.5Q817-252 763-197.68q-54 54.31-127 86Q563-80 480.27-80Z" />
                     </svg>
-                    <h6 class="py-1 text-gray-400"><strong>Nueva Proyecto</strong></h6>
+                    <h6 class="py-1 text-gray-400"><strong>Nuevo Proyecto</strong></h6>
                 </div>
             </button>
 
@@ -52,6 +52,7 @@
                             <input v-model="form.name" type="text" class="form-control" id="name">
                             <div v-if="form.errors.name">{{ form.errors.name }}</div>
                         </div>
+                        <!--
                         <div class="mb-3">
                             <label for="startDate" class="font-bold">Fecha Inicio</label>
                             <input v-model="form.startDate" type="date" class="form-control" id="startDate">
@@ -72,6 +73,24 @@
                             <input v-model="form.description" type="text" class="form-control" id="description">
                             <div v-if="form.errors.description">{{ form.errors.description }}</div>
                         </div>
+                        -->
+
+                        <div class="mb-3">
+                            <label class="font-bold">Asociar Investigadores</label>
+                            <div v-for="investigator in investigators" :key="investigator.id">
+                                <input class="mr-2" type="checkbox" :id="'checkbox-' + investigator.id"
+                                    v-model="form.investigatorsID" :value="investigator.id">
+                                <label :for="'checkbox-' + investigator.id">{{ investigator.name }}</label>
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="font-bold">Elige rol de visualización</label>
+                            <br>
+                            <select v-model="form.visualizationRoleSelected">
+                                <option v-for="vRole in visualizationsRole" :value="vRole.id" :key="vRole.id">{{ nameRoleVisualization[vRole.name] }}</option>
+                            </select>
+                        </div>
 
                         <div class="row justify-center p-3 mt-5">
                             <button type="submit" class=" py-2"
@@ -89,29 +108,49 @@
 
 <script setup>
 import Card from '@/Pages/Projects/Components/CardProjectOld.vue';
-import { useForm } from '@inertiajs/inertia-vue3'
+import { useForm, usePage } from '@inertiajs/inertia-vue3'
 import { ref } from 'vue';
 
 const form = useForm({
     name: null,
-    startDate: null,
-    endDate: null,
-    target: null,
-    description: null,
+    //startDate: null,
+    //endDate: null,
+    //target: null,
+    //description: null,
+    investigatorsID: [],
+    validityID: null,
+    visualizationRoleSelected: null
 })
+
+const nameRoleVisualization = {
+    "private" : "Privado",
+    "public" : "Público",
+    "general-public" : "Publico en general"
+}
 
 const modal = ref(null)
 
-defineProps({
+const { investigators, validityID } = defineProps({
     projects: Object,
+    investigators: Object,
     isAuthenticated: Boolean,
     role: String,
+    validityID: Number,
+    visualizationsRole: Object
 })
 
-
 const saveProject = () => {
-    form.post(route('project.store'))
-    closeModal()
+    form.validityID = validityID
+    form.post(route('project.store'), {
+        onSuccess: () => {
+            closeModal()
+            showSuccessMessage()
+        }
+    })
+}
+
+const showSuccessMessage = () => {
+    alert(usePage().props.value.flash.message)
 }
 
 const closeModal = () => {

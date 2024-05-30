@@ -70,6 +70,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // RUTA PARA ELIMINAR UN INVESTIGADOR
     Route::delete('/investigator/{userID}/destroy', [InvestigatorController::class, 'destroy'])
         ->name('investigator.destroy');
+
+    // RUTA PARA CREAR PROYECTOS
+    Route::post('/project/store', [ProjectController::class, 'store'])
+        ->name('project.store');
 });
 
 

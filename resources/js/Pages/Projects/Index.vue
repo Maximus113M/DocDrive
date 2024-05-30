@@ -6,16 +6,19 @@ import ContentIndex from './Components/ContentIndexProject.vue';
 defineProps({
     role:String,
     projects:Object,
-    isAuthenticated:Boolean
+    validityID:Number,
+    isAuthenticated:Boolean,
+    investigators:Object,
+    visualizationsRole:Object
 })
 
 
 </script>
 
 <template>
-
+    
     <AuthLayout :role="role">
-        <ContentIndex :projects="projects" :isAuthenticated="isAuthenticated" :role="role" />   
+        <ContentIndex :visualizationsRole="visualizationsRole" :validityID="validityID" :investigators="investigators" :projects="projects" :isAuthenticated="isAuthenticated" :role="role" />   
     </AuthLayout>
 
 

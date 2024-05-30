@@ -33,7 +33,7 @@
       </Link>
     </div>
 
-    <div v-if="isGuest" class="mb-3">
+    <div v-if="role == 'guest'" class="mb-3">
       <Link class="group flex items-center py-3 text-decoration-none" href="/login">
       <div class="lg:ml-2 hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
         <Link class="font-bold no-underline cursor-pointer text-lime-600 bg-white px-5 py-2" :href="route('login')">
@@ -46,7 +46,7 @@
       <img src="/images/logos/logo-sena-blanco-fix.png" width="140px" alt="logo-sena">
     </div>
 
-    <div v-if="!isGuest" class="md:mt-5">
+    <div v-if="role != 'guest'" class="md:mt-5">
       <Link class="group flex items-center py-3 text-decoration-none" method="post" href="/logout" @click="selectedIndex = 4">
       <Icon name="logout" class="mr-2 w-7 h-7"
         :class="selectedIndex === 4 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />

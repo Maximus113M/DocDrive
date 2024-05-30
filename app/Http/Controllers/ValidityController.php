@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Validity;
+use App\Models\VisualizationRole;
 use App\Providers\AuthServiceProvider;
 use App\Providers\RoleServiceProvider;
 use App\Rules\SingleYearValidity;
@@ -96,8 +97,9 @@ class ValidityController extends Controller
         if(!Validity::where('year', $validityYear)->exists()) {
             return Inertia::render("PageNotFound");
         }
+        $validity = Validity::where('year', $validityYear)->first();
         $userRole = AuthServiceProvider::getRole();
-        $projects = Validity::where('year', $validityYear)->first()->projects;
+        $projects = $validity->projects;
         $data = array();
         if ($userRole == RoleServiceProvider::INVESTIGATOR || $userRole == RoleServiceProvider::COLLABORATOR) {
             $data = $projects->filter(function ($project) {
@@ -116,11 +118,13 @@ class ValidityController extends Controller
             $data = $projects;
         }
 
-
         return Inertia::render("Projects/Index", [
             "projects" => $data,
             "role" => AuthServiceProvider::getRole(),
-            "isAuthenticated" => AuthServiceProvider::checkAuthenticated()
+            "isAuthenticated" => AuthServiceProvider::checkAuthenticated(),
+            "investigators" => InvestigatorController::getInvestigators(),
+            "validityID" => $validity->id,
+            "visualizationsRole" => VisualizationRole::all()
         ]);
     }
 }
