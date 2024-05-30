@@ -22107,12 +22107,14 @@ __webpack_require__.r(__webpack_exports__);
     __expose();
     var props = __props;
     var modal = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(null);
+    var sendingForm = (0,vue__WEBPACK_IMPORTED_MODULE_0__.ref)(false);
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_1__.useForm)({
       name: null,
-      email: null,
-      password: null
+      email: null
+      //password: null,
     });
     var saveUser = function saveUser() {
+      sendingForm.value = true;
       if (props.userType === 'investigator') {
         form.post(route('investigator.store'), {
           onSuccess: function onSuccess() {
@@ -22130,18 +22132,25 @@ __webpack_require__.r(__webpack_exports__);
     var closeModal = function closeModal() {
       form.name = null;
       form.email = null;
-      form.password = null;
+      //form.password = null;
       form.clearErrors();
       form.reset();
+      sendingForm.value = false;
       var modalBootstrap = bootstrap.Modal.getInstance(modal.value);
       modalBootstrap.hide();
+      showMessage();
+    };
+    var showMessage = function showMessage() {
+      alert("Se ha enviado la contraseña al email registrado.");
     };
     var __returned__ = {
       props: props,
       modal: modal,
+      sendingForm: sendingForm,
       form: form,
       saveUser: saveUser,
       closeModal: closeModal,
+      showMessage: showMessage,
       ref: vue__WEBPACK_IMPORTED_MODULE_0__.ref,
       onBeforeUpdate: vue__WEBPACK_IMPORTED_MODULE_0__.onBeforeUpdate,
       get useForm() {
@@ -24689,25 +24698,11 @@ var _hoisted_13 = {
   key: 0
 };
 var _hoisted_14 = {
-  "class": "mb-3"
-};
-var _hoisted_15 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
-  "for": "password",
-  "class": "font-bold"
-}, "Contraseña", -1 /* HOISTED */);
-var _hoisted_16 = {
-  key: 0
-};
-var _hoisted_17 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
   "class": "row justify-center p-3 mt-5"
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-  type: "submit",
-  "class": "py-2",
-  style: {
-    "background-color": "#39A900",
-    "color": "white"
-  }
-}, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Crear ")])], -1 /* HOISTED */);
+};
+var _hoisted_15 = ["disabled"];
+var _hoisted_16 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Crear ", -1 /* HOISTED */);
+var _hoisted_17 = [_hoisted_16];
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
     ref: "modal",
@@ -24732,14 +24727,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     type: "email",
     "class": "form-control",
     id: "email"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.email]]), $setup.form.errors.email ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.errors.email), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [_hoisted_15, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-    "onUpdate:modelValue": _cache[2] || (_cache[2] = function ($event) {
-      return $setup.form.password = $event;
-    }),
-    type: "password",
-    "class": "form-control",
-    id: "password"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.password]]), $setup.form.errors.password ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_16, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.errors.password), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _hoisted_17], 32 /* NEED_HYDRATION */)])])])], 8 /* PROPS */, _hoisted_1);
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.email]]), $setup.form.errors.email ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_13, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.form.errors.email), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("                        \n                        <div class=\"mb-3\">\n                            <label for=\"password\" class=\"font-bold\">Contraseña</label>\n                            <input v-model=\"form.password\" type=\"password\" class=\"form-control\" id=\"password\">\n                            <div v-if=\"form.errors.password\">{{ form.errors.password }}</div>\n                        </div>"), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_14, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    disabled: $setup.sendingForm,
+    type: "submit",
+    "class": "py-2",
+    style: {
+      "background-color": "#39A900",
+      "color": "white"
+    }
+  }, [].concat(_hoisted_17), 8 /* PROPS */, _hoisted_15)])], 32 /* NEED_HYDRATION */)])])])], 8 /* PROPS */, _hoisted_1);
 }
 
 /***/ }),

@@ -23,13 +23,14 @@
                             <input v-model="form.email" type="email" class="form-control" id="email">
                             <div v-if="form.errors.email">{{ form.errors.email }}</div>
                         </div>
+                        <!--                        
                         <div class="mb-3">
                             <label for="password" class="font-bold">Contraseña</label>
                             <input v-model="form.password" type="password" class="form-control" id="password">
                             <div v-if="form.errors.password">{{ form.errors.password }}</div>
-                        </div>
+                        </div>-->
                         <div class="row justify-center p-3 mt-5">
-                            <button type="submit" class=" py-2"
+                            <button :disabled="sendingForm" type="submit" class=" py-2"
                                 style="background-color: #39A900; color: white; "><strong>Crear
                                 </strong></button>
                         </div>
@@ -44,20 +45,23 @@
 import { ref, onBeforeUpdate } from "vue";
 import { useForm } from '@inertiajs/inertia-vue3'
 
+
 const props = defineProps({
     userType: { type: String, required: true },
     modalId: { type: String, required: true }
 })
 
 const modal = ref(null)
+const sendingForm = ref(false)
 
 const form = useForm({
     name: null,
     email: null,
-    password: null,
+    //password: null,
 })
 
 const saveUser = () => {
+    sendingForm.value = true;
     if (props.userType === 'investigator') {
         form.post(route('investigator.store'), {
             onSuccess: () => closeModal()
@@ -72,11 +76,17 @@ const saveUser = () => {
 const closeModal = () => {
     form.name = null;
     form.email = null;
-    form.password = null;
+    //form.password = null;
     form.clearErrors()
     form.reset()
+    sendingForm.value = false;
     const modalBootstrap = bootstrap.Modal.getInstance(modal.value)
     modalBootstrap.hide()
+    showMessage()
+}
+
+const showMessage = () => {
+    alert("Se ha enviado la contraseña al email registrado.")
 }
 
 </script>

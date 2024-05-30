@@ -2,11 +2,13 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\VerifyEmail;
 use App\Models\User;
 use App\Providers\AuthServiceProvider;
 use App\Providers\RoleServiceProvider;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password as RulesPassword;
 use Inertia\Inertia;
@@ -41,22 +43,26 @@ class CollaboratorController extends Controller
         $validator = Validator::make(request()->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', RulesPassword::defaults()],
+            //'password' => ['required', RulesPassword::defaults()],
         ]);
 
         if ($validator->fails()) {
             return redirect()->route("collaborator.index")->withErrors($validator)->withInput();
         }
 
+        $password = AuthServiceProvider::generatePassword();
+
         $user = new User();
         $user->name = request("name");
         $user->email = request("email");
-        $user->password = Hash::make(request("password"));
+        $user->password = Hash::make($password);
         $user->role_id = RoleServiceProvider::COLLABORATOR_ID;
 
         $user->save();
 
         $user->assignRole(RoleServiceProvider::COLLABORATOR);
+
+        Mail::to($user)->send(new VerifyEmail($password, $user));
 
         return redirect()->route("collaborator.index")->with("message", "¡El colaborador se ha creado correctamente!");
     }

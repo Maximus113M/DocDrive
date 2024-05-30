@@ -47,4 +47,20 @@ class AuthServiceProvider extends ServiceProvider
     {
         return Auth::user()->role->name ?? "guest";
     }
+
+    /**
+     * Generar una contraseña aleatoria
+     */
+    static public function generatePassword(): string
+    {
+        $characters = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        $randomPwd = '';
+
+        for ($i = 0; $i < 10; $i++) {
+            $index = rand(0, strlen($characters) - 1);
+            $randomPwd .= $characters[$index];
+        }
+
+        return $randomPwd;
+    }
 }
