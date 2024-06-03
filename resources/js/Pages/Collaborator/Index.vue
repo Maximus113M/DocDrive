@@ -1,7 +1,7 @@
 <script setup>
 import AuthLayout from '@/Layouts/Authenticated.vue';
-import CreateUserModal from '@/Shared/CreateUserModal.vue';
-import Table from '@/Shared/UsersTable.vue'
+import CreateUserModal from '@/Shared/users/CreateUserModal.vue';
+import Table from '@/Shared/users/UsersTable.vue'
 import Icon from '@/Shared/Icon.vue';
 
 defineProps({
@@ -25,7 +25,7 @@ defineProps({
                 </button>
             </div>
 
-            <Table :users="collaborators" :isCollaborator="true" />
+            <Table :users="collaborators" :isCollaborator="true" tableType="collaborator"/>
         </div>
 
     </AuthLayout>

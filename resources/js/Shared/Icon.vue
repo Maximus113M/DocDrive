@@ -109,10 +109,17 @@
 
 
   <!-- ADD -->
-  <svg v-else-if="name === 'add'"  xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px"
+  <svg v-else-if="name === 'add'" xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px"
     fill="#FFFFFF">
     <path d="M440.39-440.39H185.87v-79.22h254.52V-774.7h79.22v255.09H774.7v79.22H519.61v254.52h-79.22v-254.52Z" />
   </svg>
+  <!-- SEARCH -->
+  <svg v-else-if="name === 'search'" xmlns="http://www.w3.org/2000/svg" height="25px" viewBox="0 -960 960 960"
+    width="25px" fill="#999999">
+    <path
+      d="M784-120 532-372q-30 24-69 38t-83 14q-109 0-184.5-75.5T120-580q0-109 75.5-184.5T380-840q109 0 184.5 75.5T640-580q0 44-14 83t-38 69l252 252-56 56ZM380-400q75 0 127.5-52.5T560-580q0-75-52.5-127.5T380-760q-75 0-127.5 52.5T200-580q0 75 52.5 127.5T380-400Z" />
+  </svg>
+
 </template>
 
 <script>

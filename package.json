@@ -27,6 +27,8 @@
     "dependencies": {
         "datatables.net-bs5": "^2.0.7",
         "datatables.net-responsive": "^3.0.2",
-        "datatables.net-vue3": "^3.0.1"
+        "datatables.net-vue3": "^3.0.1",
+        "sweetalert2": "^11.11.0",
+        "vue3-easy-data-table": "^1.5.47"
     }
 }
