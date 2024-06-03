@@ -25,7 +25,7 @@
             </button>
 
             <div v-for="project in projects">
-                <Card :id="project.id" :year="project.year" />
+                <Card :project="project"/>
             </div>
         </div>
     </div>
@@ -107,7 +107,7 @@
 </template>
 
 <script setup>
-import Card from '@/Pages/Projects/Components/CardProjectOld.vue';
+import Card from '@/Pages/Projects/Components/CardProject.vue';
 import { useForm, usePage } from '@inertiajs/inertia-vue3'
 import { ref } from 'vue';
 

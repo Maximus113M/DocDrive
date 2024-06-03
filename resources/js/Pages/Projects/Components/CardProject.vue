@@ -1,23 +1,49 @@
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link, usePage } from '@inertiajs/inertia-vue3';
 import FoldersDropdown from '@/Shared/FoldersDropdown.vue';
 import BreezeDropdownLink from '@/Components/DropdownLink.vue';
 import Icon from '@/Shared/Icon.vue';
+import { onMounted, ref } from 'vue';
 
-defineProps(['year', 'id']);
+const { project } = defineProps(['project']);
 
 const onClicks = (event) => {
     event.preventDefault();
 }
+
+const isAssociatedUser = ref(null);
+
+const authUser = usePage().props.value.auth.user ?? null;
+
+const verifiyAssociatedUser = () => {
+    if (authUser == null) {
+        return false;
+    }
+    for (let index = 0; index < project.users.length; index++) {
+        const user = project.users[index];
+        if (user.id == authUser.id) {
+            return true;            
+        } else {
+            continue;
+        }
+    }
+    return false;
+}
+
+onMounted(() => {
+    isAssociatedUser.value = verifiyAssociatedUser()
+})
 
 </script>
 
 <template>
     <!-- PROJECT DESIGN -->
     <div class="col position-relative" style="max-width: 300px;">
-        <Link :href="route('validity.projects', { 'validityYear': year })" class="text-decoration-none">
+      
+        <Link class="text-decoration-none">
         <div class="d-flex flex-column align-items-center border-3 rounded-4 py-1 bg-white">
-            <div class="position-absolute top-1 end-1" @click="onClicks">
+            <div v-if="authUser != null && ( authUser.role.name == 'admin'
+                || (authUser.role.name == 'investigator' && isAssociatedUser) )" class="position-absolute top-1 end-1" @click="onClicks">
                 <FoldersDropdown align="right" width="45">
                     <template #trigger>
                         <span class="inline-flex rounded-md">
@@ -47,11 +73,12 @@ const onClicks = (event) => {
             </svg>
 
             <div class="validity-font">
-                Vigencia
+                Proyecto
             </div>
-            <h3 class="text-black"><strong>{{ year }}</strong></h3>
+            <h5 class="text-black"><strong>{{ project.name }}</strong></h5>
         </div>
         </Link>
+        <p v-if="project.isIncomplete && isAssociatedUser" class="text-xs border-black border-1 bg-yellow-500 color-black text-center">¡Datos del proyecto incompleto!</p>
     </div>
     <!-- PROJECT DESIGN -->
 </template>
