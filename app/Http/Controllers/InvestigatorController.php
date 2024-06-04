@@ -86,19 +86,42 @@ class InvestigatorController extends Controller
      * Actualiza un Investigador
      */
     public function update($userID)
-    {
-        $this->validate(request(), [
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => ['required', Password::defaults()],
-        ]);
+    {   
+        $validator;
+        $password= null;
+        if(request("password")){
+            $validator = Validator::make(request()->all(), [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'document' => 'required|string|max:50',
+                'password' => ['required', Password::defaults()],
+            ]);
+            $password= Hash::make(request("password"));
+        }else{
+            $validator = Validator::make(request()->all(), [
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'document' => 'required|string|max:50',
+            ]);
+        }
+
+        if ($validator->fails()) {
+            return redirect()->route("investigator.index")->withErrors($validator)->withInput();
+        }
 
         $user = User::find($userID);
+        if(!$password){
+            $password = $user->password;
+        }
+        
+        error_log($password);
 
         $user->update([
             'name' => request("name"),
+            'document' => request("document"),
+            'phone' => request("phone"),    
             'email' => request("email"),
-            'password' => Hash::make(request("password")),
+            'password' => $password,
         ]);
 
         return redirect()->route("investigator.index")->with("message", "¡El investigador se ha actualizado correctamente!");
@@ -110,17 +133,13 @@ class InvestigatorController extends Controller
      */
     public function destroy($userID)
     {
-        try {
-            error_log('Enter in Investigator/Destroy');
-            
-            $user = User::find($userID);
+        error_log('Enter in Investigator/Destroy');
+        
+        $user = User::find($userID);
 
-            $user->delete();
+        $user->delete();
 
-            return redirect()->route("investigator.index")->with("successDelete", true);
-        } catch (\Throwable $th) {
-            //throw $th;
-        }
+        return redirect()->route("investigator.index")->with("successDelete", true);
     }
 
 }
