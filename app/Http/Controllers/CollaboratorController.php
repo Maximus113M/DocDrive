@@ -22,7 +22,7 @@ class CollaboratorController extends Controller
     public function index()
     {
         $query = DB::table("users AS u")
-            ->select('u.name AS name', 'u.id AS id', 'u.email AS email')
+            ->select('u.name AS name', 'u.id AS id', 'u.document AS document', 'u.phone AS phone', 'u.email AS email')
             ->join("roles AS r", "u.role_id", "=", "r.id")
             ->where("r.name", "=", RoleServiceProvider::COLLABORATOR)
             ->get();
@@ -52,17 +52,18 @@ class CollaboratorController extends Controller
 
         $password = AuthServiceProvider::generatePassword();
 
-        $user = new User();
-        $user->name = request("name");
-        $user->email = request("email");
-        $user->password = Hash::make($password);
-        $user->role_id = RoleServiceProvider::COLLABORATOR_ID;
-
-        $user->save();
+        $user = User::create([
+            'name' =>  request("name"),
+            'document' => request("document"),
+            'phone' => request("phone"),    
+            'email' => request("email"),
+            'password' => Hash::make($password),
+            'role_id' => RoleServiceProvider::COLLABORATOR_ID,
+        ]);
 
         $user->assignRole(RoleServiceProvider::COLLABORATOR);
 
-        Mail::to($user)->send(new VerifyEmail($password, $user));
+        //Mail::to($user)->send(new VerifyEmail($password, $user));
 
         return redirect()->route("collaborator.index")->with("message", "¡El colaborador se ha creado correctamente!");
     }

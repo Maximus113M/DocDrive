@@ -69,7 +69,6 @@ import BreezeNavLink from '@/Components/NavLink.vue';
 
 defineProps({
   role: String,
-  isGuest: Boolean,
   isSideMenu: Boolean
 })
 

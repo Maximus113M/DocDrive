@@ -80,6 +80,15 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // RUTAS PROTEGIDAS EN COMUN DEL ADMIN Y EL INVESTIGADOR
 Route::middleware(['auth', 'role:admin|investigator'])->group(function () {
 
+      // RUTA PARA EDITAR UN INVESTIGADOR
+      Route::put('/investigator/{userID}/update', [InvestigatorController::class, 'update'])
+      ->name('investigator.update');
+
+      // RUTA PARA EDITAR UN COLABORADOR
+      Route::put('/investigator/{userID}/update', [InvestigatorController::class, 'update'])
+      ->name('investigator.update');
+
+      
     // RUTA PARA MOSTRAR LOS COLABORADORES
     Route::get('/collaborator/index', [CollaboratorController::class, 'index'])
         ->name('collaborator.index');

@@ -1119,6 +1119,9 @@ select{
     max-width: 1536px;
   }
 }
+.static{
+  position: static;
+}
 .fixed{
   position: fixed;
 }
@@ -1133,6 +1136,9 @@ select{
 }
 .end-1{
   inset-inline-end: 0.25rem;
+}
+.end-2{
+  inset-inline-end: 0.5rem;
 }
 .end-3{
   inset-inline-end: 0.75rem;
@@ -1154,6 +1160,9 @@ select{
 }
 .top-1{
   top: 0.25rem;
+}
+.top-2{
+  top: 0.5rem;
 }
 .z-0{
   z-index: 0;
@@ -1419,6 +1428,9 @@ select{
 .items-center{
   align-items: center;
 }
+.justify-start{
+  justify-content: flex-start;
+}
 .justify-end{
   justify-content: flex-end;
 }
@@ -1454,6 +1466,9 @@ select{
 }
 .rounded{
   border-radius: 0.25rem;
+}
+.rounded-2xl{
+  border-radius: 1rem;
 }
 .rounded-3xl{
   border-radius: 1.5rem;
@@ -1666,11 +1681,17 @@ select{
 .pl-0{
   padding-left: 0px;
 }
+.pl-1{
+  padding-left: 0.25rem;
+}
 .pl-3{
   padding-left: 0.75rem;
 }
 .pr-1{
   padding-right: 0.25rem;
+}
+.pr-3{
+  padding-right: 0.75rem;
 }
 .pr-4{
   padding-right: 1rem;
