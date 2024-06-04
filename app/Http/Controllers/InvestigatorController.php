@@ -6,7 +6,7 @@ use App\Mail\VerifyEmail;
 use App\Models\User;
 use App\Providers\AuthServiceProvider;
 use App\Providers\RoleServiceProvider;
-
+use App\Rules\SingleEmailUser;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -77,7 +77,7 @@ class InvestigatorController extends Controller
 
         $user->assignRole(RoleServiceProvider::INVESTIGATOR);
 
-        //Mail::to($user)->send(new VerifyEmail($password, $user));
+        Mail::to($user)->send(new VerifyEmail($password, $user));
 
         return Redirect::route("investigator.index")->with("message", "¡El investigador se ha creado correctamente!");
     }
@@ -87,12 +87,11 @@ class InvestigatorController extends Controller
      */
     public function update($userID)
     {   
-        $validator;
         $password= null;
         if(request("password")){
             $validator = Validator::make(request()->all(), [
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
+                'email' => ['required','string','email','max:255',new SingleEmailUser($userID)],
                 'document' => 'required|string|max:50',
                 'password' => ['required', Password::defaults()],
             ]);
@@ -100,7 +99,7 @@ class InvestigatorController extends Controller
         }else{
             $validator = Validator::make(request()->all(), [
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users',
+                'email' => ['required','string','email','max:255',new SingleEmailUser($userID)],
                 'document' => 'required|string|max:50',
             ]);
         }
@@ -116,13 +115,13 @@ class InvestigatorController extends Controller
         
         error_log($password);
 
-        $user->update([
-            'name' => request("name"),
-            'document' => request("document"),
-            'phone' => request("phone"),    
-            'email' => request("email"),
-            'password' => $password,
-        ]);
+    
+        $user->name = request("name");
+        $user->document = request("document");
+        $user->phone = request("phone");
+        $user->email = request("email");
+        $user->password = $password;
+        $user->update();
 
         return redirect()->route("investigator.index")->with("message", "¡El investigador se ha actualizado correctamente!");
     }

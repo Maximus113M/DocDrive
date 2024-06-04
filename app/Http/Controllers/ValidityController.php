@@ -79,7 +79,7 @@ class ValidityController extends Controller
         $validity = Validity::find($validityID);
 
         if ($validity->projects->count() > 0) {
-            return redirect()->route("validity.index")->with("message", "¡No se puede eliminar una vigencia con proyectos asociados!");
+            return redirect()->route("validity.index")->with("errorMessage", "¡No se puede eliminar una vigencia con proyectos asociados!");
         }
 
         $validity->delete();
@@ -122,8 +122,6 @@ class ValidityController extends Controller
         } else {
             $data = $projects;
         }
-
-
 
         return Inertia::render("Projects/Index", [
             "projects" => $data,

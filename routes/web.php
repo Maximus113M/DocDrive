@@ -1,4 +1,5 @@
 <?php
+
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\CollaboratorController;
 use App\Http\Controllers\InvestigatorController;
@@ -64,7 +65,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->name('investigator.index');
 
     // RUTA PARA CREAR UN INVESTIGADOR
-    Route::post('/investigator/store', [InvestigatorController::class,'store'])
+    Route::post('/investigator/store', [InvestigatorController::class, 'store'])
         ->name('investigator.store');
 
     // RUTA PARA ELIMINAR UN INVESTIGADOR
@@ -80,26 +81,35 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 // RUTAS PROTEGIDAS EN COMUN DEL ADMIN Y EL INVESTIGADOR
 Route::middleware(['auth', 'role:admin|investigator'])->group(function () {
 
-      // RUTA PARA EDITAR UN INVESTIGADOR
-      Route::put('/investigator/{userID}/update', [InvestigatorController::class, 'update'])
-      ->name('investigator.update');
+    // RUTA PARA EDITAR UN INVESTIGADOR
+    Route::put('/investigator/{userID}/update', [InvestigatorController::class, 'update'])
+        ->name('investigator.update');
 
-      // RUTA PARA EDITAR UN COLABORADOR
-      Route::put('/investigator/{userID}/update', [InvestigatorController::class, 'update'])
-      ->name('investigator.update');
+    // RUTA PARA EDITAR UN COLABORADOR
+    Route::put('/collaborator/{userID}/update', [CollaboratorController::class, 'update'])
+        ->name('collaborator.update');
 
-      
+
     // RUTA PARA MOSTRAR LOS COLABORADORES
     Route::get('/collaborator/index', [CollaboratorController::class, 'index'])
         ->name('collaborator.index');
 
     // RUTA PARA CREAR UN COLABORADOR
-    Route::post('/collaborator/store', [CollaboratorController::class,'store'])
+    Route::post('/collaborator/store', [CollaboratorController::class, 'store'])
         ->name('collaborator.store');
 
     // RUTA PARA ELIMINAR UN COLABORADOR
     Route::delete('/collaborator/{userID}/destroy', [CollaboratorController::class, 'destroy'])
         ->name('collaborator.destroy');
+
+    // RUTA PARA ACTUALIZAR UN PROYECTO
+    Route::put('/project/{projectID}/update', [ProjectController::class, 'update'])
+        ->name('project.update');
+
+    // RUTA PARA ELIMINAR UN PROYECTO
+    Route::delete('/project/{projectID}/destroy', [ProjectController::class, 'destroy'])
+        ->name('project.destroy');
+
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

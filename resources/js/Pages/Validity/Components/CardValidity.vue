@@ -3,6 +3,7 @@ import { Link, usePage } from '@inertiajs/inertia-vue3';
 import FoldersDropdown from '@/Shared/FoldersDropdown.vue';
 import BreezeDropdownLink from '@/Components/DropdownLink.vue';
 import { useForm } from '@inertiajs/inertia-vue3'
+import { CustomAlertsService } from '@/services/customAlerts';
 
 const props = defineProps(['year', 'id']);
 
@@ -18,9 +19,26 @@ const openModal = () => {
 }
 
 const openModalDelete = () => {
-    const modal = document.getElementById("modal-delete-" + props.id)
-    const modalBootstrap = new bootstrap.Modal(modal)
-    modalBootstrap.show()
+    CustomAlertsService.deleteConfirmAlert({
+        title: 'Eliminar vigencia',
+        text: '¿Deseas eliminar la vigencia seleccionado? Esta acción no se puede revertir'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.delete(route("validity.destroy", { "validityID": props.id }), {
+                onSuccess: () => {
+                    showMessage()
+                },
+                onError: () => {
+                    CustomAlertsService.generalAlert({
+                        title: 'Error',
+                        text: `Ha ocurrido un error al eliminar la vigencia`,
+                        icon: "error",
+                        isToast: true,
+                    })
+                }
+            })
+        }
+    })
 }
 
 const updateValidity = () => {
@@ -29,37 +47,28 @@ const updateValidity = () => {
     })
 }
 
-const closeModalDelete = () => {
-    const modal = document.getElementById("modal-delete-" + props.id)
-    if (modal) {
-        const modalBootstrap = bootstrap.Modal.getInstance(modal)
-        modalBootstrap.hide()
-    }
-
-}
-
 const closeModal = () => {
     const modal = document.getElementById("modal-" + props.id)
     const modalBootstrap = bootstrap.Modal.getInstance(modal)
     modalBootstrap.hide()
 }
 
-const deleteValidity = () => {
-    closeModalDelete()
-    form.delete(route("validity.destroy", { "validityID": props.id }), {
-        onSuccess: () => {
-            showErrorMessage()
-        },
-    })
 
-
-}
-
-const showErrorMessage = () => {
-    const flashMessage = usePage().props.value.flash.message;
+const showMessage = () => {
+    const flashMessage = usePage().props.value.flash.message
+    const errorMessage = usePage().props.value.flash.errorMessage
 
     if (flashMessage) {
-        alert(flashMessage);
+        CustomAlertsService.successConfirmAlert({
+            title: flashMessage,
+        })
+    } else if (errorMessage) {
+        CustomAlertsService.generalAlert({
+            title: 'Error',
+            text: errorMessage,
+            icon: "error",
+            isToast: true,
+        })
     }
 }
 
@@ -74,7 +83,8 @@ const onClicks = (event) => {
     <div class="col position-relative" style="max-width: 300px;">
         <Link :href="route('validity.projects', { 'validityYear': year })" class="text-decoration-none">
         <div class="d-flex flex-column align-items-center border-3 rounded-4 py-1 bg-white">
-            <div v-if="$page.props.auth.user != null && $page.props.auth.user.role.name == 'admin'" class="position-absolute top-1 end-1" @click="onClicks">
+            <div v-if="$page.props.auth.user != null && $page.props.auth.user.role.name == 'admin'"
+                class="position-absolute top-1 end-1" @click="onClicks">
                 <FoldersDropdown align="right" width="45">
                     <template #trigger>
                         <span class="inline-flex rounded-md">
@@ -149,27 +159,7 @@ const onClicks = (event) => {
 
 
 
-    <!-- MODAL ELIMINAR-->
-    <div class="modal fade" :id="`modal-delete-${id}`" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" style="width: 350px; height: 600px;">
-            <div class="modal-content position-relative p-3" style="max-height: 400px;">
-                <div class="d-flex flex-row justify-center px-3">
-                    <h4 class="my-3"><strong>Eliminar vigencia</strong></h4>
 
-                    <button type="button" class="btn-close position-absolute top-1 end-3" data-bs-dismiss="modal"
-                        aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    <p>Confirmar eliminación de la vigencia</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
-                    <button @click="deleteValidity" type="button" class="btn btn-primary">Eliminar</button>
-                </div>
-            </div>
-        </div>
-    </div>
 </template>
 
 <style scoped>
