@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Rules\ValidityEndYearProject;
+use App\Rules\ValidityYearProject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -40,6 +42,8 @@ class ProjectController extends Controller
     }
 
     /**
+     @TODO: FALTA IMPLEMENTAR EL CAMPO TARGET DE PROJECT
+     * 
      * Actualizar un projecto
      */
     public function update($projectID)
@@ -52,12 +56,10 @@ class ProjectController extends Controller
         $validator = Validator::make(request()->all(), [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'startDate ' => 'required',
-            'endDate' => 'required',
-            'target' => 'required'
+            'startDate' => ['required', new ValidityYearProject($project->validity->first()->year)],
+            'endDate' => ['required', new ValidityEndYearProject(request("startDate"))],
+            //'target' => 'required'
         ]);
-
-
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
@@ -82,6 +84,13 @@ class ProjectController extends Controller
         if (!in_array(Auth::user()->id, $usersID)) {
             abort(403, "No tienes persmisos para estar aqui");
         }
+        if ($project->folders->count() > 0 || $project->documents->count() > 0) {
+            return redirect()->back()->with("errorMessage", "¡No se puede eliminar un proyecto con documentos o carpetas asociados!");
+        }
+        if ($project->users->count() > 0) {
+            return redirect()->back()->with("errorMessage", "¡No se puede eliminar un proyecto con usuarios asociados!");
+        }
+
         $project->delete();
 
         return redirect()->back()->with("message", "Proyecto eliminado.");

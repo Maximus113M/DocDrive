@@ -25,7 +25,7 @@
             </button>
 
             <div v-for="project in projects">
-                <Card :project="project"/>
+                <Card :project="project" />
             </div>
         </div>
     </div>
@@ -88,7 +88,8 @@
                             <label class="font-bold">Elige rol de visualización</label>
                             <br>
                             <select v-model="form.visualizationRoleSelected">
-                                <option v-for="vRole in visualizationsRole" :value="vRole.id" :key="vRole.id">{{ nameRoleVisualization[vRole.name] }}</option>
+                                <option v-for="vRole in visualizationsRole" :value="vRole.id" :key="vRole.id">{{
+                                    nameRoleVisualization[vRole.name] }}</option>
                             </select>
                         </div>
 
@@ -108,6 +109,7 @@
 
 <script setup>
 import Card from '@/Pages/Projects/Components/CardProject.vue';
+import { CustomAlertsService } from '@/services/customAlerts';
 import { useForm, usePage } from '@inertiajs/inertia-vue3'
 import { ref } from 'vue';
 
@@ -123,9 +125,9 @@ const form = useForm({
 })
 
 const nameRoleVisualization = {
-    "private" : "Privado",
-    "public" : "Público",
-    "general-public" : "Publico en general"
+    "private": "Privado",
+    "public": "Público",
+    "general-public": "Publico en general"
 }
 
 const modal = ref(null)
@@ -150,7 +152,9 @@ const saveProject = () => {
 }
 
 const showSuccessMessage = () => {
-    alert(usePage().props.value.flash.message)
+    CustomAlertsService.successConfirmAlert({
+        title: usePage().props.value.flash.message,
+    })
 }
 
 const closeModal = () => {

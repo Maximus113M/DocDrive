@@ -1164,6 +1164,9 @@ select{
 .top-2{
   top: 0.5rem;
 }
+.right-16{
+  right: 4rem;
+}
 .z-0{
   z-index: 0;
 }
@@ -1175,6 +1178,9 @@ select{
 }
 .float-right{
   float: right;
+}
+.float-left{
+  float: left;
 }
 .m-auto{
   margin: auto;
@@ -1404,6 +1410,9 @@ select{
 }
 .cursor-pointer{
   cursor: pointer;
+}
+.cursor-auto{
+  cursor: auto;
 }
 .select-none{
   -webkit-user-select: none;
