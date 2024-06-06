@@ -32,8 +32,6 @@ const verifiyAssociatedUser = () => {
         const user = project.users[index];
         if (user.id == authUser.id) {
             return true;
-        } else {
-            continue;
         }
     }
     return false;
@@ -110,7 +108,7 @@ onMounted(() => {
     <!-- PROJECT DESIGN -->
     <div class="col position-relative" style="max-width: 300px;">
 
-        <Link class="text-decoration-none" >
+        <Link class="text-decoration-none">
 
         <div class="d-flex flex-column align-items-center border-3 rounded-4 py-1 bg-white">
             <div class="cursor-auto absolute left-0 ml-2" data-toggle="tooltip" data-placement="top"

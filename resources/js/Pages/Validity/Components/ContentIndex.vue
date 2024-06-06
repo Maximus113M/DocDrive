@@ -1,21 +1,39 @@
 <script setup>
 import Card from '@/Pages/Validity/Components/CardValidity.vue';
-import FoldersDropdown from '@/Shared/FoldersDropdown.vue';
-import BreezeDropdownLink from '@/Components/DropdownLink.vue';
+import Icon from '@/Shared/Icon.vue';
 import { useForm } from '@inertiajs/inertia-vue3'
-import { ref } from 'vue';
+import { ref, onUpdated, onMounted, watch } from 'vue';
 
+
+const validityList = ref([])
+const searchValue = ref('')
 
 const modal = ref(null)
-
 const form = useForm({
     year: null,
 })
 
-defineProps({
-    validities: Object,
+const props = defineProps({
+    validities: { type: Array, required: true },
     isAuthenticated: Boolean,
     role: String,
+});
+
+onMounted(() => {
+    validityList.value = props.validities;
+});
+onUpdated(() => {
+    if (searchValue.value.length === 0) {
+        validityList.value = props.validities.sort((a, b) => a.year - b.year);
+    }
+});
+
+watch(searchValue, (newValue, oldValue) => {
+    if (newValue.length > 0) {
+        validityList.value = props.validities.filter((validity) => validity.year == searchValue.value);
+    } else {
+        validityList.value = props.validities.sort((a, b) => a.year - b.year);
+    }
 })
 
 
@@ -39,13 +57,16 @@ const onClicks = (event) => {
 <template>
     <div class="p-5 relative">
         <!-- Buscador -->
-        <div class="absolute top-1 right-20">
-            
+        <div class="absolute top-3 right-12">
+            <div class="flex pl-1 pr-3 py-2 rounded-2xl border-1 border-gray-300">
+                <Icon name="search" />
+                <input type="text" v-model="searchValue" style="all: unset" placeholder="Buscar">
+            </div>
         </div>
 
-        <div class="pt-3 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
+        <div class="pt-4 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
 
-            <button v-if="role == 'admin' && isAuthenticated" class="col" data-bs-toggle="modal"
+            <button v-if="props.role == 'admin' && props.isAuthenticated" class="col" data-bs-toggle="modal"
                 data-bs-target="#modalSaveValidity">
                 <div class="folder border-3 rounded-4 py-3 bg-white">
                     <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
@@ -57,11 +78,11 @@ const onClicks = (event) => {
                 </div>
             </button>
 
-            <div class="mt-auto mb-auto" v-if="validities.length < 1">
+            <div class="mt-auto mb-auto" v-if="validityList.length < 1">
                 <h1>No hay vigencias</h1>
             </div>
 
-            <div v-for="v in validities" :key="v.id">
+            <div v-for="v in validityList" :key="v.id">
                 <Card :id="v.id" :year="v.year" />
             </div>
         </div>
