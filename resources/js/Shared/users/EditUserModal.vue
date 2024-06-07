@@ -16,27 +16,27 @@
                         <div class="mb-3">
                             <label for="name" class="font-bold">Nombre</label>
                             <input v-model="form.name" type="text" class="form-control" id="name" >
-                            <div v-if="form.errors.name">{{ form.errors.name }}</div>
+                            <div class="text-red-400" v-if="form.errors.name">{{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}</div>
                         </div>
                         <div class="mb-3">
                             <label for="email" class="font-bold">Email</label>
                             <input v-model="form.email" type="email" class="form-control" id="email">
-                            <div v-if="form.errors.email">{{ form.errors.email }}</div>
+                            <div class="text-red-400" v-if="form.errors.email">{{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}</div>
                         </div>
                         <div class="mb-3">
                             <label for="document" class="font-bold">Documento</label>
                             <input v-model.number="form.document" type="number" class="form-control" id="document" >
-                            <div v-if="form.errors.document">{{ form.errors.document }}</div>
+                            <div class="text-red-400" v-if="form.errors.document">{{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}</div>
                         </div>
                         <div class="mb-3">
                             <label for="phone" class="font-bold">Teléfono</label>
                             <input v-model.number="form.phone" type="number" class="form-control" id="phone" :placeholder="currentUser? currentUser.phone : ''" >
-                            <div v-if="form.errors.phone">{{ form.errors.phone }}</div>
+                            <div class="text-red-400" v-if="form.errors.phone">{{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}</div>
                         </div>
                         <div class="mb-3">
                             <label for="password" class="font-bold">Contraseña</label>
                             <input v-model="form.password" type="text" class="form-control" id="password">
-                            <div v-if="form.errors.password">{{ form.errors.password }}</div>
+                            <div class="text-red-400" v-if="form.errors.password">{{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Password) }}</div>
                         </div>
                         <div class="row justify-center p-3 mt-5">
                             <button :disabled="form.processing" type="submit" class="btn py-2 text-white"
@@ -55,6 +55,7 @@
 import { onBeforeUpdate, ref } from "vue";
 import { useForm } from '@inertiajs/inertia-vue3';
 import { CustomAlertsService } from "@/services/customAlerts";
+import { AppFunctions } from "@/core/appFunctions";
 import { UserModel } from "@/models/userModel";
 
 const props = defineProps({
@@ -74,6 +75,7 @@ const form = useForm({
     email: null,
     document: null,
     phone: null,
+    password: null,
 });
 
 const emit= defineEmits(["loadedModal"])

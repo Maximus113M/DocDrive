@@ -35,11 +35,11 @@
 
     <div ref="modal" class="modal fade" id="modalSaveProject" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-lg">
             <div class="modal-content position-relative p-3" style="max-height: 800px;">
                 <div class="d-flex flex-row justify-center px-3">
-                    <h4 class="my-3" style="color: #39A900;"><strong>{{
-                        'Nuevo Proyecto' }} </strong>
+                    <h4 class="my-3" style="color: #39A900;">
+                        <strong> Nuevo Proyecto </strong>
                     </h4>
 
                     <button type="button" class="btn-close position-absolute top-1 end-3" data-bs-dismiss="modal"
@@ -47,22 +47,24 @@
                 </div>
                 <div class="modal-body px-3">
                     <form @submit.prevent="saveProject">
-                        <div class="mb-3">
-                            <label for="name" class="font-bold">Nombre</label>
-                            <input v-model="form.name" type="text" class="form-control" id="name">
-                            <div v-if="form.errors.name">{{ form.errors.name }}</div>
-                        </div>
-                        <!--
-                        <div class="mb-3">
-                            <label for="startDate" class="font-bold">Fecha Inicio</label>
-                            <input v-model="form.startDate" type="date" class="form-control" id="startDate">
-                            <div v-if="form.errors.startDate">{{ form.errors.startDate }}</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="endDate" class="font-bold">Fecha Fin</label>
-                            <input v-model="form.endDate" type="date" class="form-control" id="endDate">
-                            <div v-if="form.errors.endDate">{{ form.errors.endDate }}</div>
-                        </div>
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="name" class="font-bold">Nombre</label>
+                                <input v-model="form.name" type="text" class="form-control" id="name">
+                                <div v-if="form.errors.name">{{ form.errors.name }}</div>
+                            </div>
+
+                            <div class="col-md-4 mb-3">
+                                <label for="startDate" class="font-bold">Fecha Inicio</label>
+                                <input v-model="form.startDate" type="date" class="form-control" id="startDate">
+                                <div v-if="form.errors.startDate">{{ form.errors.startDate }}</div>
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="endDate" class="font-bold">Fecha Fin</label>
+                                <input v-model="form.endDate" type="date" class="form-control" id="endDate">
+                                <div v-if="form.errors.endDate">{{ form.errors.endDate }}</div>
+                            </div>
+                            <!-- 
                         <div class="mb-3">
                             <label for="target" class="font-bold">Objetivos</label>
                             <input v-model="form.target" type="text" class="form-control" id="target">
@@ -75,22 +77,23 @@
                         </div>
                         -->
 
-                        <div class="mb-3">
-                            <label class="font-bold">Asociar Investigadores</label>
-                            <div v-for="investigator in investigators" :key="investigator.id">
-                                <input class="mr-2" type="checkbox" :id="'checkbox-' + investigator.id"
-                                    v-model="form.investigatorsID" :value="investigator.id">
-                                <label :for="'checkbox-' + investigator.id">{{ investigator.name }}</label>
+                            <div class="col-md-4 mb-3">
+                                <label class="font-bold">Asociar Investigadores</label>
+                                <div v-for="investigator in investigators" :key="investigator.id">
+                                    <input class="mr-2" type="checkbox" :id="'checkbox-' + investigator.id"
+                                        v-model="form.investigatorsID" :value="investigator.id">
+                                    <label :for="'checkbox-' + investigator.id">{{ investigator.name }}</label>
+                                </div>
                             </div>
-                        </div>
 
-                        <div class="mb-3">
-                            <label class="font-bold">Elige rol de visualización</label>
-                            <br>
-                            <select v-model="form.visualizationRoleSelected">
-                                <option v-for="vRole in visualizationsRole" :value="vRole.id" :key="vRole.id">{{
-                                    nameRoleVisualization[vRole.name] }}</option>
-                            </select>
+                            <div class="col-md-4 mb-3">
+                                <label class="font-bold">Elige rol de visualización</label>
+                                <br>
+                                <select v-model="form.visualizationRoleSelected">
+                                    <option v-for="vRole in visualizationsRole" :value="vRole.id" :key="vRole.id">{{
+                                        nameRoleVisualization[vRole.name] }}</option>
+                                </select>
+                            </div>
                         </div>
 
                         <div class="row justify-center p-3 mt-5">

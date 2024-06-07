@@ -32,8 +32,6 @@ const verifiyAssociatedUser = () => {
         const user = project.users[index];
         if (user.id == authUser.id) {
             return true;
-        } else {
-            continue;
         }
     }
     return false;

@@ -45,7 +45,7 @@ class CollaboratorController extends Controller
         $validator = Validator::make(request()->all(), [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
-            //'password' => ['required', RulesPassword::defaults()],
+            'document' => 'required|string|max:50',
         ]);
 
         if ($validator->fails()) {

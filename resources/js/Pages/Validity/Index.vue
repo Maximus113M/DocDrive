@@ -14,8 +14,7 @@ defineProps({
 </script>
 
 <template>
-
-
+    
     <AuthLayout :role="role">
         <ContentIndex :message="message" :isAuthenticated="isAuthenticated" :validities="validities" :role="role" #content/> 
     </AuthLayout>
