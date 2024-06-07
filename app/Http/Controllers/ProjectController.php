@@ -3,11 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Providers\AuthServiceProvider;
+use App\Providers\RoleServiceProvider;
 use App\Rules\ValidityEndYearProject;
 use App\Rules\ValidityYearProject;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
+use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
@@ -50,7 +53,8 @@ class ProjectController extends Controller
     {
         $project = Project::find($projectID);
         $usersID =  $project->users->pluck('id')->toArray();
-        if (!in_array(Auth::user()->id, $usersID)) {
+        $role = AuthServiceProvider::getRole();
+        if (!in_array(Auth::user()->id, $usersID) && $role != RoleServiceProvider::ADMIN) {
             abort(403, "No tienes persmisos para estar aqui");
         }
         $validator = Validator::make(request()->all(), [
@@ -94,6 +98,19 @@ class ProjectController extends Controller
         $project->delete();
 
         return redirect()->back()->with("message", "Proyecto eliminado.");
+    }
+
+    /**
+     * 
+     * MUESTRA LOS DOCUMENTOS Y CARPETAS QUE TIENE UN PROEYCTO
+     */
+    public function index($validityYear, $projectID)
+    {
+        $project = Project::find($projectID);
+        return Inertia::render("Projects/Project/Index", [
+            "folders" => $project->folders,
+            "documents" => $project->documents
+        ]);
     }
 
 }

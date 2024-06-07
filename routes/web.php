@@ -30,19 +30,18 @@ use Inertia\Inertia;
 // });
 
 
-// RUTA PAGINA DE INICIO
-Route::get('/dashboard', function () {
-    return Inertia::render('Dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
 // RUTA LOGIN (INICIAL)
-Route::get('/', [AuthenticatedSessionController::class, 'create']);
+//Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
 // RUTA DE LAS VIGENCIAS
-Route::get('/validity', [ValidityController::class, "index"])->name('validity.index');
+Route::get('/', [ValidityController::class, "index"])->name('validity.index');
 
 // RUTA PARA MOSTRAR LOS PROYECTOS DE UNA VIGENCIA
 Route::get('/{validityYear}/projects', [ValidityController::class, "projects"])->name('validity.projects');
+
+// RUTA PARA MOSTRAR LOS DOCUMENTOS O CARPETAS DE UN PROYECTO
+Route::get('/{validityYear}/projects/{projectID}', [ProjectController::class, 'index'])
+    ->name('project.index')->middleware("protect.project");
 
 
 // RUTAS PROTEGIDAS PARA EL ADMIN
