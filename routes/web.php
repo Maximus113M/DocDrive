@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Auth\AuthenticatedSessionController;
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CollaboratorController;
 use App\Http\Controllers\InvestigatorController;
 use App\Http\Controllers\ProjectController;
@@ -20,18 +21,7 @@ use Inertia\Inertia;
 |
 */
 
-// Route::get('/', function () {
-//     return Inertia::render('Welcome', [
-//         'canLogin' => Route::has('login'),
-//         'canRegister' => Route::has('register'),
-//         'laravelVersion' => Application::VERSION,
-//         'phpVersion' => PHP_VERSION,
-//     ]);
-// });
 
-
-// RUTA LOGIN (INICIAL)
-//Route::get('/', [AuthenticatedSessionController::class, 'create']);
 
 // RUTA DE LAS VIGENCIAS
 Route::get('/', [ValidityController::class, "index"])->name('validity.index');
@@ -108,7 +98,13 @@ Route::middleware(['auth', 'role:admin|investigator'])->group(function () {
     // RUTA PARA ELIMINAR UN PROYECTO
     Route::delete('/project/{projectID}/destroy', [ProjectController::class, 'destroy'])
         ->name('project.destroy');
-
 });
+
+
+Route::get('/user/edit', [RegisteredUserController::class, 'edit'])
+    ->name('user.edit')->middleware('auth');
+
+Route::put('/user/update', [RegisteredUserController::class, 'updateProfile'])
+    ->name('user.update')->middleware('auth');
 
 require __DIR__ . '/auth.php';

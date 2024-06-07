@@ -4,12 +4,16 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Providers\AuthServiceProvider;
+use App\Providers\RoleServiceProvider;
 use App\Providers\RouteServiceProvider;
+use App\Rules\SingleEmailUser;
+use App\Rules\SingleYearValidity;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\Rules;
+use Illuminate\Support\Facades\Validator;
 use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 
@@ -52,5 +56,85 @@ class RegisteredUserController extends Controller
         Auth::login($user);
 
         return redirect(RouteServiceProvider::HOME);
+    }
+
+    /**
+     * 
+     * Ruta para mostrar la vista para editar el usuario
+     */
+    public function edit()
+    {
+        $user = Auth::user();
+        $user->role;
+        return Inertia::render("Profile/Edit", [
+            "user" => $user
+        ]);
+    }
+
+
+    /**
+     * Actualizar cualquier tipo de usuario
+     */
+    public function update($userID, $role)
+    {
+        $route = null;
+        $message = null;
+        $password= null;
+        if ($role == RoleServiceProvider::INVESTIGATOR) {
+            $route = "investigator.index";
+            $message = "¡El investigador se ha actualizado correctamente!";
+        } elseif ($role == RoleServiceProvider::COLLABORATOR) {
+            $route = "collaborator.index";
+            $message = "¡El colaborador se ha actualizado correctamente!";
+        } else {
+            $route = "profile.index";
+            $message = "¡Has actualizado correctamente tus datos!";
+        }
+
+        if(request("password")){
+            $validator = Validator::make(request()->all(), [
+                'name' => 'required|string|max:255',
+                'email' => ['required','string','email','max:255',new SingleEmailUser($userID)],
+                'document' => 'required|string|max:50',
+                'password' => ['required', Password::defaults()],
+            ]);
+            $password= Hash::make(request("password"));
+        }else{
+            $validator = Validator::make(request()->all(), [
+                'name' => 'required|string|max:255',
+                'email' => ['required','string','email','max:255',new SingleEmailUser($userID)],
+                'document' => 'required|string|max:50',
+            ]);
+        }
+
+        if ($validator->fails()) {
+            return redirect()->route($route)->withErrors($validator)->withInput();
+        }
+
+        $user = User::find($userID);
+        if(!$password){
+            $password = $user->password;
+        }
+        
+        error_log($password);
+
+    
+        $user->name = request("name");
+        $user->document = request("document");
+        $user->phone = request("phone");
+        $user->email = request("email");
+        $user->password = $password;
+        $user->update();
+
+        return redirect()->route($route)
+            ->with("message", $message);
+    }
+
+    /**
+     * ACtualiz los datos del usuario autenticado
+     */
+    public function updateProfile()
+    {
+        return $this->update(Auth::user()->id, AuthServiceProvider::getRole());
     }
 }

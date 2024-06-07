@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Mail\VerifyEmail;
 use App\Models\User;
 use App\Providers\AuthServiceProvider;
@@ -17,6 +18,18 @@ use Inertia\Inertia;
 
 class CollaboratorController extends Controller
 {
+    protected $userController;
+
+    /**
+     * Constructor
+     * 
+     */
+    public function __construct(RegisteredUserController $userController)
+    {
+        $this->userController = $userController;
+    }
+
+
     /**
      *
      * Muestra todos los colaboradores
@@ -75,43 +88,7 @@ class CollaboratorController extends Controller
      */
     public function update($userID)
     {
-        $password= null;
-        if(request("password")){
-            $validator = Validator::make(request()->all(), [
-                'name' => 'required|string|max:255',
-                'email' => ['required','string','email','max:255',new SingleEmailUser($userID)],
-                'document' => 'required|string|max:50',
-                'password' => ['required', Password::defaults()],
-            ]);
-            $password= Hash::make(request("password"));
-        }else{
-            $validator = Validator::make(request()->all(), [
-                'name' => 'required|string|max:255',
-                'email' => ['required','string','email','max:255',new SingleEmailUser($userID)],
-                'document' => 'required|string|max:50',
-            ]);
-        }
-
-        if ($validator->fails()) {
-            return redirect()->route("collaborator.index")->withErrors($validator)->withInput();
-        }
-
-        $user = User::find($userID);
-        if(!$password){
-            $password = $user->password;
-        }
-        
-        error_log($password);
-
-    
-        $user->name = request("name");
-        $user->document = request("document");
-        $user->phone = request("phone");
-        $user->email = request("email");
-        $user->password = $password;
-        $user->update();
-
-        return redirect()->route("collaborator.index")->with("message", "¡El Colaborador se ha actualizado correctamente!");
+        return $this->userController->update($userID, RoleServiceProvider::COLLABORATOR);
     }
 
     /**

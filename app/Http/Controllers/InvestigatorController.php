@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Mail\VerifyEmail;
 use App\Models\User;
 use App\Providers\AuthServiceProvider;
@@ -19,6 +20,18 @@ use Inertia\Inertia;
 
 class InvestigatorController extends Controller
 {
+    protected $userController;
+
+    /**
+     * 
+     * CONSTRUCTOR
+     */
+    public function __construct(RegisteredUserController $userController)
+    {
+        $this->userController = $userController;;
+    }
+
+
     /**
      * Obtener los investigadores
      * 
@@ -87,43 +100,7 @@ class InvestigatorController extends Controller
      */
     public function update($userID)
     {   
-        $password= null;
-        if(request("password")){
-            $validator = Validator::make(request()->all(), [
-                'name' => 'required|string|max:255',
-                'email' => ['required','string','email','max:255',new SingleEmailUser($userID)],
-                'document' => 'required|string|max:50',
-                'password' => ['required', Password::defaults()],
-            ]);
-            $password= Hash::make(request("password"));
-        }else{
-            $validator = Validator::make(request()->all(), [
-                'name' => 'required|string|max:255',
-                'email' => ['required','string','email','max:255',new SingleEmailUser($userID)],
-                'document' => 'required|string|max:50',
-            ]);
-        }
-
-        if ($validator->fails()) {
-            return redirect()->route("investigator.index")->withErrors($validator)->withInput();
-        }
-
-        $user = User::find($userID);
-        if(!$password){
-            $password = $user->password;
-        }
-        
-        error_log($password);
-
-    
-        $user->name = request("name");
-        $user->document = request("document");
-        $user->phone = request("phone");
-        $user->email = request("email");
-        $user->password = $password;
-        $user->update();
-
-        return redirect()->route("investigator.index")->with("message", "¡El investigador se ha actualizado correctamente!");
+        return $this->userController->update($userID, RoleServiceProvider::INVESTIGATOR);
     }
 
     /**
