@@ -2,7 +2,7 @@
   <div class="flex-col relative h-full">
     
     <div class="mb-3">
-      <Link class="group flex items-center py-3 text-decoration-none" :href="route('validity.index')"
+      <Link class="group flex items-center py-3 text-decoration-none" method="get"  :href="route('validity.index')"
         @click="selectedIndex = 0">
       <Icon name="dashboard" class="mr-2 w-7 h-7"
         :class="selectedIndex === 0 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
@@ -12,7 +12,7 @@
     </div>
 
     <div v-if="role === 'admin'" class="mb-3">
-      <Link class="group flex items-center py-3 text-decoration-none" :href="route('investigator.index')"
+      <Link class="group flex items-center py-3 text-decoration-none" method="get" :href="route('investigator.index')"
         @click="selectedIndex = 1">
       <Icon name="investigators" class="mr-2 w-7 h-7"
         :class="selectedIndex === 1 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
@@ -23,7 +23,7 @@
     </div>
 
     <div v-if="role === 'admin' || role === 'investigator'" class="mb-3">
-      <Link class="group flex items-center py-3 text-decoration-none" :href="route('collaborator.index')"
+      <Link class="group flex items-center py-3 text-decoration-none" method="get" :href="route('collaborator.index')"
         @click="selectedIndex = 2">
       <Icon name="collaborators" class="mr-2 w-7 h-7"
         :class="selectedIndex === 2 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
@@ -34,10 +34,10 @@
     </div>
 
     <div v-if="role == 'guest'" class="mb-3">
-      <Link class="group flex items-center py-3 text-decoration-none" href="/login">
-      <div class="lg:ml-2 hidden space-x-8 sm:-my-px sm:ml-10 sm:flex">
-        <Link class="font-bold no-underline cursor-pointer text-lime-600 bg-white px-5 py-2" :href="route('login')">
-        Ingresar</Link>
+      <Link class="group flex items-center py-3 text-decoration-none"  method="get" :href="route('login')" >
+      <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex lg:ml-2">
+        <div class="font-bold no-underline cursor-pointer text-lime-600 bg-white px-5 py-2 rounded-lg">
+        Ingresar</div>
       </div>
       </Link>
     </div>
@@ -47,7 +47,7 @@
     </div>
 
     <div v-if="role != 'guest'" class="md:mt-5">
-      <Link class="group flex items-center py-3 text-decoration-none" method="post" href="/logout" @click="selectedIndex = 4">
+      <Link class="group flex items-center py-3 text-decoration-none" method="post" :href="route('login')" @click="selectedIndex = 4">
       <Icon name="logout" class="mr-2 w-7 h-7"
         :class="selectedIndex === 4 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
       <div :class="selectedIndex === 4 ? 'text-white text-lg font-bold' : 'text-gray-300 group-hover:text-white'">Cerrar
@@ -62,10 +62,6 @@
 import Icon from '@/Shared/Icon.vue'
 import { Link } from '@inertiajs/inertia-vue3';
 import { ref, onMounted} from 'vue';
-import BreezeNavLink from '@/Components/NavLink.vue';
-
-
-//const 
 
 defineProps({
   role: String,
@@ -73,7 +69,6 @@ defineProps({
 })
 
 onMounted(()=>{
-  console.log('Mamamahuevboooooooooooooooooo')
 })
 
 const selectedIndex = ref(0)

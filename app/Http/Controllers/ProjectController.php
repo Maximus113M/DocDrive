@@ -85,12 +85,15 @@ class ProjectController extends Controller
     {
         $project = Project::find($projectID);
         $usersID =  $project->users->pluck('id')->toArray();
-        if (!in_array(Auth::user()->id, $usersID)) {
+        $role = AuthServiceProvider::getRole();
+
+        if (!in_array(Auth::user()->id, $usersID) && $role != RoleServiceProvider::ADMIN ) {
             abort(403, "No tienes persmisos para estar aqui");
         }
         if ($project->folders->count() > 0 || $project->documents->count() > 0) {
             return redirect()->back()->with("errorMessage", "¡No se puede eliminar un proyecto con documentos o carpetas asociados!");
         }
+        // TODO: TECNICAMENTE SI PODRIA ELIMINAR SI TIENE USUARIOS, SE DEBE ELIMINAR AL ASOCIACION DE PROJECTS-USERS
         if ($project->users->count() > 0) {
             return redirect()->back()->with("errorMessage", "¡No se puede eliminar un proyecto con usuarios asociados!");
         }
@@ -108,8 +111,10 @@ class ProjectController extends Controller
     {
         $project = Project::find($projectID);
         return Inertia::render("Projects/Project/Index", [
-            "folders" => $project->folders,
-            "documents" => $project->documents
+            // "folders" => $project->folders,
+            // "documents" => $project->documents,
+            "project" => $project,
+            "currentYear"=> $validityYear
         ]);
     }
 

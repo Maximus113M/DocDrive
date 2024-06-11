@@ -6,30 +6,38 @@ import Icon from '@/Shared/Icon.vue';
 import { onMounted, ref } from 'vue';
 import { CustomAlertsService } from '@/services/customAlerts';
 
-const { project } = defineProps(['project']);
+const props = defineProps({
+    project: { type: Object, required: true },
+    currentYear: { type: String, required: true }
+});
 
 const form = useForm({
-    name: project.name,
-    description: project.description,
-    startDate: project.startDate,
-    endDate: project.endDate,
+    name: props.project.name,
+    description: props.project.description,
+    startDate: props.project.startDate,
+    endDate: props.project.endDate,
     //target: project.target,
+})
+
+
+const isAssociatedUser = ref(null);
+
+const authUser = usePage().props.value.auth.user ?? null;
+
+onMounted(() => {
+    isAssociatedUser.value = verifiyAssociatedUser()
 })
 
 const onClicks = (event) => {
     event.preventDefault();
 }
 
-const isAssociatedUser = ref(null);
-
-const authUser = usePage().props.value.auth.user ?? null;
-
 const verifiyAssociatedUser = () => {
-    if (authUser == null || !project.users) {
+    if (authUser == null || !props.project.users) {
         return false;
     }
-    for (let index = 0; index < project.users.length; index++) {
-        const user = project.users[index];
+    for (let index = 0; index < props.project.users.length; index++) {
+        const user = props.project.users[index];
         if (user.id == authUser.id) {
             return true;
         }
@@ -38,7 +46,7 @@ const verifiyAssociatedUser = () => {
 }
 
 const updateProject = () => {
-    form.put(route("project.update", { "projectID": project.id }), {
+    form.put(route("project.update", { "projectID": props.project.id }), {
         onSuccess: () => showMessage(),
     })
 }
@@ -63,14 +71,14 @@ const showMessage = () => {
 }
 
 const openModalUpdate = () => {
-    const modal = document.getElementById("modal-update-project-" + project.id)
+    const modal = document.getElementById("modal-update-project-" + props.project.id)
     const modalBootstrap = new bootstrap.Modal(modal)
     modalBootstrap.show()
 }
 
 
 const closeModalUpdate = () => {
-    const modal = document.getElementById("modal-update-project-" + project.id)
+    const modal = document.getElementById("modal-update-project-" + props.project.id)
     const modalBootstrap = bootstrap.Modal.getInstance(modal)
     modalBootstrap.hide()
 }
@@ -81,14 +89,14 @@ const openModalDelete = () => {
         text: '¿Deseas eliminar el proyecto seleccionado? Esta acción no se puede revertir'
     }).then((result) => {
         if (result.isConfirmed) {
-            form.delete(route("project.destroy", { "projectID": project.id }), {
+            form.delete(route("project.destroy", { "projectID": props.project.id }), {
                 onSuccess: () => {
                     showMessage()
                 },
                 onError: () => {
                     CustomAlertsService.generalAlert({
                         title: 'Error',
-                        text: `Ha ocurrido un error al eliminar la vigencia`,
+                        text: `Ha ocurrido un error al eliminar el proyecto`,
                         icon: "error",
                         isToast: true,
                     })
@@ -97,22 +105,18 @@ const openModalDelete = () => {
         }
     })
 }
-
-onMounted(() => {
-    isAssociatedUser.value = verifiyAssociatedUser()
-})
-
 </script>
 
 <template>
     <!-- PROJECT DESIGN -->
     <div class="col position-relative" style="max-width: 300px;">
 
-        <Link :href="route('project.index', {'validityYear' : 2022, 'projectID' : project.id})" class="text-decoration-none" >
+        <Link :href="route('project.index', { 'validityYear': currentYear, 'projectID': props.project.id })"
+            class="text-decoration-none">
 
-        <div class="d-flex flex-column align-items-center border-3 rounded-4 py-1 bg-white">
+        <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40">
             <div class="cursor-auto absolute left-0 ml-2" data-toggle="tooltip" data-placement="top"
-                title="¡Datos del proyecto incompleto!" v-if="project.isIncomplete && isAssociatedUser">
+                title="¡Datos del proyecto incompleto!" v-if="props.project.isIncomplete && isAssociatedUser">
                 <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24">
                     <g fill="none">
                         <path
@@ -122,6 +126,7 @@ onMounted(() => {
                     </g>
                 </svg>
             </div>
+            <!-- BODY -->
             <div v-if="authUser != null && (authUser.role.name == 'admin'
                 || (authUser.role.name == 'investigator' && isAssociatedUser))" class="position-absolute top-1 end-1"
                 @click="onClicks">
@@ -155,28 +160,27 @@ onMounted(() => {
                     </template>
                 </FoldersDropdown>
             </div>
-            <svg xmlns="http://www.w3.org/2000/svg" height="80px" viewBox="0 -960 960 960" width="80px" fill="#FEC63D">
-                <path
-                    d="M140-160q-24 0-42-18.5T80-220v-520q0-23 18-41.5t42-18.5h281l60 60h339q23 0 41.5 18.5T880-680v460q0 23-18.5 41.5T820-160H140Z" />
-            </svg>
-
+            <Icon name="project" />
 
 
             <div class="validity-font">
                 Proyecto
             </div>
-            <h5 class="text-black"><strong>{{ project.name }}</strong></h5>
+            <div class="max-h-12 max-w-44 overflow-hidden text-center">
+                <h5 class="text-black text-wrap text-ellipsis"><strong> {{ props.project.name.length > 25 ?
+                    `${props.project.name.substring(0, 25)}...` : props.project.name }} </strong></h5>
+            </div>
         </div>
         </Link>
     </div>
     <!-- PROJECT DESIGN -->
 
 
+    <!--  -->
 
-
-    <!-- MODAL EDITAR-->
-    <div class="modal fade" :id="`modal-update-project-${project.id}`" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <!-- MODAL EDIT PROJECT-->
+    <div class="modal fade" :id="`modal-update-project-${props.project.id}`" tabindex="-1"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="width: 350px; height: 600px;">
             <div class="modal-content position-relative p-3" style="max-height: 800px;">
                 <div class="d-flex flex-row justify-center px-3">

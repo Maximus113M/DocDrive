@@ -4,6 +4,11 @@ import Icon from '@/Shared/Icon.vue';
 import { useForm } from '@inertiajs/inertia-vue3'
 import { ref, onUpdated, onMounted, watch } from 'vue';
 
+const props = defineProps({
+    validities: { type: Array, required: true },
+    isAuthenticated: Boolean,
+    role: String,
+});
 
 const validityList = ref([])
 const searchValue = ref('')
@@ -12,12 +17,6 @@ const modal = ref(null)
 const form = useForm({
     year: null,
 })
-
-const props = defineProps({
-    validities: { type: Array, required: true },
-    isAuthenticated: Boolean,
-    role: String,
-});
 
 onMounted(() => {
     validityList.value = props.validities;

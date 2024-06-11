@@ -126,10 +126,10 @@ class ValidityController extends Controller
         return Inertia::render("Projects/Index", [
             "projects" => $data,
             "role" => AuthServiceProvider::getRole(),
-            "isAuthenticated" => AuthServiceProvider::checkAuthenticated(),
             "investigators" => InvestigatorController::getInvestigators(),
             "validityID" => $validity->id,
-            "visualizationsRole" => VisualizationRole::all()
+            "visualizationsRole" => VisualizationRole::all(),
+            "currentYear" => $validityYear,
         ]);
     }
 }
