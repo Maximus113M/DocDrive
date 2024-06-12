@@ -1,7 +1,7 @@
 <template>
 
     <AuthLayout :role="role">
-        <ProjectContent :current-year="currentYear" :project="project"/>
+        <ProjectContent :current-year="currentYear" :project="project" :visualizations-role="visualizationsRole"/>
     </AuthLayout>
 
 </template>
@@ -14,6 +14,7 @@ import { usePage } from '@inertiajs/inertia-vue3';
 
 defineProps({
     project: Object,
+    visualizationsRole: {type: Array, required: true},
     currentYear: {type: String, required: true},
 })
 

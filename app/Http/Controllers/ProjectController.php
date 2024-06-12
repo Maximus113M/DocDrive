@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\VisualizationRole;
 use App\Providers\AuthServiceProvider;
 use App\Providers\RoleServiceProvider;
 use App\Rules\ValidityEndYearProject;
@@ -114,7 +115,8 @@ class ProjectController extends Controller
             // "folders" => $project->folders,
             // "documents" => $project->documents,
             "project" => $project,
-            "currentYear"=> $validityYear
+            "currentYear"=> $validityYear,
+            "visualizationsRole" => VisualizationRole::all(),
         ]);
     }
 

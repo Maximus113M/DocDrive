@@ -22310,20 +22310,18 @@ __webpack_require__.r(__webpack_exports__);
     project: {
       type: Object,
       required: true
+    },
+    visualizationsRole: {
+      type: Array,
+      required: true
     }
   },
   setup: function setup(__props, _ref) {
     var __expose = _ref.expose;
     __expose();
     var props = __props;
-    var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_3__.useForm)({
-      name: null,
-      //startDate: null,
-      //endDate: null,
-      //target: null,
-      //description: null,
-      investigatorsID: [],
-      validityID: null,
+    var formUploadFile = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_3__.useForm)({
+      document: null,
       visualizationRoleSelected: null
     });
     var nameRoleVisualization = {
@@ -22333,6 +22331,7 @@ __webpack_require__.r(__webpack_exports__);
     };
     var isAssociatedUser = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(null);
     var authUser = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_3__.usePage)().props.value.auth.user;
+    var modal = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(null);
     (0,vue__WEBPACK_IMPORTED_MODULE_4__.onMounted)(function () {
       isAssociatedUser.value = verifiyAssociatedUser();
     });
@@ -22348,13 +22347,22 @@ __webpack_require__.r(__webpack_exports__);
       }
       return false;
     };
-    var modal = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(null);
-    var saveProject = function saveProject() {
-      form.validityID = validityID;
-      form.post(route('project.store'), {
+    var upload = function upload() {
+      formUploadFile.post(route("document.upload", {
+        "projectID": props.project.id,
+        "validityYear": props.currentYear
+      }), {
         onSuccess: function onSuccess() {
-          closeModal();
-          showSuccessMessage();
+          return showSuccessMessage();
+        },
+        onError: function onError(e) {
+          console.log(e);
+          _services_customAlerts__WEBPACK_IMPORTED_MODULE_2__.CustomAlertsService.generalAlert({
+            title: 'Error',
+            text: 'Ha ocurrido un error al subir el archivo',
+            icon: "error",
+            isToast: true
+          });
         }
       });
     };
@@ -22362,20 +22370,22 @@ __webpack_require__.r(__webpack_exports__);
       _services_customAlerts__WEBPACK_IMPORTED_MODULE_2__.CustomAlertsService.successConfirmAlert({
         title: (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_3__.usePage)().props.value.flash.message
       });
+      closeModal();
     };
     var closeModal = function closeModal() {
-      var modalBootstrap = bootstrap.Modal.getInstance(modal.value);
+      var modal = document.getElementById("modalNewDocument");
+      var modalBootstrap = bootstrap.Modal.getInstance(modal);
       modalBootstrap.hide();
     };
     var __returned__ = {
       props: props,
-      form: form,
+      formUploadFile: formUploadFile,
       nameRoleVisualization: nameRoleVisualization,
       isAssociatedUser: isAssociatedUser,
       authUser: authUser,
-      verifiyAssociatedUser: verifiyAssociatedUser,
       modal: modal,
-      saveProject: saveProject,
+      verifiyAssociatedUser: verifiyAssociatedUser,
+      upload: upload,
       showSuccessMessage: showSuccessMessage,
       closeModal: closeModal,
       ProjectCard: _Pages_Projects_Components_CardProject_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -22427,6 +22437,10 @@ __webpack_require__.r(__webpack_exports__);
   __name: 'Index',
   props: {
     project: Object,
+    visualizationsRole: {
+      type: Array,
+      required: true
+    },
     currentYear: {
       type: String,
       required: true
@@ -25608,7 +25622,7 @@ var _hoisted_6 = {
   key: 0,
   "class": "col",
   "data-bs-toggle": "modal",
-  "data-bs-target": "#modalSaveProject"
+  "data-bs-target": "#modalNewDocument"
 };
 var _hoisted_7 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
@@ -25670,6 +25684,98 @@ var _hoisted_13 = /*#__PURE__*/_withScopeId(function () {
   }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Asociar Colaborador")])], -1 /* HOISTED */);
 });
 var _hoisted_14 = [_hoisted_13];
+var _hoisted_15 = {
+  "class": "modal fade",
+  id: "modalNewDocument",
+  tabindex: "-1",
+  "aria-hidden": "true"
+};
+var _hoisted_16 = {
+  "class": "modal-dialog",
+  style: {
+    "width": "350px",
+    "height": "600px"
+  }
+};
+var _hoisted_17 = {
+  "class": "modal-content position-relative p-3",
+  style: {
+    "max-height": "400px"
+  }
+};
+var _hoisted_18 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "d-flex flex-row justify-center px-3"
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("h4", {
+    "class": "my-3",
+    style: {
+      "color": "#39A900"
+    }
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Nuevo")]), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "button",
+    "class": "btn-close position-absolute top-1 end-3",
+    "data-bs-dismiss": "modal",
+    "aria-label": "Close"
+  })], -1 /* HOISTED */);
+});
+var _hoisted_19 = {
+  "class": "modal-body px-3"
+};
+var _hoisted_20 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "flex mb-3"
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "form-check"
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    "class": "form-check-input",
+    type: "radio",
+    name: "file",
+    id: "file",
+    checked: ""
+  }), /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "class": "form-check-label",
+    "for": "file"
+  }, " Archivo ")])], -1 /* HOISTED */);
+});
+var _hoisted_21 = {
+  "class": "mb-3"
+};
+var _hoisted_22 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "class": "font-bold"
+  }, "Visualización", -1 /* HOISTED */);
+});
+var _hoisted_23 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("br", null, null, -1 /* HOISTED */);
+});
+var _hoisted_24 = ["value"];
+var _hoisted_25 = {
+  key: 0
+};
+var _hoisted_26 = {
+  "class": "mb-3"
+};
+var _hoisted_27 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    "for": "formFile",
+    "class": "font-bold form-label"
+  }, "Seleccionar archivo", -1 /* HOISTED */);
+});
+var _hoisted_28 = {
+  key: 0
+};
+var _hoisted_29 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "row justify-center p-3 mt-5"
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+    type: "submit",
+    "class": "btn py-2",
+    style: {
+      "background-color": "#39A900",
+      "color": "white"
+    }
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Crear")])], -1 /* HOISTED */);
+});
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _$setup$authUser, _$setup$authUser2, _$setup$authUser3;
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Buscador "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Link"], {
@@ -25695,7 +25801,26 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       project: $props.project,
       "current-year": $props.currentYear
     }, null, 8 /* PROPS */, ["project", "current-year"])]);
-  }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" MODAL NEW FILE-FOLDER "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" MODAL associate USERS ")], 2112 /* STABLE_FRAGMENT, DEV_ROOT_FRAGMENT */);
+  }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" MODAL NEW FILE-FOLDER "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_15, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_16, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_17, [_hoisted_18, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_19, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+    onSubmit: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)($setup.upload, ["prevent"])
+  }, [_hoisted_20, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [_hoisted_22, _hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("select", {
+    "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
+      return $setup.formUploadFile.visualizationRoleSelected = $event;
+    }),
+    "class": "form-select"
+  }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.visualizationsRole, function (vRole) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
+      value: vRole.id,
+      key: vRole.id
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.nameRoleVisualization[vRole.name]), 9 /* TEXT, PROPS */, _hoisted_24);
+  }), 128 /* KEYED_FRAGMENT */)), $setup.formUploadFile.errors.visualizationRoleSelected ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_25, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.formUploadFile.errors.visualizationRoleSelected), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelSelect, $setup.formUploadFile.visualizationRoleSelected]])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [_hoisted_27, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+    onInput: _cache[1] || (_cache[1] = function ($event) {
+      return $setup.formUploadFile.document = $event.target.files[0];
+    }),
+    "class": "form-control",
+    type: "file",
+    id: "formFile"
+  }, null, 32 /* NEED_HYDRATION */), $setup.formUploadFile.errors.visualizationRoleSelected ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_28, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.formUploadFile.errors.visualizationRoleSelected), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _hoisted_29], 32 /* NEED_HYDRATION */)])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" MODAL associate USERS ")], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),
@@ -25720,8 +25845,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ProjectContent"], {
         "current-year": $props.currentYear,
-        project: $props.project
-      }, null, 8 /* PROPS */, ["current-year", "project"])];
+        project: $props.project,
+        "visualizations-role": $props.visualizationsRole
+      }, null, 8 /* PROPS */, ["current-year", "project", "visualizations-role"])];
     }),
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["role"]);
