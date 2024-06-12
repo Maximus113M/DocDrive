@@ -54,24 +54,30 @@
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 mb-3">
                                         <label for="name" class="font-bold">Nombre</label>
                                         <input v-model="form.name" type="text" class="form-control" id="name">
-                                        <div v-if="form.errors.name">{{ form.errors.name }}</div>
+                                        <div v-if="form.errors.name" class="text-center text-red-400">
+                                            {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}</div>
                                     </div>
 
                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 mb-3">
                                         <label for="startDate" class="font-bold">Fecha Inicio</label>
                                         <input v-model="form.startDate" type="date" class="form-control" id="startDate">
-                                        <div v-if="form.errors.startDate">{{ form.errors.startDate }}</div>
+                                        <div v-if="form.errors.startDate" class="text-center text-red-400">{{
+                                            AppFunctions.getErrorTranslate(AppFunctions.Errors.Date) }}</div>
                                     </div>
                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 mb-3">
                                         <label for="endDate" class="font-bold">Fecha Fin</label>
                                         <input v-model="form.endDate" type="date" class="form-control" id="endDate">
-                                        <div v-if="form.errors.endDate">{{ form.errors.endDate }}</div>
+                                        <div v-if="form.errors.endDate" class="text-center text-red-400">
+                                            {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Date) }}
+                                        </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-9 mb-3">
                                         <label for="description" class="font-bold">Descripción</label>
-                                        <textarea v-model="form.description" type="text-area" class="form-control lg:h-48 max-h-48"
-                                            id="description" />
-                                        <div v-if="form.errors.description">{{ form.errors.description }}</div>
+                                        <textarea v-model="form.description" type="text-area"
+                                            class="form-control lg:h-48 max-h-48" id="description" />
+                                        <div v-if="form.errors.description" class="text-center text-red-400">
+                                            {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
+                                        </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-3 mb-3">
                                         <label class="font-bold">Visualización</label>
@@ -81,21 +87,70 @@
                                                 :key="vRole.id">{{
                                                     nameRoleVisualization[vRole.name] }}</option>
                                         </select>
+                                        <div v-if="form.errors.visualizationRoleSelected"
+                                            class="text-center text-red-400">
+                                            {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
                             <div class="col-12 col-lg-4">
-                                <div class="px-4 py-2 mb-3 border-2 rounded-lg" style="height: 300px;">
+                                <div class="px-3 py-2 mb-3 border-2 rounded-lg" style="height: 350px;">
                                     <div class="text-center">
                                         <label class="font-bold pb-2">Asociar Investigadores</label>
                                     </div>
-                                    <div v-for="investigator in investigators" :key="investigator.id">
-                                        <input class="mr-2" type="checkbox" :id="'checkbox-' + investigator.id"
-                                            v-model="form.investigatorsID" :value="investigator.id">
-                                        <label :for="'checkbox-' + investigator.id">{{ investigator.name }}</label>
+                                    <div class="h-64">
+                                        <div v-for="(investigator, index) in paginatedList" :key="investigator?.id"
+                                            :style="index % 2 != 0 ? 'background-color: #FFFFFF' : 'background-color: #F3F3F3'"
+                                            class="px-2 py-1">
+                                            <div v-if="investigator">
+                                                <input class="mr-2" type="checkbox" :id="'checkbox-' + investigator.id"
+                                                    v-model="form.investigatorsID" :value="investigator.id">
+                                                <label :for="'checkbox-' + investigator.id">{{ investigator.name
+                                                    }}</label>
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div
+                                        style="display: flex; flex-direction: row; justify-content: center; user-select: none;">
+                                        <ul class="pagination cursor-pointer mt-1">
+                                            <li class="page-item">
+                                                <div class="page-link" aria-label="Previous"
+                                                    @click="decreasePaginatorIndex()">
+                                                    <span aria-hidden="true" style="color: #39A900;">&laquo;</span>
+                                                </div>
+                                            </li>
+                                            <li class="page-item">
+                                                <div class="page-link" @click="getCurrentPageList(1)"
+                                                    :style="paginatorIndex === 1 ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;'">
+                                                    1
+                                                </div>
+                                            </li>
+                                            <li v-if="totalPages > 1" class="page-item" aria-current="page">
+                                                <div class="page-link"
+                                                    :style="paginatorIndex !== 1 && paginatorIndex !== totalPages ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;'">
+                                                    ...
+                                                </div>
+                                            </li>
+                                            <li v-if="totalPages > 1" class="page-item" aria-current="page">
+                                                <div class="page-link" @click="getCurrentPageList(totalPages)"
+                                                    :style="paginatorIndex === totalPages ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;'">
+                                                    {{ totalPages }}
+                                                </div>
+                                            </li>
+                                            <li class="page-item">
+                                                <div class="page-link" aria-label="Next"
+                                                    @click="incrementPaginatorIndex()">
+                                                    <span aria-hidden="true" style="color: #39A900;">&raquo;</span>
+                                                </div>
+                                            </li>
+                                        </ul>
                                     </div>
                                 </div>
+                                <div v-if="form.errors.investigatorsID" class="text-center text-red-400">{{
+                                    AppFunctions.getErrorTranslate(AppFunctions.Errors.Investigator) }}</div>
                             </div>
                             <!-- 
                         <div class="mb-3">
@@ -123,18 +178,19 @@
 import ProjectCard from '@/Pages/Projects/Components/CardProject.vue';
 import { CustomAlertsService } from '@/services/customAlerts';
 import { Link, useForm, usePage } from '@inertiajs/inertia-vue3'
-import { ref } from 'vue';
+import { ref, onBeforeMount, onUpdated } from 'vue';
 import Icon from '@/Shared/Icon.vue';
+import { AppFunctions } from '@/core/appFunctions';
 
 const form = useForm({
     name: null,
-    //startDate: null,
-    //endDate: null,
-    //target: null,
-    //description: null,
+    startDate: null,
+    endDate: null,
+    description: null,
     investigatorsID: [],
     validityID: null,
     visualizationRoleSelected: null
+    //target: null,
 })
 
 const nameRoleVisualization = {
@@ -145,17 +201,57 @@ const nameRoleVisualization = {
 
 const modal = ref(null)
 
-const { investigators, validityID, currentYear } = defineProps({
+const props = defineProps({
     projects: Object,
-    investigators: Object,
+    investigators: { type: Array, required: true },
     role: String,
     validityID: Number,
     visualizationsRole: Object,
     currentYear: String,
 })
+const paginatedList = ref([])
+const totalPages = ref(0);
+const paginatorIndex = ref(1);
+const pageElements = 8;
+
+onBeforeMount(() => {
+    totalPages.value = Math.ceil(props.investigators.length / pageElements);
+    getCurrentPageList(1);
+});
+
+const getCurrentPageList = (index) => {
+    if (index != paginatorIndex.value) {
+        paginatorIndex.value = index;
+    }
+    paginatedList.value = [];
+    let indexBase = (index * pageElements) - pageElements;
+    let indexEnd = index * pageElements;
+
+    for (let i = indexBase; i < indexEnd; i++) {
+        if (props.investigators[i]) {
+            paginatedList.value.push(props.investigators[i]);
+        }
+    }
+}
+
+const incrementPaginatorIndex = () => {
+    if (paginatorIndex.value < totalPages.value) {
+        paginatorIndex.value++;
+        console.log(paginatorIndex.value)
+        getCurrentPageList(paginatorIndex.value);
+    }
+}
+
+const decreasePaginatorIndex = () => {
+    if (paginatorIndex.value > 1) {
+        paginatorIndex.value--;
+        console.log(paginatorIndex.value)
+        getCurrentPageList(paginatorIndex.value);
+    }
+}
 
 const saveProject = () => {
-    form.validityID = validityID
+    form.validityID = props.validityID
     form.post(route('project.store'), {
         onSuccess: () => {
             closeModal()

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Validity;
 use App\Providers\AuthServiceProvider;
 use App\Providers\RoleServiceProvider;
 use App\Rules\ValidityEndYearProject;
@@ -23,7 +24,7 @@ class ProjectController extends Controller
     {
         $validator = Validator::make(request()->all(), [
             'name' => 'required|string|max:255',
-            'investigatorsID' => 'required',
+            'investigatorsID' => 'required|array',
             'validityID' => 'required|numeric',
             'visualizationRoleSelected' => 'required|numeric',
         ]);
@@ -36,12 +37,40 @@ class ProjectController extends Controller
         $project->name = request("name");
         $project->validity_id = request("validityID");
         $project->visualization_role_id = request("visualizationRoleSelected");
+        $project->description = request("description");
+        
+        if(request("startDate")){
+            $validity= Validity::where('id', request("validityID"))->first();
+            $minDate= $validity;
+            //error_log( $minDate);
+
+            $validator = Validator::make(request()->all(), [
+                'startDate' => ['required'],
+                'endDate' => ['required'],
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
+            $project->startDate= request("startDate");
+            $project->endDate= request("endDate");
+        }
+            
         $project->save();
 
         $project->users()->attach(request("investigatorsID"));
 
 
         return redirect()->back()->with("message", "Proyecto creado.");
+    }
+
+    private function validateYear($validity, $originalDate){
+        $date = explode("-", $originalDate)[0];
+
+        if(!$validity || ($validity->year !==  $date)){
+            return false;
+        }
+        return true;
     }
 
     /**
