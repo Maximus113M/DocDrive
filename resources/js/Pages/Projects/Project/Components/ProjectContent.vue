@@ -17,7 +17,7 @@
         <div class="px-5 pt-1 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
 
             <button v-if="authUser != null && (authUser?.role.name == 'admin'
-                || (isAssociatedUser))" class="col" data-bs-toggle="modal" data-bs-target="#modalSaveProject">
+                || (isAssociatedUser))" class="col" data-bs-toggle="modal" data-bs-target="#modalNewDocument">
                 <div class="folder border-3 rounded-4 py-3 bg-white">
                     <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
                         fill="#000000">
@@ -63,12 +63,55 @@
 
     <!-- MODAL NEW FILE-FOLDER -->
 
+    <div class="modal fade" id="modalNewDocument" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" style="width: 350px; height: 600px;">
+            <div class="modal-content position-relative p-3" style="max-height: 400px;">
+                <div class="d-flex flex-row justify-center px-3">
+                    <h4 class="my-3" style="color: #39A900;"><strong>Nuevo</strong></h4>
 
+                    <button type="button" class="btn-close position-absolute top-1 end-3" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-3">
+                    <form @submit.prevent="upload">
+                        <div class="flex mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="radio" name="file" id="file" checked>
+                                <label class="form-check-label" for="file">
+                                    Archivo
+                                </label>
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label class="font-bold">Visualización</label>
+                            <br>
+                            <select v-model="formUploadFile.visualizationRoleSelected" class="form-select">
+                                <option v-for="vRole in visualizationsRole" :value="vRole.id" :key="vRole.id">{{
+                                    nameRoleVisualization[vRole.name] }}</option>
+                                <div v-if="formUploadFile.errors.visualizationRoleSelected">{{
+                                    formUploadFile.errors.visualizationRoleSelected }}</div>
+                            </select>
+                        </div>
+                        <div class="mb-3">
+                            <label for="formFile" class="font-bold form-label">Seleccionar archivo</label>
+                            <input @input="formUploadFile.document = $event.target.files[0]" class="form-control" type="file" id="formFile">
+                            <div v-if="formUploadFile.errors.visualizationRoleSelected">{{
+                                    formUploadFile.errors.visualizationRoleSelected }}</div>
+                        </div>
+                        <div class="row justify-center p-3 mt-5">
+                            <button type="submit" class="btn py-2"
+                                style="background-color: #39A900; color: white; "><strong>Crear</strong></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
     <!-- MODAL associate USERS -->
-    
+
 
 
 
@@ -87,17 +130,12 @@ import Icon from '@/Shared/Icon.vue';
 
 const props = defineProps({
     currentYear: { type: String, required: true },
-    project: { type: Object, required: true }
+    project: { type: Object, required: true },
+    visualizationsRole: { type: Array, required: true }
 })
 
-const form = useForm({
-    name: null,
-    //startDate: null,
-    //endDate: null,
-    //target: null,
-    //description: null,
-    investigatorsID: [],
-    validityID: null,
+const formUploadFile = useForm({
+    document: null,
     visualizationRoleSelected: null
 })
 
@@ -110,6 +148,8 @@ const nameRoleVisualization = {
 const isAssociatedUser = ref(null);
 
 const authUser = usePage().props.value.auth.user;
+
+const modal = ref(null)
 
 onMounted(() => {
     isAssociatedUser.value = verifiyAssociatedUser()
@@ -128,14 +168,21 @@ const verifiyAssociatedUser = () => {
     return false;
 }
 
-const modal = ref(null)
 
-const saveProject = () => {
-    form.validityID = validityID
-    form.post(route('project.store'), {
-        onSuccess: () => {
-            closeModal()
-            showSuccessMessage()
+const upload = () => {
+    formUploadFile.post(route("document.upload", {
+        "projectID" : props.project.id, 
+        "validityYear" : props.currentYear
+    }), {
+        onSuccess: () => showSuccessMessage(),
+        onError: (e) => {
+            console.log(e);
+            CustomAlertsService.generalAlert({
+                title: 'Error',
+                text: 'Ha ocurrido un error al subir el archivo',
+                icon: "error",
+                isToast: true,
+            })
         }
     })
 }
@@ -144,10 +191,12 @@ const showSuccessMessage = () => {
     CustomAlertsService.successConfirmAlert({
         title: usePage().props.value.flash.message,
     })
+    closeModal()
 }
 
 const closeModal = () => {
-    const modalBootstrap = bootstrap.Modal.getInstance(modal.value)
+    const modal = document.getElementById("modalNewDocument")
+    const modalBootstrap = bootstrap.Modal.getInstance(modal)
     modalBootstrap.hide()
 }
 

@@ -17,7 +17,7 @@ class CreateDocumentsTable extends Migration
             $table->id();
             $table->string("name");
             $table->string("documentPath");
-            $table->string("description");
+            $table->string("description")->nullable();
             $table->string("format");
             $table->unsignedBigInteger('project_id');
             $table->foreign('project_id')->references('id')->on('projects');
@@ -25,7 +25,7 @@ class CreateDocumentsTable extends Migration
             $table->foreign('folder_id')->references('id')->on('folders');
             $table->unsignedBigInteger('visualization_role_id');
             $table->foreign('visualization_role_id')->references('id')->on('visualization_roles');
-            //$table->timestamps();
+            $table->timestamps();
         });
     }
 
