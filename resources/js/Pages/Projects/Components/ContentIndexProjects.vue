@@ -122,7 +122,7 @@
                                                     <span aria-hidden="true" style="color: #39A900;">&laquo;</span>
                                                 </div>
                                             </li>
-                                            <li class="page-item">
+                                            <li v-if="paginatedList.length > 0" class="page-item">
                                                 <div class="page-link" @click="getCurrentPageList(1)"
                                                     :style="paginatorIndex === 1 ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;'">
                                                     1

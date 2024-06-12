@@ -25417,15 +25417,16 @@ var _hoisted_44 = /*#__PURE__*/_withScopeId(function () {
 });
 var _hoisted_45 = [_hoisted_44];
 var _hoisted_46 = {
+  key: 0,
   "class": "page-item"
 };
 var _hoisted_47 = {
-  key: 0,
+  key: 1,
   "class": "page-item",
   "aria-current": "page"
 };
 var _hoisted_48 = {
-  key: 1,
+  key: 2,
   "class": "page-item",
   "aria-current": "page"
 };
@@ -25537,13 +25538,13 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     onClick: _cache[6] || (_cache[6] = function ($event) {
       return $setup.decreasePaginatorIndex();
     })
-  }, [].concat(_hoisted_45))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, [].concat(_hoisted_45))]), $setup.paginatedList.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "page-link",
     onClick: _cache[7] || (_cache[7] = function ($event) {
       return $setup.getCurrentPageList(1);
     }),
     style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)($setup.paginatorIndex === 1 ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;')
-  }, " 1 ", 4 /* STYLE */)]), $setup.totalPages > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_47, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+  }, " 1 ", 4 /* STYLE */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.totalPages > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_47, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "page-link",
     style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)($setup.paginatorIndex !== 1 && $setup.paginatorIndex !== $setup.totalPages ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;')
   }, " ... ", 4 /* STYLE */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.totalPages > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
