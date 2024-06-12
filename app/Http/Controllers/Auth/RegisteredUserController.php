@@ -8,7 +8,6 @@ use App\Providers\AuthServiceProvider;
 use App\Providers\RoleServiceProvider;
 use App\Providers\RouteServiceProvider;
 use App\Rules\SingleEmailUser;
-use App\Rules\SingleYearValidity;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -87,15 +86,18 @@ class RegisteredUserController extends Controller
             $route = "collaborator.index";
             $message = "¡El colaborador se ha actualizado correctamente!";
         } else {
-            $route = "profile.index";
+            $route = "user.edit";
             $message = "¡Has actualizado correctamente tus datos!";
         }
+
+
 
         if(request("password")){
             $validator = Validator::make(request()->all(), [
                 'name' => 'required|string|max:255',
                 'email' => ['required','string','email','max:255',new SingleEmailUser($userID)],
-                'document' => 'required|string|max:50',
+                'document' => 'required',
+                'phone' => ['required'],
                 'password' => ['required', Password::defaults()],
             ]);
             $password= Hash::make(request("password"));
@@ -103,13 +105,15 @@ class RegisteredUserController extends Controller
             $validator = Validator::make(request()->all(), [
                 'name' => 'required|string|max:255',
                 'email' => ['required','string','email','max:255',new SingleEmailUser($userID)],
-                'document' => 'required|string|max:50',
+                'phone' => ['required'],
+                'document' => 'required',
             ]);
         }
 
         if ($validator->fails()) {
             return redirect()->route($route)->withErrors($validator)->withInput();
         }
+
 
         $user = User::find($userID);
         if(!$password){
@@ -135,6 +139,6 @@ class RegisteredUserController extends Controller
      */
     public function updateProfile()
     {
-        return $this->update(Auth::user()->id, AuthServiceProvider::getRole());
+        return $this->update(Auth::user()->id, null);
     }
 }

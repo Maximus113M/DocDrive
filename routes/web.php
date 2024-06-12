@@ -104,7 +104,7 @@ Route::middleware(['auth', 'role:admin|investigator'])->group(function () {
 Route::get('/user/edit', [RegisteredUserController::class, 'edit'])
     ->name('user.edit')->middleware('auth');
 
-Route::put('/user/update', [RegisteredUserController::class, 'updateProfile'])
-    ->name('user.update')->middleware('auth');
+Route::post('/profile/update', [RegisteredUserController::class, 'updateProfile'])
+    ->name('update.profile')->middleware('auth');
 
 require __DIR__ . '/auth.php';

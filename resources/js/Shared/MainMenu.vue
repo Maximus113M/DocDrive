@@ -42,12 +42,23 @@
       </Link>
     </div>
 
+    <div v-if="role != 'guest'" class="mb-3">
+      <Link class="group flex items-center py-3 text-decoration-none" method="get" :href="route('user.edit')"
+        @click="selectedIndex = 2">
+      <Icon name="settings" class="mr-2 w-7 h-7"
+        :class="selectedIndex === 2 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
+      <div :class="selectedIndex === 2 ? 'text-white text-lg font-bold' : 'text-gray-300 group-hover:text-white'">
+        Ajustes
+      </div>
+      </Link>
+    </div>
+
     <div v-if="isSideMenu" class="flex justify-center opacity-30 lg:mt-4 lg:mb-5  xxl:my-5">
       <img src="/images/logos/logo-sena-blanco-fix.png" width="140px" alt="logo-sena">
     </div>
 
     <div v-if="role != 'guest'" class="md:mt-5">
-      <Link class="group flex items-center py-3 text-decoration-none" method="post" :href="route('login')" @click="selectedIndex = 4">
+      <Link class="group flex items-center py-3 text-decoration-none" method="post" :href="route('logout')" @click="selectedIndex = 4">
       <Icon name="logout" class="mr-2 w-7 h-7"
         :class="selectedIndex === 4 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
       <div :class="selectedIndex === 4 ? 'text-white text-lg font-bold' : 'text-gray-300 group-hover:text-white'">Cerrar
