@@ -109,8 +109,8 @@
                             <label for="formFile" class="font-bold form-label">Seleccionar archivo</label>
                             <input @input="formUploadFile.document = $event.target.files[0]" class="form-control"
                                 type="file" id="formFile">
-                            <div v-if="formUploadFile.errors.visualizationRoleSelected">{{
-                                formUploadFile.errors.visualizationRoleSelected }}</div>
+                            <div v-if="formUploadFile.errors.document">{{
+                                formUploadFile.errors.document }}</div>
                         </div>
                         <div class="row justify-center p-3 my-3">
                             <button type="submit" class="btn py-2"

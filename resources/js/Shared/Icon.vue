@@ -134,7 +134,7 @@
       d="M331-431h37v-83h48q15.73 0 26.36-10.64Q453-535.28 453-551v-48q0-15.72-10.64-26.36Q431.73-636 416-636h-85v205Zm37-120v-48h48v48h-48Zm129 120h84q15 0 26-10.64 11-10.63 11-26.36v-131q0-15.72-11-26.36Q596-636 581-636h-84v205Zm37-37v-131h47v131h-47Zm133 37h37v-83h50v-37h-50v-48h50v-37h-87v205ZM260-200q-24 0-42-18t-18-42v-560q0-24 18-42t42-18h560q24 0 42 18t18 42v560q0 24-18 42t-42 18H260ZM140-80q-24 0-42-18t-18-42v-620h60v620h620v60H140Z" />
   </svg>
   <!-- Word -->
-  <svg v-else-if="name === 'word'" xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960"
+  <svg v-else-if="name === 'word' || name == 'docx'" xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960"
     width="48px" fill="#0000F5">
     <path
       d="M319-250h322v-60H319v60Zm0-170h322v-60H319v60ZM220-80q-24 0-42-18t-18-42v-680q0-24 18-42t42-18h361l219 219v521q0 24-18 42t-42 18H220Zm331-554h189L551-820v186Z" />
@@ -153,9 +153,18 @@
   </svg>
 
   <!-- Image -->
-  <svg v-else-if="name == 'png' || name == 'jpg' || name == 'jpeg'" xmlns="http://www.w3.org/2000/svg" width="68px" height="68px" viewBox="0 0 24 24">
+  <svg v-else-if="name == 'png' || name == 'jpg' || name == 'jpeg'" xmlns="http://www.w3.org/2000/svg" width="68px"
+    height="68px" viewBox="0 0 24 24">
     <path fill="#a51d2d"
       d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h14q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm0-2h14V5H5zm1-2h12l-3.75-5l-3 4L9 13zm-1 2V5z" />
+  </svg>
+
+  <svg v-else xmlns="http://www.w3.org/2000/svg" width="68px" height="68px" viewBox="0 0 24 24">
+    <g fill="none">
+      <path d="M0 0h24v24H0z" />
+      <path fill="#26a269"
+        d="M14.486 3.143a1 1 0 0 1 .692 1.233l-4.43 15.788a1 1 0 0 1-1.926-.54l4.43-15.788a1 1 0 0 1 1.234-.693M7.207 7.05a1 1 0 0 1 0 1.414L3.672 12l3.535 3.535a1 1 0 1 1-1.414 1.415L1.55 12.707a1 1 0 0 1 0-1.414L5.793 7.05a1 1 0 0 1 1.414 0m9.586 1.414a1 1 0 1 1 1.414-1.414l4.243 4.243a1 1 0 0 1 0 1.414l-4.243 4.243a1 1 0 0 1-1.414-1.415L20.328 12z" />
+    </g>
   </svg>
 
 </template>

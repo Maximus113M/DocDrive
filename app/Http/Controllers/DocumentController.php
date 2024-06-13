@@ -17,21 +17,21 @@ class DocumentController extends Controller
     public function store($validityYear, $projectID)
     {
         $validator = Validator::make(request()->all(), [
-            'document' => ['required', 'file', 'max:10240'],
+            'document' => 'required|file|max:10240',
             'visualizationRoleSelected' => 'required',
         ]);
-
+        
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-
+        
         $file = request()->file("document");
         $path = $this->uploadDocument($file, $validityYear, $projectID);
 
         $document = new Document();
         $document->name = $file->getClientOriginalName();
         $document->documentPath = $path;
-        $document->format = $file->extension();
+        $document->format = $file->extension() ?? $this->getExtension($document->name);
         $document->project_id = $projectID;
         $document->visualization_role_id = request("visualizationRoleSelected");
         $document->save();
@@ -47,5 +47,14 @@ class DocumentController extends Controller
         $ruta = $year.'/'.$projectID;
         $file->storeAs($ruta, $file->getClientOriginalName());
         return Storage::url($ruta.'/'.$file->getClientOriginalName());
+    }
+
+    /**
+     * Obtener la extension de algunos documentos
+     */
+    private function getExtension(string $name)
+    {
+        $split = explode('.', $name);
+        return $split[count($split)-1];
     }
 }
