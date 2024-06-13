@@ -206,7 +206,7 @@ const verifiyAssociatedUser = () => {
 
 
 const upload = () => {
-    
+
     formUploadFile.post(route(checkedCreateFolder.value.checked ? "folder.upload" : "document.upload", {
         "projectID": props.project.id,
         "validityYear": props.currentYear
@@ -225,9 +225,21 @@ const upload = () => {
 }
 
 const showSuccessMessage = () => {
-    CustomAlertsService.successConfirmAlert({
-        title: usePage().props.value.flash.message,
-    })
+    const flashMessage = usePage().props.value.flash.message
+
+    if (flashMessage) {
+        CustomAlertsService.successConfirmAlert({
+            title: flashMessage,
+        })
+    } else {
+        CustomAlertsService.generalAlert({
+            title: 'Error',
+            text: usePage().props.value.flash.errorMessage,
+            icon: "error",
+            isToast: true,
+        })
+    }
+
     closeModal()
 }
 

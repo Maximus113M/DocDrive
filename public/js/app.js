@@ -22389,9 +22389,19 @@ __webpack_require__.r(__webpack_exports__);
       });
     };
     var showSuccessMessage = function showSuccessMessage() {
-      _services_customAlerts__WEBPACK_IMPORTED_MODULE_2__.CustomAlertsService.successConfirmAlert({
-        title: (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_3__.usePage)().props.value.flash.message
-      });
+      var flashMessage = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_3__.usePage)().props.value.flash.message;
+      if (flashMessage) {
+        _services_customAlerts__WEBPACK_IMPORTED_MODULE_2__.CustomAlertsService.successConfirmAlert({
+          title: flashMessage
+        });
+      } else {
+        _services_customAlerts__WEBPACK_IMPORTED_MODULE_2__.CustomAlertsService.generalAlert({
+          title: 'Error',
+          text: (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_3__.usePage)().props.value.flash.errorMessage,
+          icon: "error",
+          isToast: true
+        });
+      }
       closeModal();
     };
     var closeModal = function closeModal() {

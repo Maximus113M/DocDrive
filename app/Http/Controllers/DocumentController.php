@@ -27,7 +27,9 @@ class DocumentController extends Controller
         
         $file = request()->file("document");
         $path = $this->uploadDocument($file, $validityYear, $projectID);
-
+        if (!$path) {
+            return redirect()->back()->with("errorMessage", "Documento ya existe");;
+        }
         $document = new Document();
         $document->name = $file->getClientOriginalName();
         $document->documentPath = $path;
@@ -42,9 +44,13 @@ class DocumentController extends Controller
     /** 
      * Subir el archivo al storage 
      */
-    private function uploadDocument(UploadedFile $file, int $year, int $projectID) : string
+    private function uploadDocument(UploadedFile $file, int $year, int $projectID)
     {
         $ruta = $year.'/'.$projectID;
+        if (Storage::exists($ruta.'/'.$file->getClientOriginalName())) {
+            return false;
+        } 
+        Storage::exists($ruta);
         $file->storeAs($ruta, $file->getClientOriginalName());
         return Storage::url($ruta.'/'.$file->getClientOriginalName());
     }
