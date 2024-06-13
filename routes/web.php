@@ -4,6 +4,7 @@ use App\Http\Controllers\Auth\AuthenticatedSessionController;
 use App\Http\Controllers\Auth\RegisteredUserController;
 use App\Http\Controllers\CollaboratorController;
 use App\Http\Controllers\DocumentController;
+use App\Http\Controllers\FolderController;
 use App\Http\Controllers\InvestigatorController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\ValidityController;
@@ -37,6 +38,10 @@ Route::get('/{validityYear}/projects/{projectID}', [ProjectController::class, 'i
 // RUTA PARA SUBIR LOS DOCUMENTOS
 Route::post('/{validityYear}/projects/{projectID}/upload', [DocumentController::class, 'store'])
     ->name('document.upload')->middleware("protect.project");
+
+// RUTA PARA SUBIR LAS CARPETAS
+Route::post('/{validityYear}/projects/{projectID}/folder', [FolderController::class, 'store'])
+    ->name('folder.upload')->middleware("protect.project");
 
 
 // RUTAS PROTEGIDAS PARA EL ADMIN

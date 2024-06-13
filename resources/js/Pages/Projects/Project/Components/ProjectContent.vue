@@ -52,11 +52,11 @@
                 </div>
             </button>
 
-            <div v-for="folder in props.project.folder">
-                <ProjectCard :project="project" :current-year="currentYear" />
+            <div v-for="folder in props.project.folders">
+                <ProjectCard :folder="folder" :project="project" :current-year="currentYear" />
             </div>
             <div v-for="document in props.project.documents">
-                <CardDocumentDetails :project="project" :current-year="currentYear" />
+                <CardDocumentDetails :document="document" :current-year="currentYear" :project="project" />
             </div>
         </div>
     </div>
@@ -75,10 +75,18 @@
                 <div class="modal-body px-3">
                     <form @submit.prevent="upload">
                         <div class="flex mb-3">
-                            <div class="form-check">
-                                <input class="form-check-input" type="radio" name="file" id="file" checked>
+                            <div class="form-check mr-4">
+                                <input :onclick="changeInputCheck" ref="checkedUploadFile" class="form-check-input"
+                                    type="radio" name="file" id="file" value="file" checked>
                                 <label class="form-check-label" for="file">
                                     Archivo
+                                </label>
+                            </div>
+                            <div class="form-check">
+                                <input :onclick="changeInputCheck" ref="checkedCreateFolder" class="form-check-input"
+                                    type="radio" name="file" value="folder" id="folder">
+                                <label class="form-check-label" for="folder">
+                                    Carpeta
                                 </label>
                             </div>
                         </div>
@@ -92,13 +100,19 @@
                                     formUploadFile.errors.visualizationRoleSelected }}</div>
                             </select>
                         </div>
-                        <div class="mb-3">
-                            <label for="formFile" class="font-bold form-label">Seleccionar archivo</label>
-                            <input @input="formUploadFile.document = $event.target.files[0]" class="form-control" type="file" id="formFile">
-                            <div v-if="formUploadFile.errors.visualizationRoleSelected">{{
-                                    formUploadFile.errors.visualizationRoleSelected }}</div>
+                        <div class="mb-3 inputs-folder" style="display: none;">
+                            <label class="font-bold">Nombre</label>
+                            <br>
+                            <input v-model="formUploadFile.name" class="form-control" type="text" placeholder="Nombre">
                         </div>
-                        <div class="row justify-center p-3 mt-5">
+                        <div class="mb-3 inputs-file">
+                            <label for="formFile" class="font-bold form-label">Seleccionar archivo</label>
+                            <input @input="formUploadFile.document = $event.target.files[0]" class="form-control"
+                                type="file" id="formFile">
+                            <div v-if="formUploadFile.errors.visualizationRoleSelected">{{
+                                formUploadFile.errors.visualizationRoleSelected }}</div>
+                        </div>
+                        <div class="row justify-center p-3 my-3">
                             <button type="submit" class="btn py-2"
                                 style="background-color: #39A900; color: white; "><strong>Crear</strong></button>
                         </div>
@@ -136,24 +150,46 @@ const props = defineProps({
 
 const formUploadFile = useForm({
     document: null,
+    name: null,
     visualizationRoleSelected: null
 })
+
+const checkedUploadFile = ref(null)
+const checkedCreateFolder = ref(null)
+
+const isAssociatedUser = ref(null);
+
+const authUser = usePage().props.value.auth.user;
 
 const nameRoleVisualization = {
     "private": "Privado",
     "public": "Público",
     "general-public": "Publico en general"
 }
-
-const isAssociatedUser = ref(null);
-
-const authUser = usePage().props.value.auth.user;
-
 const modal = ref(null)
 
 onMounted(() => {
     isAssociatedUser.value = verifiyAssociatedUser()
 })
+
+const changeInputCheck = (e) => {
+
+    const inputsFile = document.getElementsByClassName("inputs-file")
+    const inputsFolder = document.getElementsByClassName("inputs-folder")
+    if (e.target.value == "file") {
+        changeDisplayCheckBox(inputsFile, "block")
+        changeDisplayCheckBox(inputsFolder, "none")
+    } else {
+        changeDisplayCheckBox(inputsFolder, "block")
+        changeDisplayCheckBox(inputsFile, "none")
+    }
+}
+
+const changeDisplayCheckBox = (inputs, display) => {
+    Array.from(inputs).forEach(function (element) {
+        element.style.display = display;
+    });
+}
 
 const verifiyAssociatedUser = () => {
     if (authUser || !props.project.users) {
@@ -170,9 +206,10 @@ const verifiyAssociatedUser = () => {
 
 
 const upload = () => {
-    formUploadFile.post(route("document.upload", {
-        "projectID" : props.project.id, 
-        "validityYear" : props.currentYear
+    
+    formUploadFile.post(route(checkedCreateFolder.value.checked ? "folder.upload" : "document.upload", {
+        "projectID": props.project.id,
+        "validityYear": props.currentYear
     }), {
         onSuccess: () => showSuccessMessage(),
         onError: (e) => {
@@ -198,6 +235,7 @@ const closeModal = () => {
     const modal = document.getElementById("modalNewDocument")
     const modalBootstrap = bootstrap.Modal.getInstance(modal)
     modalBootstrap.hide()
+    formUploadFile.reset()
 }
 
 </script>

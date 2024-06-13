@@ -17,7 +17,7 @@ class DocumentController extends Controller
     public function store($validityYear, $projectID)
     {
         $validator = Validator::make(request()->all(), [
-            'document' => ['required', 'file'],
+            'document' => ['required', 'file', 'max:10240'],
             'visualizationRoleSelected' => 'required',
         ]);
 
@@ -45,7 +45,7 @@ class DocumentController extends Controller
     private function uploadDocument(UploadedFile $file, int $year, int $projectID) : string
     {
         $ruta = $year.'/'.$projectID;
-        $file->store($ruta);
+        $file->storeAs($ruta, $file->getClientOriginalName());
         return Storage::url($ruta.'/'.$file->getClientOriginalName());
     }
 }

@@ -15,7 +15,7 @@ use Inertia\Inertia;
 
 class ProjectController extends Controller
 {
-    
+
     /**
      * Crear un nuevo projecto
      * 
@@ -88,7 +88,7 @@ class ProjectController extends Controller
         $usersID =  $project->users->pluck('id')->toArray();
         $role = AuthServiceProvider::getRole();
 
-        if (!in_array(Auth::user()->id, $usersID) && $role != RoleServiceProvider::ADMIN ) {
+        if (!in_array(Auth::user()->id, $usersID) && $role != RoleServiceProvider::ADMIN) {
             abort(403, "No tienes persmisos para estar aqui");
         }
         if ($project->folders->count() > 0 || $project->documents->count() > 0) {
@@ -111,13 +111,52 @@ class ProjectController extends Controller
     public function index($validityYear, $projectID)
     {
         $project = Project::find($projectID);
+        $userRole = AuthServiceProvider::getRole();
+        if ($userRole == RoleServiceProvider::INVESTIGATOR || $userRole == RoleServiceProvider::COLLABORATOR) {
+            $usersID = $project->users->pluck('id')->toArray();
+            $filteredDocuments = $project->documents->filter(function ($document) use ($usersID) {
+                $visualizationRole = $document->visualizationRole()->first()->name;
+                return $this->conditionCollaboratorInvestigator($visualizationRole, $usersID);
+            });
+            $filteredFolders = $project->folders->filter(function ($folder) use ($usersID) {
+                $visualizationRole = $folder->visualizationRole()->first()->name;
+                return $this->conditionCollaboratorInvestigator($visualizationRole, $usersID);
+            });
+            $project->setRelation('documents', $filteredDocuments);
+            $project->setRelation('folders', $filteredFolders);
+        } elseif ($userRole == RoleServiceProvider::GUEST) {
+            $filteredDocuments = $project->documents->filter(function ($document) {
+                $visualizationRole = $document->visualizationRole()->first()->name;
+                return $this->conditionGuest($visualizationRole);
+            });
+            $filteredFolders = $project->folders->filter(function ($folder) {
+                $visualizationRole = $folder->visualizationRole()->first()->name;
+                return $this->conditionGuest($visualizationRole);
+            });
+            $project->setRelation('documents', $filteredDocuments);
+            $project->setRelation('folders', $filteredFolders);
+        } else {
+            $project->documents;
+            $project->folders;
+        }
         return Inertia::render("Projects/Project/Index", [
             // "folders" => $project->folders,
             // "documents" => $project->documents,
             "project" => $project,
-            "currentYear"=> $validityYear,
+            "currentYear" => $validityYear,
             "visualizationsRole" => VisualizationRole::all(),
         ]);
     }
 
+    private function conditionCollaboratorInvestigator($visualizationRole, $usersID): bool
+    {
+        return $visualizationRole == RoleServiceProvider::PUBLIC || $visualizationRole ==
+            RoleServiceProvider::GENERAL_PUBLIC || ($visualizationRole == RoleServiceProvider::PRIVATE
+                && in_array(Auth::user()->id, $usersID));
+    }
+
+    private function conditionGuest($visualizationRole): bool
+    {
+        return $visualizationRole == RoleServiceProvider::GENERAL_PUBLIC; 
+    }
 }

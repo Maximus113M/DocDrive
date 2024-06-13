@@ -12,11 +12,13 @@ import ProjectContent from '@/Pages/Projects/Project/Components/ProjectContent.v
 import { usePage } from '@inertiajs/inertia-vue3';
 
 
-defineProps({
+const {  project } = defineProps({
     project: Object,
     visualizationsRole: {type: Array, required: true},
     currentYear: {type: String, required: true},
 })
+
+console.log(project.documents);
 
 const authUser = usePage().props.value.auth.user ?? null;
 const role = authUser ? authUser.role.name : 'guest';

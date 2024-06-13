@@ -7,6 +7,7 @@ import { onMounted, ref } from 'vue';
 import { CustomAlertsService } from '@/services/customAlerts';
 
 const props = defineProps({
+    folder: { type: Object },
     project: { type: Object, required: true },
     currentYear: { type: String, required: true }
 });
@@ -163,12 +164,16 @@ const openModalDelete = () => {
             <Icon name="project" />
 
 
-            <div class="validity-font">
+            <div v-if="!folder" class="validity-font">
                 Proyecto
             </div>
             <div class="max-h-12 max-w-44 overflow-hidden text-center">
-                <h5 class="text-black text-wrap text-ellipsis"><strong> {{ props.project.name.length > 25 ?
+                <h5 v-if="!folder" class="text-black text-wrap text-ellipsis"><strong> {{ props.project.name.length > 25
+                    ?
                     `${props.project.name.substring(0, 25)}...` : props.project.name }} </strong></h5>
+                <h5 v-else class="text-black text-wrap text-ellipsis"><strong> {{ props.folder.name.length > 25 ?
+                    `${props.folder.name.substring(0, 25)}...` : props.folder.name }} </strong></h5>
+
             </div>
         </div>
         </Link>
