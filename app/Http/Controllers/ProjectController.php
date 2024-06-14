@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\User;
 use App\Models\VisualizationRole;
 use App\Providers\AuthServiceProvider;
 use App\Providers\RoleServiceProvider;
@@ -175,16 +176,21 @@ class ProjectController extends Controller
             abort(403, "No tienes persmisos para estar aqui");
         }
         $usersID =  $project->users->pluck('id')->toArray();
-        $role = AuthServiceProvider::getRole();
-        if (!in_array(Auth::user()->id, $usersID) && $role != RoleServiceProvider::ADMIN) {
+        $roleAuth = AuthServiceProvider::getRole();
+        if (!in_array(Auth::user()->id, $usersID) && $roleAuth != RoleServiceProvider::ADMIN) {
             abort(403, "No tienes persmisos para estar aqui");
         }
         $validator = Validator::make(request()->all(), [
-            'usersID' => 'required',
+            'role' => 'required',
+            'usersID' =>'',
         ]);
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
+
+        $role = request("role");
+
+        $this->disassociatedUsers($project, $role, request("usersID"));        
 
         foreach (request("usersID") as $userID) {
             if (!in_array($userID, $usersID)) {
@@ -193,9 +199,39 @@ class ProjectController extends Controller
         }
 
 
-
-        return redirect()->back()->with("message", "Usuarios asociados.");
+        return redirect()->back()->with("message", "Usuarios asociados/desasociados.");
     }
 
+
+    /**
+     * 
+     * Desasociar usuarios
+     */
+    public function disassociatedUsers($project, $role, $usersID)
+    {
+        if (RoleServiceProvider::INVESTIGATOR == $role) {
+            $investigators = User::whereHas('role', function($query){
+                $query->where('id', RoleServiceProvider::INVESTIGATOR_ID);
+            })->pluck("id");
+            $usersIDToRemove = $this->removeDuplicates($usersID, $investigators);
+            $project->users()->detach($usersIDToRemove);
+        } else if (RoleServiceProvider::COLLABORATOR == $role) {
+            $collaborators = User::whereHas('role', function($query){
+                $query->where('id', RoleServiceProvider::COLLABORATOR_ID);
+            })->pluck("id");
+            $usersIDToRemove = $this->removeDuplicates($usersID, $collaborators);
+            $project->users()->detach($usersIDToRemove);
+        }
+    }
+
+    /**
+     * Remover los ids repetidos de los usuarios (investigadores o colaboradores)
+     */
+    private function removeDuplicates($usersID, $roleUsersID)
+    {
+        return array_filter($roleUsersID->toArray(), function ($roleUserID) use ($usersID) {
+            return !in_array($roleUserID, $usersID);
+        });
+    }
 
 }

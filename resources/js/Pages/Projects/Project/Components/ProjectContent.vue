@@ -150,7 +150,7 @@
                         </div>
                         <div class="row justify-center p-3 my-3">
                             <button type="submit" class="btn py-2"
-                                style="background-color: #39A900; color: white; "><strong>Asociar</strong></button>
+                                style="background-color: #39A900; color: white; "><strong>Asociar / Desasociar</strong></button>
                         </div>
                     </form>
                 </div>
@@ -183,7 +183,8 @@ const props = defineProps({
 const users = ref([])
 
 const formAssociateUser = useForm({
-    usersID: []
+    usersID: [],
+    role : ''
 })
 
 const formUploadFile = useForm({
@@ -204,6 +205,8 @@ const nameRoleVisualization = {
     "public": "Público",
     "general-public": "Publico en general"
 }
+
+let role = ""
 
 onMounted(() => {
     isAssociatedUser.value = verifiyAssociatedUser()
@@ -230,6 +233,7 @@ const changeTypeUserToInvestigator = () => {
             formAssociateUser.usersID.push(user.id)
         }
     })
+    role = Constants.INVESTIGATOR
 }
 
 const changeTypeUserToCollaborator = () => {
@@ -240,6 +244,7 @@ const changeTypeUserToCollaborator = () => {
             formAssociateUser.usersID.push(user.id)
         }
     })
+    role = Constants.COLLABORATOR
 }
 
 const changeDisplayCheckBox = (inputs, display) => {
@@ -286,6 +291,7 @@ const upload = () => {
 
 const associateUser = () => {
     console.log(formAssociateUser.usersID);
+    formAssociateUser.role = role
     formAssociateUser.post(route("project.associated.users", {
         "projectID": props.project.id,
     }), {

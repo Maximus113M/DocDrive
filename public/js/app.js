@@ -22348,7 +22348,8 @@ __webpack_require__.r(__webpack_exports__);
     var props = __props;
     var users = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)([]);
     var formAssociateUser = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_3__.useForm)({
-      usersID: []
+      usersID: [],
+      role: ''
     });
     var formUploadFile = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_3__.useForm)({
       document: null,
@@ -22364,6 +22365,7 @@ __webpack_require__.r(__webpack_exports__);
       "public": "Público",
       "general-public": "Publico en general"
     };
+    var role = "";
     (0,vue__WEBPACK_IMPORTED_MODULE_4__.onMounted)(function () {
       isAssociatedUser.value = verifiyAssociatedUser();
     });
@@ -22386,6 +22388,7 @@ __webpack_require__.r(__webpack_exports__);
           formAssociateUser.usersID.push(user.id);
         }
       });
+      role = _core_appFunctions__WEBPACK_IMPORTED_MODULE_6__.Constants.INVESTIGATOR;
     };
     var changeTypeUserToCollaborator = function changeTypeUserToCollaborator() {
       formAssociateUser.usersID = [];
@@ -22395,6 +22398,7 @@ __webpack_require__.r(__webpack_exports__);
           formAssociateUser.usersID.push(user.id);
         }
       });
+      role = _core_appFunctions__WEBPACK_IMPORTED_MODULE_6__.Constants.COLLABORATOR;
     };
     var changeDisplayCheckBox = function changeDisplayCheckBox(inputs, display) {
       Array.from(inputs).forEach(function (element) {
@@ -22435,6 +22439,7 @@ __webpack_require__.r(__webpack_exports__);
     };
     var associateUser = function associateUser() {
       console.log(formAssociateUser.usersID);
+      formAssociateUser.role = role;
       formAssociateUser.post(route("project.associated.users", {
         "projectID": props.project.id
       }), {
@@ -22490,6 +22495,12 @@ __webpack_require__.r(__webpack_exports__);
       isAssociatedUser: isAssociatedUser,
       authUser: authUser,
       nameRoleVisualization: nameRoleVisualization,
+      get role() {
+        return role;
+      },
+      set role(v) {
+        role = v;
+      },
       changeInputCheck: changeInputCheck,
       changeTypeUserToInvestigator: changeTypeUserToInvestigator,
       changeTypeUserToCollaborator: changeTypeUserToCollaborator,
@@ -25985,7 +25996,7 @@ var _hoisted_44 = /*#__PURE__*/_withScopeId(function () {
       "background-color": "#39A900",
       "color": "white"
     }
-  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Asociar")])], -1 /* HOISTED */);
+  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("strong", null, "Asociar / Desasociar")])], -1 /* HOISTED */);
 });
 function render(_ctx, _cache, $props, $setup, $data, $options) {
   var _$setup$authUser, _$setup$authUser2, _$setup$authUser3;
@@ -27656,6 +27667,8 @@ var Constants = /*#__PURE__*/_createClass(function Constants() {
 });
 _defineProperty(Constants, "INVESTIGATOR_ID", 2);
 _defineProperty(Constants, "COLLABORATOR_ID", 3);
+_defineProperty(Constants, "COLLABORATOR", "collaborator");
+_defineProperty(Constants, "INVESTIGATOR", "investigator");
 
 /***/ }),
 
