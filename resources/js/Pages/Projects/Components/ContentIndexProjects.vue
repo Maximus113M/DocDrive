@@ -27,7 +27,7 @@
             </button>
 
             <div v-for="project in projects">
-                <ProjectCard :project="project" :current-year="currentYear" />
+                <ProjectCard :visualizationsRole="visualizationsRole" :project="project" :current-year="currentYear" />
             </div>
         </div>
     </div>
@@ -145,7 +145,7 @@ const nameRoleVisualization = {
 
 const modal = ref(null)
 
-const { investigators, validityID, currentYear } = defineProps({
+const { projects, visualizationsRole, investigators, validityID, currentYear } = defineProps({
     projects: Object,
     investigators: Object,
     role: String,

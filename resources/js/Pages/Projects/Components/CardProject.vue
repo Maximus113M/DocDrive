@@ -9,14 +9,18 @@ import { CustomAlertsService } from '@/services/customAlerts';
 const props = defineProps({
     folder: { type: Object },
     project: { type: Object, required: true },
-    currentYear: { type: String, required: true }
+    currentYear: { type: String, required: true },
+    visualizationsRole : { type: Array, required: true}
 });
+
+
 
 const form = useForm({
     name: props.project.name,
     description: props.project.description,
     startDate: props.project.startDate,
     endDate: props.project.endDate,
+    visualizationRoleSelected: props.project.visualization_role_id
     //target: project.target,
 })
 
@@ -50,6 +54,12 @@ const updateProject = () => {
     form.put(route("project.update", { "projectID": props.project.id }), {
         onSuccess: () => showMessage(),
     })
+}
+
+const nameRoleVisualization = {
+    "private": "Privado",
+    "public": "Público",
+    "general-public": "Publico en general"
 }
 
 const showMessage = () => {
@@ -186,8 +196,8 @@ const openModalDelete = () => {
     <!-- MODAL EDIT PROJECT-->
     <div class="modal fade" :id="`modal-update-project-${props.project.id}`" tabindex="-1"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="width: 350px; height: 600px;">
-            <div class="modal-content position-relative p-3" style="max-height: 800px;">
+        <div class="modal-dialog" style="width: 500px;">
+            <div class="modal-content position-relative p-3">
                 <div class="d-flex flex-row justify-center px-3">
                     <h4 class="my-3" style="color: #39A900;"><strong>Actualizar proyecto</strong></h4>
 
@@ -195,28 +205,39 @@ const openModalDelete = () => {
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body px-3">
-                    <form @submit.prevent="updateProject">
+                    <form class="sm:grid sm:grid-cols-2" @submit.prevent="updateProject">
                         <div class="mb-3">
-                            <label for="name" class="form-label">Ingrese el nombre:</label>
+                            <label for="name" class="font-bold form-label">Ingrese el nombre:</label>
                             <input v-model="form.name" type="text" class="form-control" id="name">
                             <div v-if="form.errors.name">{{ form.errors.name }}</div>
                         </div>
+                        
                         <div class="mb-3">
-                            <label for="description" class="form-label">Ingrese la descripción:</label>
-                            <input v-model="form.description" type="text" class="form-control" id="description">
-                            <div v-if="form.errors.description">{{ form.errors.description }}</div>
+                            <label class="font-bold">Visualización</label>
+                            <br>
+                            <select v-model="form.visualizationRoleSelected" class="form-select">
+                                <option v-for="vRole in visualizationsRole" :value="vRole.id" :key="vRole.id">{{
+                                    nameRoleVisualization[vRole.name] }}</option>
+                            </select>
                         </div>
                         <div class="mb-3">
-                            <label for="startDate" class="form-label">Ingrese la fecha de inicio:</label>
+                            <label for="startDate" class="font-bold form-label">Ingrese la fecha de inicio:</label>
                             <input v-model="form.startDate" type="date" class="form-control" id="startDate">
                             <div v-if="form.errors.startDate">{{ form.errors.startDate }}</div>
                         </div>
                         <div class="mb-3">
-                            <label for="endDate" class="form-label">Ingrese la fecha fin:</label>
+                            <label for="endDate" class="font-bold form-label">Ingrese la fecha fin:</label>
                             <input v-model="form.endDate" type="date" class="form-control" id="endDate">
                             <div v-if="form.errors.endDate">{{ form.errors.endDate }}</div>
                         </div>
-                        <div class="row justify-center p-3 mt-5">
+                        
+                        <div class="col-span-2 mb-3">
+                            <label for="description" class="font-bold form-label">Ingrese la descripción:</label>
+                            <textarea v-model="form.description" type="text-area" class="form-control lg:h-48 max-h-48"
+                                id="description" />
+                            <div v-if="form.errors.description">{{ form.errors.description }}</div>
+                        </div>
+                        <div class="col-span-2 row justify-center p-3 ">
                             <button type="submit" class="btn py-2"
                                 style="background-color: #39A900; color: white; "><strong>Actualizar
                                     proyecto</strong></button>

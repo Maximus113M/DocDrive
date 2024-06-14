@@ -16,7 +16,7 @@
 
         <div class="px-5 pt-1 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
 
-            <button v-if="authUser != null && (authUser?.role.name == 'admin'
+            <button :v-if="authUser != null && (authUser?.role.name == 'admin'
                 || (isAssociatedUser))" class="col" data-bs-toggle="modal" data-bs-target="#modalNewDocument">
                 <div class="folder border-3 rounded-4 py-3 bg-white">
                     <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
@@ -28,8 +28,8 @@
                 </div>
             </button>
 
-            <button v-if="authUser != null && (authUser?.role.name == 'admin'
-                || (isAssociatedUser))" class="col" data-bs-toggle="modal" data-bs-target="#modalSaveProject">
+            <button name="investigator"  :onclick="changeTypeUserToInvestigator" v-if="authUser != null && (authUser?.role.name == 'admin'
+                || (isAssociatedUser))" class="col" data-bs-toggle="modal" data-bs-target="#modalAssociateUser">
                 <div class="folder border-3 rounded-4 py-3 bg-white">
                     <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
                         fill="#39A900">
@@ -40,8 +40,8 @@
                 </div>
             </button>
 
-            <button v-if="authUser != null && (authUser?.role.name == 'admin'
-                || (isAssociatedUser))" class="col" data-bs-toggle="modal" data-bs-target="#modalSaveProject">
+            <button name="collaborator" :onclick="changeTypeUserToCollaborator" v-if="authUser != null && (authUser?.role.name == 'admin'
+                || (isAssociatedUser))" class="col" data-bs-toggle="modal" data-bs-target="#modalAssociateUser">
                 <div class="folder border-3 rounded-4 py-3 bg-white">
                     <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
                         fill="#FF6624">
@@ -127,7 +127,36 @@
     <!-- MODAL associate USERS -->
 
 
+    <div class="modal fade" id="modalAssociateUser" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog" style="width: 350px; height: 600px;">
+            <div class="modal-content position-relative p-3" style="max-height: 400px;">
+                <div class="d-flex flex-row justify-center px-3">
+                    <h4 class="my-3" style="color: #39A900;"><strong>Asociar Investigador</strong></h4>
 
+                    <button type="button" class="btn-close position-absolute top-1 end-3" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-3">
+                    <form @submit.prevent="associateUser">
+                        <div class="px-4 py-2 mb-3 border-2 rounded-lg">
+                            <div class="">
+                                <label class="font-bold pb-2">Investigadores</label>
+                            </div>
+                            <div v-for="user in users" :key="user.id">
+                                <input class="mr-2" type="checkbox" :id="'checkbox-' + user.id"
+                                    v-model="formAssociateUser.usersID" :value="user.id">
+                                <label :for="'checkbox-' + user.id">{{ user.name }}</label>
+                            </div>
+                        </div>
+                        <div class="row justify-center p-3 my-3">
+                            <button type="submit" class="btn py-2"
+                                style="background-color: #39A900; color: white; "><strong>Asociar</strong></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
 
 
@@ -141,11 +170,20 @@ import { CustomAlertsService } from '@/services/customAlerts';
 import { Link, useForm, usePage } from '@inertiajs/inertia-vue3'
 import { ref, onMounted } from 'vue';
 import Icon from '@/Shared/Icon.vue';
+import { Constants } from '@/core/appFunctions';
 
 const props = defineProps({
     currentYear: { type: String, required: true },
     project: { type: Object, required: true },
-    visualizationsRole: { type: Array, required: true }
+    visualizationsRole: { type: Array, required: true },
+    investigators: { type: Array, required: true },
+    collaborators: { type: Array, required: true }
+})
+
+const users = ref([])
+
+const formAssociateUser = useForm({
+    usersID: []
 })
 
 const formUploadFile = useForm({
@@ -166,14 +204,13 @@ const nameRoleVisualization = {
     "public": "Público",
     "general-public": "Publico en general"
 }
-const modal = ref(null)
 
 onMounted(() => {
     isAssociatedUser.value = verifiyAssociatedUser()
 })
 
-const changeInputCheck = (e) => {
 
+const changeInputCheck = (e) => {
     const inputsFile = document.getElementsByClassName("inputs-file")
     const inputsFolder = document.getElementsByClassName("inputs-folder")
     if (e.target.value == "file") {
@@ -183,6 +220,26 @@ const changeInputCheck = (e) => {
         changeDisplayCheckBox(inputsFolder, "block")
         changeDisplayCheckBox(inputsFile, "none")
     }
+}
+
+const changeTypeUserToInvestigator = () => {
+    formAssociateUser.usersID = []
+    users.value = props.investigators
+    props.project.users.forEach((user) => {
+        if (user.role_id == Constants.INVESTIGATOR_ID) {
+            formAssociateUser.usersID.push(user.id)
+        }
+    })
+}
+
+const changeTypeUserToCollaborator = () => {
+    formAssociateUser.usersID = []
+    users.value = props.collaborators
+    props.project.users.forEach((user) => {
+        if (user.role_id == Constants.COLLABORATOR_ID) {
+            formAssociateUser.usersID.push(user.id)
+        }
+    })
 }
 
 const changeDisplayCheckBox = (inputs, display) => {
@@ -211,12 +268,36 @@ const upload = () => {
         "projectID": props.project.id,
         "validityYear": props.currentYear
     }), {
-        onSuccess: () => showSuccessMessage(),
+        onSuccess: () => {
+            showSuccessMessage()
+            closeModal()
+        },
         onError: (e) => {
             console.log(e);
             CustomAlertsService.generalAlert({
                 title: 'Error',
                 text: 'Ha ocurrido un error al subir el archivo',
+                icon: "error",
+                isToast: true,
+            })
+        }
+    })
+}
+
+const associateUser = () => {
+    console.log(formAssociateUser.usersID);
+    formAssociateUser.post(route("project.associated.users", {
+        "projectID": props.project.id,
+    }), {
+        onSuccess: () => {
+            showSuccessMessage()
+            closeModalAssociateUsers()
+        },
+        onError: (e) => {
+            console.log(e);
+            CustomAlertsService.generalAlert({
+                title: 'Error',
+                text: 'Ha ocurrido un error al asociar el/los usuario/s',
                 icon: "error",
                 isToast: true,
             })
@@ -239,8 +320,6 @@ const showSuccessMessage = () => {
             isToast: true,
         })
     }
-
-    closeModal()
 }
 
 const closeModal = () => {
@@ -248,6 +327,13 @@ const closeModal = () => {
     const modalBootstrap = bootstrap.Modal.getInstance(modal)
     modalBootstrap.hide()
     formUploadFile.reset()
+}
+
+const closeModalAssociateUsers = () => {
+    const modal = document.getElementById("modalAssociateUser")
+    const modalBootstrap = bootstrap.Modal.getInstance(modal)
+    modalBootstrap.hide()
+    formAssociateUser.reset()
 }
 
 </script>

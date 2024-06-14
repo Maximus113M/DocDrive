@@ -22,11 +22,11 @@ class FolderController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
-        $document = new Folder();
-        $document->name = request("name");
-        $document->project_id = $projectID;
-        $document->visualization_role_id = request("visualizationRoleSelected");
-        $document->save();
+        $folder = new Folder();
+        $folder->name = request("name");
+        $folder->project_id = $projectID;
+        $folder->visualization_role_id = request("visualizationRoleSelected");
+        $folder->save();
 
         return redirect()->back()->with("message", "Carpeta creada correctamente");
     }

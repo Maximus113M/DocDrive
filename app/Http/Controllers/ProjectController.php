@@ -63,6 +63,7 @@ class ProjectController extends Controller
             'description' => 'required|string',
             'startDate' => ['required', new ValidityYearProject($project->validity->first()->year)],
             'endDate' => ['required', new ValidityEndYearProject(request("startDate"))],
+            'visualizationRoleSelected' => 'required|numeric',
             //'target' => 'required'
         ]);
         if ($validator->fails()) {
@@ -74,6 +75,7 @@ class ProjectController extends Controller
         $project->startDate = request("startDate");
         $project->endDate = request("endDate");
         $project->target = request("target");
+        $project->visualization_role_id = request("visualizationRoleSelected");
         $project->update();
 
         return redirect()->back()->with("message", "Proyecto actualizado.");
@@ -110,7 +112,7 @@ class ProjectController extends Controller
      */
     public function index($validityYear, $projectID)
     {
-        $project = Project::find($projectID);
+        $project = Project::with('users')->find($projectID);
         $userRole = AuthServiceProvider::getRole();
         if ($userRole == RoleServiceProvider::INVESTIGATOR || $userRole == RoleServiceProvider::COLLABORATOR) {
             $usersID = $project->users->pluck('id')->toArray();
@@ -145,6 +147,8 @@ class ProjectController extends Controller
             "project" => $project,
             "currentYear" => $validityYear,
             "visualizationsRole" => VisualizationRole::all(),
+            "investigators" => InvestigatorController::getInvestigators(),
+            "collaborators" => CollaboratorController::getCollaborators()
         ]);
     }
 
@@ -159,4 +163,39 @@ class ProjectController extends Controller
     {
         return $visualizationRole == RoleServiceProvider::GENERAL_PUBLIC; 
     }
+
+
+    /**
+     * Asociar usuarios a un proyecto
+     */
+    public function associatedUsers($projectID)
+    {
+        $project = Project::find($projectID);
+        if (!$project) {
+            abort(403, "No tienes persmisos para estar aqui");
+        }
+        $usersID =  $project->users->pluck('id')->toArray();
+        $role = AuthServiceProvider::getRole();
+        if (!in_array(Auth::user()->id, $usersID) && $role != RoleServiceProvider::ADMIN) {
+            abort(403, "No tienes persmisos para estar aqui");
+        }
+        $validator = Validator::make(request()->all(), [
+            'usersID' => 'required',
+        ]);
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        foreach (request("usersID") as $userID) {
+            if (!in_array($userID, $usersID)) {
+                $project->users()->attach($userID);
+            }
+        }
+
+
+
+        return redirect()->back()->with("message", "Usuarios asociados.");
+    }
+
+
 }

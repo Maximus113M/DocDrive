@@ -108,6 +108,10 @@ Route::middleware(['auth', 'role:admin|investigator'])->group(function () {
     // RUTA PARA ELIMINAR UN PROYECTO
     Route::delete('/project/{projectID}/destroy', [ProjectController::class, 'destroy'])
         ->name('project.destroy');
+
+    // RUTA PARA ASOCIAR USUARIOS A UN PROYECTO
+    Route::post('/project/{projectID}/users', [ProjectController::class, 'associatedUsers'])
+        ->name('project.associated.users');
 });
 
 
