@@ -16,7 +16,7 @@
 
         <div class="px-5 pt-1 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
 
-            <button :v-if="authUser != null && (authUser?.role.name == 'admin'
+            <button v-if="authUser != null && (authUser?.role.name == 'admin'
                 || (isAssociatedUser))" class="col" data-bs-toggle="modal" data-bs-target="#modalNewDocument">
                 <div class="folder border-3 rounded-4 py-3 bg-white">
                     <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
@@ -28,7 +28,7 @@
                 </div>
             </button>
 
-            <button name="investigator"  :onclick="changeTypeUserToInvestigator" v-if="authUser != null && (authUser?.role.name == 'admin'
+            <button name="investigator" :onclick="changeTypeUserToInvestigator" v-if="authUser != null && (authUser?.role.name == 'admin'
                 || (isAssociatedUser))" class="col" data-bs-toggle="modal" data-bs-target="#modalAssociateUser">
                 <div class="folder border-3 rounded-4 py-3 bg-white">
                     <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
@@ -150,7 +150,8 @@
                         </div>
                         <div class="row justify-center p-3 my-3">
                             <button type="submit" class="btn py-2"
-                                style="background-color: #39A900; color: white; "><strong>Asociar / Desasociar</strong></button>
+                                style="background-color: #39A900; color: white; "><strong>Asociar /
+                                    Desasociar</strong></button>
                         </div>
                     </form>
                 </div>
@@ -182,9 +183,11 @@ const props = defineProps({
 
 const users = ref([])
 
+const visualizationsRole = ref([])
+
 const formAssociateUser = useForm({
     usersID: [],
-    role : ''
+    role: ''
 })
 
 const formUploadFile = useForm({
@@ -200,6 +203,7 @@ const isAssociatedUser = ref(null);
 
 const authUser = usePage().props.value.auth.user;
 
+
 const nameRoleVisualization = {
     "private": "Privado",
     "public": "Público",
@@ -209,9 +213,22 @@ const nameRoleVisualization = {
 let role = ""
 
 onMounted(() => {
-    isAssociatedUser.value = verifiyAssociatedUser()
+    isAssociatedUser.value = verifiyAssociatedUser(),
+        validateVisualizationRole()
 })
 
+const validateVisualizationRole = () => {
+
+    if (props.project.visualization_role_id == Constants.PRIVATE_ID) {
+        visualizationsRole.value = props.visualizationsRole = props.visualizationsRole.filter((element) => element.id == Constants.PRIVATE_ID )
+    } else if (props.project.visualization_role_id == Constants.PUBLIC_ID) {
+        visualizationsRole.value = props.visualizationsRole.filter((element) => {
+            return element.id == Constants.PUBLIC_ID || element.id == Constants.PRIVATE_ID
+        })
+    } else {
+        visualizationsRole.value = props.visualizationsRole
+    }
+}
 
 const changeInputCheck = (e) => {
     const inputsFile = document.getElementsByClassName("inputs-file")

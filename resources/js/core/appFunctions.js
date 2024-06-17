@@ -19,4 +19,8 @@ export class Constants {
     static COLLABORATOR_ID = 3
     static COLLABORATOR = "collaborator"
     static INVESTIGATOR = "investigator"
+
+    static PRIVATE_ID = 1
+    static PUBLIC_ID = 2
+    static GENERAL_PUBLIC_ID = 3
 }

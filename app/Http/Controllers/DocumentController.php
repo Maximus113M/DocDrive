@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Document;
 use App\Models\Validity;
+use App\Providers\AuthServiceProvider;
 use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -16,6 +17,9 @@ class DocumentController extends Controller
      */
     public function store($validityYear, $projectID)
     {
+        if (!AuthServiceProvider::checkAuthenticated()) {
+            abort(403, "No tienes permisos para estar aqui");
+        }
         $validator = Validator::make(request()->all(), [
             'document' => 'required|file|max:10240',
             'visualizationRoleSelected' => 'required',

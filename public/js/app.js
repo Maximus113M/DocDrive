@@ -22347,6 +22347,7 @@ __webpack_require__.r(__webpack_exports__);
     __expose();
     var props = __props;
     var users = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)([]);
+    var visualizationsRole = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)([]);
     var formAssociateUser = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_3__.useForm)({
       usersID: [],
       role: ''
@@ -22367,8 +22368,21 @@ __webpack_require__.r(__webpack_exports__);
     };
     var role = "";
     (0,vue__WEBPACK_IMPORTED_MODULE_4__.onMounted)(function () {
-      isAssociatedUser.value = verifiyAssociatedUser();
+      isAssociatedUser.value = verifiyAssociatedUser(), validateVisualizationRole();
     });
+    var validateVisualizationRole = function validateVisualizationRole() {
+      if (props.project.visualization_role_id == _core_appFunctions__WEBPACK_IMPORTED_MODULE_6__.Constants.PRIVATE_ID) {
+        visualizationsRole.value = props.visualizationsRole = props.visualizationsRole.filter(function (element) {
+          return element.id == _core_appFunctions__WEBPACK_IMPORTED_MODULE_6__.Constants.PRIVATE_ID;
+        });
+      } else if (props.project.visualization_role_id == _core_appFunctions__WEBPACK_IMPORTED_MODULE_6__.Constants.PUBLIC_ID) {
+        visualizationsRole.value = props.visualizationsRole.filter(function (element) {
+          return element.id == _core_appFunctions__WEBPACK_IMPORTED_MODULE_6__.Constants.PUBLIC_ID || element.id == _core_appFunctions__WEBPACK_IMPORTED_MODULE_6__.Constants.PRIVATE_ID;
+        });
+      } else {
+        visualizationsRole.value = props.visualizationsRole;
+      }
+    };
     var changeInputCheck = function changeInputCheck(e) {
       var inputsFile = document.getElementsByClassName("inputs-file");
       var inputsFolder = document.getElementsByClassName("inputs-folder");
@@ -22488,6 +22502,7 @@ __webpack_require__.r(__webpack_exports__);
     var __returned__ = {
       props: props,
       users: users,
+      visualizationsRole: visualizationsRole,
       formAssociateUser: formAssociateUser,
       formUploadFile: formUploadFile,
       checkedUploadFile: checkedUploadFile,
@@ -22501,6 +22516,7 @@ __webpack_require__.r(__webpack_exports__);
       set role(v) {
         role = v;
       },
+      validateVisualizationRole: validateVisualizationRole,
       changeInputCheck: changeInputCheck,
       changeTypeUserToInvestigator: changeTypeUserToInvestigator,
       changeTypeUserToCollaborator: changeTypeUserToCollaborator,
@@ -25777,7 +25793,12 @@ var _hoisted_4 = {
 var _hoisted_5 = {
   "class": "px-5 pt-1 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5"
 };
-var _hoisted_6 = ["v-if"];
+var _hoisted_6 = {
+  key: 0,
+  "class": "col",
+  "data-bs-toggle": "modal",
+  "data-bs-target": "#modalNewDocument"
+};
 var _hoisted_7 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "folder border-3 rounded-4 py-3 bg-white"
@@ -26013,20 +26034,15 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       })];
     }),
     _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["href"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)("Vigencias/".concat($setup.props.currentYear, "/").concat($setup.props.project.name)), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
-    "v-if": $setup.authUser != null && (((_$setup$authUser = $setup.authUser) === null || _$setup$authUser === void 0 ? void 0 : _$setup$authUser.role.name) == 'admin' || $setup.isAssociatedUser),
-    "class": "col",
-    "data-bs-toggle": "modal",
-    "data-bs-target": "#modalNewDocument"
-  }, [].concat(_hoisted_8), 8 /* PROPS */, _hoisted_6), $setup.authUser != null && (((_$setup$authUser2 = $setup.authUser) === null || _$setup$authUser2 === void 0 ? void 0 : _$setup$authUser2.role.name) == 'admin' || $setup.isAssociatedUser) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
-    key: 0,
+  }, 8 /* PROPS */, ["href"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)("Vigencias/".concat($setup.props.currentYear, "/").concat($setup.props.project.name)), 1 /* TEXT */)])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_5, [$setup.authUser != null && (((_$setup$authUser = $setup.authUser) === null || _$setup$authUser === void 0 ? void 0 : _$setup$authUser.role.name) == 'admin' || $setup.isAssociatedUser) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", _hoisted_6, [].concat(_hoisted_8))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.authUser != null && (((_$setup$authUser2 = $setup.authUser) === null || _$setup$authUser2 === void 0 ? void 0 : _$setup$authUser2.role.name) == 'admin' || $setup.isAssociatedUser) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
+    key: 1,
     name: "investigator",
     onclick: $setup.changeTypeUserToInvestigator,
     "class": "col",
     "data-bs-toggle": "modal",
     "data-bs-target": "#modalAssociateUser"
   }, [].concat(_hoisted_10))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.authUser != null && (((_$setup$authUser3 = $setup.authUser) === null || _$setup$authUser3 === void 0 ? void 0 : _$setup$authUser3.role.name) == 'admin' || $setup.isAssociatedUser) ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("button", {
-    key: 1,
+    key: 2,
     name: "collaborator",
     onclick: $setup.changeTypeUserToCollaborator,
     "class": "col",
@@ -26068,7 +26084,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $setup.formUploadFile.visualizationRoleSelected = $event;
     }),
     "class": "form-select"
-  }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($props.visualizationsRole, function (vRole) {
+  }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.visualizationsRole, function (vRole) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
       value: vRole.id,
       key: vRole.id
@@ -27669,6 +27685,9 @@ _defineProperty(Constants, "INVESTIGATOR_ID", 2);
 _defineProperty(Constants, "COLLABORATOR_ID", 3);
 _defineProperty(Constants, "COLLABORATOR", "collaborator");
 _defineProperty(Constants, "INVESTIGATOR", "investigator");
+_defineProperty(Constants, "PRIVATE_ID", 1);
+_defineProperty(Constants, "PUBLIC_ID", 2);
+_defineProperty(Constants, "GENERAL_PUBLIC_ID", 3);
 
 /***/ }),
 
