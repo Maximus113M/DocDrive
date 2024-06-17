@@ -21,7 +21,7 @@
                         <div class="mb-3">
                             <label for="email" class="font-bold">Email</label>
                             <input v-model="form.email" type="email" class="form-control" id="email">
-                            <div class="text-red-400" v-if="form.errors.email">{{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}</div>
+                            <div class="text-red-400" v-if="form.errors.email">{{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Email) }}</div>
 
                         </div>
                         <div class="mb-3">

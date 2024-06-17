@@ -41,14 +41,15 @@ class ProjectController extends Controller
         $project->visualization_role_id = request("visualizationRoleSelected");
         $project->description = request("description");
         
-        if(request("startDate")){
+        if(request("startDate") || request("endDate")){
             $validity= Validity::where('id', request("validityID"))->first();
-            $minDate= $validity;
-            //error_log( $minDate);
-
+            $startDate = "{$validity->year}-01-01";
+            $endDate = "{$validity->year}-12-31";
+            // error_log($startDate);
+            // error_log($endDate);
             $validator = Validator::make(request()->all(), [
-                'startDate' => ['required'],
-                'endDate' => ['required'],
+                'startDate' => "required|date|before_or_equal:$endDate|after_or_equal:$startDate",
+                'endDate' => "required|date|after_or_equal:startDate|before_or_equal:$endDate",
             ]);
             if ($validator->fails()) {
                 return redirect()->back()->withErrors($validator)->withInput();
@@ -88,11 +89,16 @@ class ProjectController extends Controller
         if (!in_array(Auth::user()->id, $usersID) && $role != RoleServiceProvider::ADMIN) {
             abort(403, "No tienes persmisos para estar aqui");
         }
+        $year= $project->validity->first()->year;
+        $startDate = "{$year}-01-01";
+        $endDate = "{$year}-12-31";
+
+
         $validator = Validator::make(request()->all(), [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'startDate' => ['required', new ValidityYearProject($project->validity->first()->year)],
-            'endDate' => ['required', new ValidityEndYearProject(request("startDate"))],
+            'startDate' => "required|date|before_or_equal:$endDate|after_or_equal:$startDate",
+            'endDate' => "required|date|after_or_equal:startDate|before_or_equal:$endDate",
             'visualizationRoleSelected' => 'required|numeric',
             //'target' => 'required'
         ]);

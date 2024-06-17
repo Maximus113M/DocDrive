@@ -43,7 +43,7 @@
                         <strong> Nuevo Proyecto </strong>
                     </h4>
 
-                    <button type="button" class="btn-close position-absolute top-2 end-3" data-bs-dismiss="modal"
+                    <button type="button" class="btn-close position-absolute top-2 end-3" @click="closeModal()"
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body px-2">
@@ -62,13 +62,13 @@
                                         <label for="startDate" class="font-bold">Fecha Inicio</label>
                                         <input v-model="form.startDate" type="date" class="form-control" id="startDate">
                                         <div v-if="form.errors.startDate" class="text-center text-red-400">{{
-                                            AppFunctions.getErrorTranslate(AppFunctions.Errors.Date) }}</div>
+                                            AppFunctions.getErrorTranslate(AppFunctions.Errors.startDate) }}</div>
                                     </div>
                                     <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 mb-3">
                                         <label for="endDate" class="font-bold">Fecha Fin</label>
                                         <input v-model="form.endDate" type="date" class="form-control" id="endDate">
                                         <div v-if="form.errors.endDate" class="text-center text-red-400">
-                                            {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Date) }}
+                                            {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.endDate) }}
                                         </div>
                                     </div>
                                     <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-9 mb-3">
@@ -128,10 +128,10 @@
                                                     1
                                                 </div>
                                             </li>
-                                            <li v-if="totalPages > 1" class="page-item" aria-current="page">
+                                            <li v-if="totalPages > 2" class="page-item" aria-current="page">
                                                 <div class="page-link"
                                                     :style="paginatorIndex !== 1 && paginatorIndex !== totalPages ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;'">
-                                                    ...
+                                                    {{ paginatorIndex != 1 && paginatorIndex != totalPages? paginatorIndex : '...' }}
                                                 </div>
                                             </li>
                                             <li v-if="totalPages > 1" class="page-item" aria-current="page">
@@ -267,8 +267,10 @@ const showSuccessMessage = () => {
 }
 
 const closeModal = () => {
+    form.reset();
+    form.clearErrors();
     const modalBootstrap = bootstrap.Modal.getInstance(modal.value)
-    modalBootstrap.hide()
+    modalBootstrap?.hide()
 }
 
 </script>

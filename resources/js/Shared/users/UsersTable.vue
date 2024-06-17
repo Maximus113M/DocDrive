@@ -15,7 +15,7 @@
         </div>
     </div>
 
-    <div class="card p-3 rounded-3xl overflow-y-auto">
+    <div class="card p-3 rounded-3xl">
         <Vue3EasyDataTable :headers="headers" :items="users" :search-field="searchFields" :search-value="searchValue"
             :rows-items="[10, 15, 25, 50]" :rows-per-page="10" rows-per-page-message="Filas por página"
             empty-message="No se encontraron resultados" rows-of-page-separator-message="de" :theme-color="tableTheme"

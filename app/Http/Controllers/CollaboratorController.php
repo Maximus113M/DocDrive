@@ -86,7 +86,7 @@ class CollaboratorController extends Controller
 
         $user->assignRole(RoleServiceProvider::COLLABORATOR);
 
-        Mail::to($user)->send(new VerifyEmail($password, $user));
+        //Mail::to($user)->send(new VerifyEmail($password, $user));
 
         return redirect()->route("collaborator.index")->with("message", "¡El colaborador se ha creado correctamente!");
     }

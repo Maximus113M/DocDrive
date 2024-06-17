@@ -1,8 +1,10 @@
 export class AppFunctions{
     static Errors = Object.freeze({
         Field: 'field',
+        Email: 'email',
         Password: 'password',
-        Date: 'date',
+        startDate: 'startDate',
+        endDate: 'endDate',
         Investigator: 'investigators'
       });
 
@@ -10,10 +12,14 @@ export class AppFunctions{
         switch (error) {
             case 'field':
                 return 'Debes completar este campo';
+            case 'email':
+                return 'Correo invalido o ya existente';
             case 'password':
                 return 'Debe ser mayor a 8 caracteres';
-            case 'date':
-                return 'Debes escoger una fecha valida';
+            case 'startDate':
+                return 'Debe coincidir con el año de vigencia';
+            case 'endDate':
+                return 'Debe coincidir con el año de vigencia y ser mayor a la inicial';
             case 'investigators':
                 return 'Debes seleccionar al menos un investigador';
         }    
