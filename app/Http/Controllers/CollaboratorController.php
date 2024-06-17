@@ -29,6 +29,18 @@ class CollaboratorController extends Controller
         $this->userController = $userController;
     }
 
+    /**
+     * Traer todos los colaboradores
+     */
+
+    static public function getCollaborators() 
+    {
+        return DB::table("users AS u")
+        ->select('u.name AS name', 'u.id AS id', 'u.document AS document', 'u.phone AS phone', 'u.email AS email')
+        ->join("roles AS r", "u.role_id", "=", "r.id")
+        ->where("r.name", "=", RoleServiceProvider::COLLABORATOR)
+        ->get();
+    }
 
     /**
      *
@@ -36,14 +48,10 @@ class CollaboratorController extends Controller
      */
     public function index()
     {
-        $query = DB::table("users AS u")
-            ->select('u.name AS name', 'u.id AS id', 'u.document AS document', 'u.phone AS phone', 'u.email AS email')
-            ->join("roles AS r", "u.role_id", "=", "r.id")
-            ->where("r.name", "=", RoleServiceProvider::COLLABORATOR)
-            ->get();
+        
         
         return Inertia::render("Collaborator/Index", [
-            "collaborators" => $query,
+            "collaborators" => CollaboratorController::getCollaborators(),
             "isAuthenticated" => AuthServiceProvider::checkAuthenticated(),
             "role" => AuthServiceProvider::getRole()
         ]);

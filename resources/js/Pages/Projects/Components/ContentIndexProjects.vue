@@ -27,7 +27,7 @@
             </button>
 
             <div v-for="project in projects">
-                <ProjectCard :project="project" :current-year="currentYear" />
+                <ProjectCard :visualizationsRole="visualizationsRole" :project="project" :current-year="currentYear" />
             </div>
         </div>
     </div>

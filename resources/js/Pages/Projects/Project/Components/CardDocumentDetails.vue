@@ -47,8 +47,8 @@
 
             <div class="validity-font">
                 <div class="max-h-20 max-w-44 overflow-hidden text-center text-black text-wrap text-ellipsis">
-                    <div class=""><strong> {{ props.project.name.length > 40 ?
-                        `${props.project.name.substring(0, 40)}...` : props.project.name }} </strong></div>
+                    <div class=""><strong> {{ props.document.name.length > 40 ?
+                        `${props.document.name.substring(0, 40)}...` : props.document.name }} </strong></div>
                 </div>
             </div>
         </div>
@@ -71,8 +71,8 @@
                     <form @submit.prevent="updateProject">
                         <div class="mb-3">
                             <label for="name" class="form-label">Nombre:</label>
-                            <input v-model="form.name" type="text" class="form-control" id="name">
-                            <div v-if="form.errors.name">{{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}</div>
+                            <input v-model="documentForm.name" type="text" class="form-control" id="name">
+                            <div v-if="documentForm.errors.name">{{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}</div>
                         </div>
                     </form>
                 </div>
@@ -102,7 +102,7 @@ const documentForm = useForm({
 const isAssociatedUser = ref(null);
 const authUser = usePage().props.value.auth.user;
 
-const documentType= ref<string>(props.document.format)
+const documentType= ref(props.document.format)
 
 onMounted(() => {
     isAssociatedUser.value = verifiyAssociatedUser()
@@ -172,7 +172,7 @@ const openModalDelete = () => {
         if (result.isConfirmed) {
 
             // TODO CAMBIAR A RUTA VERDADERA
-            form.delete(route("project.destroy", { "projectID": props.document.id }), {
+            documentForm.delete(route("project.destroy", { "projectID": props.document.id }), {
                 onSuccess: () => {
                     showMessage()
                 },

@@ -19,3 +19,10 @@ export class AppFunctions{
         }    
     }
 }
+
+export class Constants {
+    static INVESTIGATOR_ID = 2
+    static COLLABORATOR_ID = 3
+    static COLLABORATOR = "collaborator"
+    static INVESTIGATOR = "investigator"
+}
