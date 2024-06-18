@@ -5,12 +5,13 @@ import BreezeDropdownLink from '@/Components/DropdownLink.vue';
 import Icon from '@/Shared/Icon.vue';
 import { onMounted, ref } from 'vue';
 import { CustomAlertsService } from '@/services/customAlerts';
+import { AppFunctions } from '@/core/appFunctions';
 
 const props = defineProps({
     folder: { type: Object },
     project: { type: Object, required: true },
     currentYear: { type: String, required: true },
-    visualizationsRole : { type: Array, required: true}
+    visualizationsRole: { type: Array, required: true }
 });
 
 
@@ -82,6 +83,8 @@ const showMessage = () => {
 }
 
 const openModalUpdate = () => {
+    form.clearErrors();
+    form.reset();
     const modal = document.getElementById("modal-update-project-" + props.project.id)
     const modalBootstrap = new bootstrap.Modal(modal)
     modalBootstrap.show()
@@ -196,7 +199,7 @@ const openModalDelete = () => {
     <!-- MODAL EDIT PROJECT-->
     <div class="modal fade" :id="`modal-update-project-${props.project.id}`" tabindex="-1"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="width: 500px;">
+        <div class="modal-dialog" style="width: 600px;">
             <div class="modal-content position-relative p-3">
                 <div class="d-flex flex-row justify-center px-3">
                     <h4 class="my-3" style="color: #39A900;"><strong>Actualizar proyecto</strong></h4>
@@ -206,36 +209,47 @@ const openModalDelete = () => {
                 </div>
                 <div class="modal-body px-3">
                     <form class="sm:grid sm:grid-cols-2" @submit.prevent="updateProject">
-                        <div class="mb-3">
+                        <div class="col-span-2 mb-3">
                             <label for="name" class="font-bold form-label">Ingrese el nombre:</label>
                             <input v-model="form.name" type="text" class="form-control" id="name">
-                            <div v-if="form.errors.name">{{ form.errors.name }}</div>
+                            <div v-if="form.errors.name" class="text-red-400 text-center">
+                                {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="startDate" class="font-bold form-label">Ingrese la fecha de inicio:</label>
+                            <input v-model="form.startDate" type="date" class="form-control" id="startDate">
+                            <div v-if="form.errors.startDate" class="text-center">
+                                {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.startDate) }}
+                            </div>
+                        </div>
+                        <div class="mb-3">
+                            <label for="endDate" class="font-bold form-label">Ingrese la fecha de fin:</label>
+                            <input v-model="form.endDate" type="date" class="form-control" id="endDate">
+                            <div v-if="form.errors.endDate" class="text-red-400">
+                                {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.endDate) }}
+                            </div>
                         </div>
                         
                         <div class="mb-3">
-                            <label class="font-bold">Visualización</label>
-                            <br>
+                            <label class="font-bold form-label">Visualización</label>
                             <select v-model="form.visualizationRoleSelected" class="form-select">
                                 <option v-for="vRole in visualizationsRole" :value="vRole.id" :key="vRole.id">{{
                                     nameRoleVisualization[vRole.name] }}</option>
                             </select>
+                            <div v-if="form.errors.visualizationRoleSelected" class="text-red-400 text-center">
+                                {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="startDate" class="font-bold form-label">Ingrese la fecha de inicio:</label>
-                            <input v-model="form.startDate" type="date" class="form-control" id="startDate">
-                            <div v-if="form.errors.startDate">{{ form.errors.startDate }}</div>
-                        </div>
-                        <div class="mb-3">
-                            <label for="endDate" class="font-bold form-label">Ingrese la fecha fin:</label>
-                            <input v-model="form.endDate" type="date" class="form-control" id="endDate">
-                            <div v-if="form.errors.endDate">{{ form.errors.endDate }}</div>
-                        </div>
-                        
+
                         <div class="col-span-2 mb-3">
                             <label for="description" class="font-bold form-label">Ingrese la descripción:</label>
-                            <textarea v-model="form.description" type="text-area" class="form-control lg:h-48 max-h-48"
+                            <textarea v-model="form.description" type="text-area" class="form-control h-48 max-h-48"
                                 id="description" />
-                            <div v-if="form.errors.description">{{ form.errors.description }}</div>
+                            <div v-if="form.errors.description" class="text-red-400 text-center">
+                                {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
+                            </div>
                         </div>
                         <div class="col-span-2 row justify-center p-3 ">
                             <button type="submit" class="btn py-2"

@@ -101,11 +101,11 @@ onMounted(() => {
 
                     <!-- CONTENT -->
                     <div class="w-full pt-3 px-3" style="background-color: #EBEBEB;" scroll-region>
-                        <div class="bg-white h-full w-full rounded-t-2xl">
+                        <div class="bg-white h-full w-full rounded-t-2xl overflow-y-auto">
                             <slot :role="role" class="shrink-0 md:flex" to="content" />
                         </div>
                     </div>
-
+                    
                 </div>
             </div>
         </div>

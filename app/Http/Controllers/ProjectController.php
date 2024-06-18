@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Project;
+use App\Models\Validity;
 use App\Models\User;
 use App\Models\VisualizationRole;
 use App\Providers\AuthServiceProvider;
@@ -25,7 +26,7 @@ class ProjectController extends Controller
     {
         $validator = Validator::make(request()->all(), [
             'name' => 'required|string|max:255',
-            'investigatorsID' => 'required',
+            'investigatorsID' => 'required|array',
             'validityID' => 'required|numeric',
             'visualizationRoleSelected' => 'required|numeric',
         ]);
@@ -38,12 +39,41 @@ class ProjectController extends Controller
         $project->name = request("name");
         $project->validity_id = request("validityID");
         $project->visualization_role_id = request("visualizationRoleSelected");
+        $project->description = request("description");
+        
+        if(request("startDate") || request("endDate")){
+            $validity= Validity::where('id', request("validityID"))->first();
+            $startDate = "{$validity->year}-01-01";
+            $endDate = "{$validity->year}-12-31";
+            // error_log($startDate);
+            // error_log($endDate);
+            $validator = Validator::make(request()->all(), [
+                'startDate' => "required|date|before_or_equal:$endDate|after_or_equal:$startDate",
+                'endDate' => "required|date|after_or_equal:startDate|before_or_equal:$endDate",
+            ]);
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
+
+            $project->startDate= request("startDate");
+            $project->endDate= request("endDate");
+        }
+            
         $project->save();
 
         $project->users()->attach(request("investigatorsID"));
 
 
         return redirect()->back()->with("message", "Proyecto creado.");
+    }
+
+    private function validateYear($validity, $originalDate){
+        $date = explode("-", $originalDate)[0];
+
+        if(!$validity || ($validity->year !==  $date)){
+            return false;
+        }
+        return true;
     }
 
     /**
@@ -59,11 +89,16 @@ class ProjectController extends Controller
         if (!in_array(Auth::user()->id, $usersID) && $role != RoleServiceProvider::ADMIN) {
             abort(403, "No tienes persmisos para estar aqui");
         }
+        $year= $project->validity->first()->year;
+        $startDate = "{$year}-01-01";
+        $endDate = "{$year}-12-31";
+
+
         $validator = Validator::make(request()->all(), [
             'name' => 'required|string|max:255',
             'description' => 'required|string',
-            'startDate' => ['required', new ValidityYearProject($project->validity->first()->year)],
-            'endDate' => ['required', new ValidityEndYearProject(request("startDate"))],
+            'startDate' => "required|date|before_or_equal:$endDate|after_or_equal:$startDate",
+            'endDate' => "required|date|after_or_equal:startDate|before_or_equal:$endDate",
             'visualizationRoleSelected' => 'required|numeric',
             //'target' => 'required'
         ]);
