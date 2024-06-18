@@ -11,7 +11,7 @@ const props = defineProps({
     folder: { type: Object },
     project: { type: Object, required: true },
     currentYear: { type: String, required: true },
-    visualizationsRole: { type: Array, required: true }
+    visualizationsRole: { type: Array, required: true },
 });
 
 
@@ -125,7 +125,8 @@ const openModalDelete = () => {
     <!-- PROJECT DESIGN -->
     <div class="col position-relative" style="max-width: 300px;">
 
-        <Link :href="route('project.index', { 'validityYear': currentYear, 'projectID': props.project.id })"
+        <Link :href="props.folder == null ? route('project.index', { 'validityYear': currentYear, 'projectID': props.project.id })
+            : route('folder.index', { 'validityYear': currentYear, 'projectID': props.project.id, 'folderID': props.folder.id })"
             class="text-decoration-none">
 
         <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40">

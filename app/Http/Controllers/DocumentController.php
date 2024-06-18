@@ -21,7 +21,7 @@ class DocumentController extends Controller
             abort(403, "No tienes permisos para estar aqui");
         }
         $validator = Validator::make(request()->all(), [
-            'document' => 'required|file|max:10240',
+            'document' => 'required|file|max:20240',
             'visualizationRoleSelected' => 'required',
         ]);
         
@@ -30,7 +30,7 @@ class DocumentController extends Controller
         }
         
         $file = request()->file("document");
-        $path = $this->uploadDocument($file, $validityYear, $projectID);
+        $path = $this->uploadDocument($file, $validityYear, $projectID, request("folder_id") ?? null);
         if (!$path) {
             return redirect()->back()->with("errorMessage", "Documento ya existe");;
         }
@@ -38,7 +38,8 @@ class DocumentController extends Controller
         $document->name = $file->getClientOriginalName();
         $document->documentPath = $path;
         $document->format = $file->extension() ?? $this->getExtension($document->name);
-        $document->project_id = $projectID;
+        $document->project_id = request("folder_id") !== null ? null : $projectID;
+        $document->folder_id = request("folder_id") !== null ? request("folder_id") : null;
         $document->visualization_role_id = request("visualizationRoleSelected");
         $document->save();
 
@@ -48,9 +49,12 @@ class DocumentController extends Controller
     /** 
      * Subir el archivo al storage 
      */
-    private function uploadDocument(UploadedFile $file, int $year, int $projectID)
+    private function uploadDocument(UploadedFile $file, int $year, int $projectID, ?int $folderID)
     {
         $ruta = $year.'/'.$projectID;
+        if (isset($folderID)) {
+            $ruta .= '/'.$folderID;
+        }
         if (Storage::exists($ruta.'/'.$file->getClientOriginalName())) {
             return false;
         } 

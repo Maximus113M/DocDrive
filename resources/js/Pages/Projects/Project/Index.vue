@@ -1,7 +1,7 @@
 <template>
 
     <AuthLayout :role="role">
-        <ProjectContent :collaborators="collaborators" :investigators="investigators" :current-year="currentYear" :project="project" :visualizations-role="visualizationsRole"/>
+        <ProjectContent :folder="folder" :collaborators="collaborators" :investigators="investigators" :current-year="currentYear" :project="project" :visualizations-role="visualizationsRole"/>
     </AuthLayout>
 
 </template>
@@ -13,6 +13,7 @@ import { usePage } from '@inertiajs/inertia-vue3';
 
 
 const {  project } = defineProps({
+    folder: Object,
     project: Object,
     visualizationsRole: {type: Array, required: true},
     currentYear: {type: String, required: true},

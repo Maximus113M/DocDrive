@@ -19,7 +19,7 @@ class CreateDocumentsTable extends Migration
             $table->string("documentPath");
             $table->string("description")->nullable();
             $table->string("format");
-            $table->unsignedBigInteger('project_id');
+            $table->unsignedBigInteger('project_id')->nullable();
             $table->foreign('project_id')->references('id')->on('projects');
             $table->unsignedBigInteger('folder_id')->nullable();
             $table->foreign('folder_id')->references('id')->on('folders');

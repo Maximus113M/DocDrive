@@ -4,12 +4,14 @@
         <div class="py-3">
             <div class="ml-5 flex justify-start items-center">
                 <Link class="mr-3" method="get"
-                    :href="route('validity.projects', { 'validityYear': props.currentYear })">
+                    :href="!folder ? route('validity.projects', { 'validityYear': props.currentYear })
+                    : route('project.index', { 'validityYear': currentYear, 'projectID': props.project.id })">
                 <Icon name="back" />
                 </Link>
 
                 <div class="text-2xl font-bold text-color-gray">
-                    {{ `Vigencias/${props.currentYear}/${props.project.name}` }}
+                    {{ !folder ? `Vigencias/${props.currentYear}/${props.project.name}`
+                    : `Vigencias/${props.currentYear}/${props.project.name}/${folder.name}` }}
                 </div>
             </div>
         </div>
@@ -131,8 +133,11 @@
         <div class="modal-dialog" style="width: 350px; height: 600px;">
             <div class="modal-content position-relative p-3" style="max-height: 400px;">
                 <div class="d-flex flex-row justify-center px-3">
-                    <h4 class="my-3" style="color: #39A900;"><strong>Asociar Investigador</strong></h4>
-
+                    <h4 class="my-3" :style="`color: ${role == 'investigator' ? '#39A900' : '#FF6624'}`">
+                        <strong>
+                            Asociar {{ role == Constants.COLLABORATOR ? 'Colaborador' : 'Investigador'}}
+                        </strong>
+                    </h4>
                     <button type="button" class="btn-close position-absolute top-1 end-3" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
@@ -140,7 +145,9 @@
                     <form @submit.prevent="associateUser">
                         <div class="px-4 py-2 mb-3 border-2 rounded-lg">
                             <div class="">
-                                <label class="font-bold pb-2">Investigadores</label>
+                                <label class="font-bold pb-2">
+                                    {{ role == Constants.COLLABORATOR ? 'Colaboradores' : 'Investigadores'}}
+                                </label>
                             </div>
                             <div v-for="user in users" :key="user.id">
                                 <input class="mr-2" type="checkbox" :id="'checkbox-' + user.id"
@@ -149,8 +156,8 @@
                             </div>
                         </div>
                         <div class="row justify-center p-3 my-3">
-                            <button type="submit" class="btn py-2"
-                                style="background-color: #39A900; color: white; "><strong>Asociar /
+                            <button type="submit" class="text-white btn py-2"
+                                :style="`background-color: ${role == 'investigator' ? '#39A900' : '#FF6624'}`"><strong>Asociar /
                                     Desasociar</strong></button>
                         </div>
                     </form>
@@ -171,9 +178,10 @@ import { CustomAlertsService } from '@/services/customAlerts';
 import { Link, useForm, usePage } from '@inertiajs/inertia-vue3'
 import { ref, onMounted } from 'vue';
 import Icon from '@/Shared/Icon.vue';
-import { Constants } from '@/core/appFunctions';
+import { AppFunctions, Constants } from '@/core/appFunctions';
 
 const props = defineProps({
+    folder: { type: Object, required: false },
     currentYear: { type: String, required: true },
     project: { type: Object, required: true },
     visualizationsRole: { type: Array, required: true },
@@ -193,7 +201,8 @@ const formAssociateUser = useForm({
 const formUploadFile = useForm({
     document: null,
     name: null,
-    visualizationRoleSelected: null
+    visualizationRoleSelected: null,
+    folder_id: props.folder != null ? props.folder.id : null,
 })
 
 const checkedUploadFile = ref(null)
@@ -218,10 +227,11 @@ onMounted(() => {
 })
 
 const validateVisualizationRole = () => {
+    let visualization_role_id = props.folder != null ? props.folder.visualization_role_id : props.project.visualization_role_id
 
-    if (props.project.visualization_role_id == Constants.PRIVATE_ID) {
+    if (visualization_role_id == Constants.PRIVATE_ID) {
         visualizationsRole.value = props.visualizationsRole = props.visualizationsRole.filter((element) => element.id == Constants.PRIVATE_ID )
-    } else if (props.project.visualization_role_id == Constants.PUBLIC_ID) {
+    } else if (visualization_role_id == Constants.PUBLIC_ID) {
         visualizationsRole.value = props.visualizationsRole.filter((element) => {
             return element.id == Constants.PUBLIC_ID || element.id == Constants.PRIVATE_ID
         })
@@ -271,7 +281,8 @@ const changeDisplayCheckBox = (inputs, display) => {
 }
 
 const verifiyAssociatedUser = () => {
-    if (authUser || !props.project.users) {
+    console.log(props.project);
+    if (!authUser || !props.project.users) {
         return false;
     }
     for (let index = 0; index < props.project.users.length; index++) {
@@ -344,6 +355,7 @@ const showSuccessMessage = () => {
         })
     }
 }
+
 
 const closeModal = () => {
     const modal = document.getElementById("modalNewDocument")

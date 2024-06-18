@@ -18,7 +18,8 @@ class CreateFoldersTable extends Migration
             $table->string("name");
             $table->string("documentPath")->nullable();
             $table->string("description")->nullable();
-            $table->unsignedBigInteger('project_id');
+            $table->integer("father_id")->nullable();
+            $table->unsignedBigInteger('project_id')->nullable();
             $table->foreign('project_id')->references('id')->on('projects');
             $table->unsignedBigInteger('visualization_role_id');
             $table->foreign('visualization_role_id')->references('id')->on('visualization_roles');
