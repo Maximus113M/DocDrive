@@ -3,9 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Document;
-use App\Models\Validity;
 use App\Providers\AuthServiceProvider;
-use Illuminate\Http\Request;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
@@ -24,11 +22,11 @@ class DocumentController extends Controller
             'document' => 'required|file|max:20240',
             'visualizationRoleSelected' => 'required',
         ]);
-        
+
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        
+
         $file = request()->file("document");
         $path = $this->uploadDocument($file, $validityYear, $projectID, request("folder_id") ?? null);
         if (!$path) {
@@ -51,16 +49,16 @@ class DocumentController extends Controller
      */
     private function uploadDocument(UploadedFile $file, int $year, int $projectID, ?int $folderID)
     {
-        $ruta = $year.'/'.$projectID;
+        $ruta = $year . '/' . $projectID;
         if (isset($folderID)) {
-            $ruta .= '/'.$folderID;
+            $ruta .= '/' . $folderID;
         }
-        if (Storage::exists($ruta.'/'.$file->getClientOriginalName())) {
+        if (Storage::exists($ruta . '/' . $file->getClientOriginalName())) {
             return false;
-        } 
+        }
         Storage::exists($ruta);
         $file->storeAs($ruta, $file->getClientOriginalName());
-        return Storage::url($ruta.'/'.$file->getClientOriginalName());
+        return Storage::url($ruta . '/' . $file->getClientOriginalName());
     }
 
     /**
@@ -69,6 +67,29 @@ class DocumentController extends Controller
     private function getExtension(string $name)
     {
         $split = explode('.', $name);
-        return $split[count($split)-1];
+        return $split[count($split) - 1];
+    }
+
+    /**
+     * Mostrar el documento
+     */
+    public function show($validityYear, $projectID, $documentID)
+    {
+        $document = Document::find($documentID);
+
+        $rutaArreglada = str_replace('/storage/', '', $document->documentPath);
+
+        $rutaCompleta = Storage::path($rutaArreglada);
+
+        if (!file_exists($rutaCompleta)) {
+            abort(404, "Documento no existe");
+        }
+
+        $type = mime_content_type($rutaCompleta);
+
+        return response()->file($rutaCompleta, [
+            'Content-Type' => $type,
+            'Content-Disposition' => 'inline',
+        ]);
     }
 }

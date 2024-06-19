@@ -66,5 +66,6 @@ class Kernel extends HttpKernel
         'verified' => \Illuminate\Auth\Middleware\EnsureEmailIsVerified::class,
         'role' => \Spatie\Permission\Middlewares\RoleMiddleware::class,
         'protect.project' => \App\Http\Middleware\ProtectProject::class,
+        'protect.documents' => \App\Http\Middleware\ProtectDocuments::class,
     ];
 }
