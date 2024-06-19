@@ -58,7 +58,7 @@
                 <ProjectCard :folder="folder" :project="project" :current-year="currentYear" />
             </div>
             <div v-for="document in props.project.documents">
-                <CardDocumentDetails :document="document" :current-year="currentYear" :project="project" />
+                <CardDocumentDetails :currentYear="currentYear" :document="document" :current-year="currentYear" :project="project" />
             </div>
         </div>
     </div>
