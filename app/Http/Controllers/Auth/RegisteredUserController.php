@@ -78,7 +78,7 @@ class RegisteredUserController extends Controller
     {
         $route = null;
         $message = null;
-        $password= null;
+        $password = null;
         if ($role == RoleServiceProvider::INVESTIGATOR) {
             $route = "investigator.index";
             $message = "¡El investigador se ha actualizado correctamente!";
@@ -91,24 +91,12 @@ class RegisteredUserController extends Controller
         }
 
 
-
-        if(request("password")){
-            $validator = Validator::make(request()->all(), [
-                'name' => 'required|string|max:255',
-                'email' => ['required','string','email','max:255',new SingleEmailUser($userID)],
-                'document' => 'required',
-                'phone' => ['required'],
-                'password' => ['required', Password::defaults()],
-            ]);
-            $password= Hash::make(request("password"));
-        }else{
-            $validator = Validator::make(request()->all(), [
-                'name' => 'required|string|max:255',
-                'email' => ['required','string','email','max:255',new SingleEmailUser($userID)],
-                'phone' => ['required'],
-                'document' => 'required',
-            ]);
-        }
+        $validator = Validator::make(request()->all(), [
+            'name' => 'required|string|max:255',
+            'email' => ['required', 'string', 'email', 'max:255', new SingleEmailUser($userID)],
+            'phone' => ['required'],
+            'document' => 'required',
+        ]);
 
         if ($validator->fails()) {
             return redirect()->route($route)->withErrors($validator)->withInput();
@@ -116,13 +104,13 @@ class RegisteredUserController extends Controller
 
 
         $user = User::find($userID);
-        if(!$password){
+        if (!$password) {
             $password = $user->password;
         }
-        
+
         error_log($password);
 
-    
+
         $user->name = request("name");
         $user->document = request("document");
         $user->phone = request("phone");
@@ -140,5 +128,33 @@ class RegisteredUserController extends Controller
     public function updateProfile()
     {
         return $this->update(Auth::user()->id, null);
+    }
+
+    /**
+     * Metodo para actualizar la contraseña
+     */
+    public function changePassword()
+    {
+        $validator = Validator::make(request()->all(), [
+            'oldPassword' => ['required', Password::defaults()],
+            'password' => ['required', Password::defaults()],
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $user = User::find(Auth::user()->id);
+
+        if (!Hash::check(request("oldPassword"), $user->password)) {
+            return redirect()->back()
+                ->with("errorMessage", "¡La contraseña actual es incorrecta!");
+        }
+
+        $user->password = Hash::make(request("password"));
+        $user->update();
+
+        return redirect()->route("user.edit")
+            ->with("message", "¡La contraseña se ha actualizado correctamente!");
     }
 }
