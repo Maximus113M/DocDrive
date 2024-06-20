@@ -28,7 +28,7 @@
                 </div>
             </button>
 
-            <button name="investigator"  :onclick="changeTypeUserToInvestigator" v-if="authUser != null && (authUser?.role.name == 'admin'
+            <button name="investigator" :onclick="changeTypeUserToInvestigator" v-if="authUser != null && (authUser?.role.name == 'admin'
                 || (isAssociatedUser))" class="col" data-bs-toggle="modal" data-bs-target="#modalAssociateUser">
                 <div class="folder border-3 rounded-4 py-3 bg-white">
                     <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
@@ -62,7 +62,6 @@
     </div>
 
     <!-- MODAL NEW FILE-FOLDER -->
-
     <div class="modal fade" id="modalNewDocument" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" style="width: 350px; height: 600px;">
             <div class="modal-content position-relative p-3" style="max-height: 400px;">
@@ -125,8 +124,6 @@
 
 
     <!-- MODAL associate USERS -->
-
-
     <div class="modal fade" id="modalAssociateUser" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" style="width: 350px; height: 600px;">
             <div class="modal-content position-relative p-3" style="max-height: 400px;">
@@ -139,18 +136,66 @@
                 <div class="modal-body px-3">
                     <form @submit.prevent="associateUser">
                         <div class="px-4 py-2 mb-3 border-2 rounded-lg">
-                            <div class="">
-                                <label class="font-bold pb-2">Investigadores</label>
-                            </div>
-                            <div v-for="user in users" :key="user.id">
+
+                            <label class="font-bold pb-2">Investigadores</label>
+
+                            <!-- <div v-for="user in users" :key="user.id">
                                 <input class="mr-2" type="checkbox" :id="'checkbox-' + user.id"
                                     v-model="formAssociateUser.usersID" :value="user.id">
                                 <label :for="'checkbox-' + user.id">{{ user.name }}</label>
+                            </div> -->
+                            <div class="h-64">
+                                <div v-for="(user, index) in paginatedList" :key="user?.id"
+                                    :style="index % 2 != 0 ? 'background-color: #FFFFFF' : 'background-color: #F3F3F3'"
+                                    class="px-2 py-1">
+                                    <div v-if="user">
+                                        <input class="mr-2" type="checkbox" :id="'checkbox-' + user.id"
+                                            v-model="formAssociateUser.usersID" :value="user.id">
+                                        <label :for="'checkbox-' + user.id">
+                                            {{ user.name }}
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div
+                                style="display: flex; flex-direction: row; justify-content: center; user-select: none;">
+                                <ul class="pagination cursor-pointer mt-1">
+                                    <li class="page-item">
+                                        <div class="page-link" aria-label="Previous" @click="decreasePaginatorIndex()">
+                                            <span aria-hidden="true" style="color: #39A900;">&laquo;</span>
+                                        </div>
+                                    </li>
+                                    <li v-if="paginatedList.length > 0" class="page-item">
+                                        <div class="page-link" @click="getCurrentPageList(1)"
+                                            :style="paginatorIndex === 1 ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;'">
+                                            1
+                                        </div>
+                                    </li>
+                                    <li v-if="totalPages > 2" class="page-item" aria-current="page">
+                                        <div class="page-link"
+                                            :style="paginatorIndex !== 1 && paginatorIndex !== totalPages ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;'">
+                                            {{ paginatorIndex != 1 && paginatorIndex != totalPages ? paginatorIndex :
+                                            '...' }}
+                                        </div>
+                                    </li>
+                                    <li v-if="totalPages > 1" class="page-item" aria-current="page">
+                                        <div class="page-link" @click="getCurrentPageList(totalPages)"
+                                            :style="paginatorIndex === totalPages ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;'">
+                                            {{ totalPages }}
+                                        </div>
+                                    </li>
+                                    <li class="page-item">
+                                        <div class="page-link" aria-label="Next" @click="incrementPaginatorIndex()">
+                                            <span aria-hidden="true" style="color: #39A900;">&raquo;</span>
+                                        </div>
+                                    </li>
+                                </ul>
                             </div>
                         </div>
                         <div class="row justify-center p-3 my-3">
                             <button type="submit" class="btn py-2"
-                                style="background-color: #39A900; color: white; "><strong>Asociar / Desasociar</strong></button>
+                                style="background-color: #39A900; color: white; "><strong>Asociar /
+                                    Desasociar</strong></button>
                         </div>
                     </form>
                 </div>
@@ -168,7 +213,7 @@ import ProjectCard from '@/Pages/Projects/Components/CardProject.vue';
 import CardDocumentDetails from '@/Pages/Projects/Project/Components/CardDocumentDetails.vue';
 import { CustomAlertsService } from '@/services/customAlerts';
 import { Link, useForm, usePage } from '@inertiajs/inertia-vue3'
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeMount } from 'vue';
 import Icon from '@/Shared/Icon.vue';
 import { Constants } from '@/core/appFunctions';
 
@@ -184,7 +229,7 @@ const users = ref([])
 
 const formAssociateUser = useForm({
     usersID: [],
-    role : ''
+    role: ''
 })
 
 const formUploadFile = useForm({
@@ -207,6 +252,49 @@ const nameRoleVisualization = {
 }
 
 let role = ""
+
+//PAGINATION
+const paginatedList = ref([])
+const totalPages = ref(0);
+const paginatorIndex = ref(1);
+const pageElements = 8;
+
+onBeforeMount(() => {
+    totalPages.value = Math.ceil(props.investigators.length / pageElements);
+    getCurrentPageList(1);
+});
+
+const getCurrentPageList = (index) => {
+    if (index != paginatorIndex.value) {
+        paginatorIndex.value = index;
+    }
+    paginatedList.value = [];
+    let indexBase = (index * pageElements) - pageElements;
+    let indexEnd = index * pageElements;
+
+    for (let i = indexBase; i < indexEnd; i++) {
+        if (props.investigators[i]) {
+            paginatedList.value.push(props.investigators[i]);
+        }
+    }
+}
+
+const incrementPaginatorIndex = () => {
+    if (paginatorIndex.value < totalPages.value) {
+        paginatorIndex.value++;
+        console.log(paginatorIndex.value)
+        getCurrentPageList(paginatorIndex.value);
+    }
+}
+
+const decreasePaginatorIndex = () => {
+    if (paginatorIndex.value > 1) {
+        paginatorIndex.value--;
+        console.log(paginatorIndex.value)
+        getCurrentPageList(paginatorIndex.value);
+    }
+}
+//END PAGINATION
 
 onMounted(() => {
     isAssociatedUser.value = verifiyAssociatedUser()

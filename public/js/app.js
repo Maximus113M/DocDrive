@@ -22376,6 +22376,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+var pageElements = 8;
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   __name: 'ProjectContent',
   props: {
@@ -22424,6 +22425,44 @@ __webpack_require__.r(__webpack_exports__);
       "general-public": "Publico en general"
     };
     var role = "";
+
+    //PAGINATION
+    var paginatedList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)([]);
+    var totalPages = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(0);
+    var paginatorIndex = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(1);
+    (0,vue__WEBPACK_IMPORTED_MODULE_4__.onBeforeMount)(function () {
+      totalPages.value = Math.ceil(props.investigators.length / pageElements);
+      getCurrentPageList(1);
+    });
+    var getCurrentPageList = function getCurrentPageList(index) {
+      if (index != paginatorIndex.value) {
+        paginatorIndex.value = index;
+      }
+      paginatedList.value = [];
+      var indexBase = index * pageElements - pageElements;
+      var indexEnd = index * pageElements;
+      for (var i = indexBase; i < indexEnd; i++) {
+        if (props.investigators[i]) {
+          paginatedList.value.push(props.investigators[i]);
+        }
+      }
+    };
+    var incrementPaginatorIndex = function incrementPaginatorIndex() {
+      if (paginatorIndex.value < totalPages.value) {
+        paginatorIndex.value++;
+        console.log(paginatorIndex.value);
+        getCurrentPageList(paginatorIndex.value);
+      }
+    };
+    var decreasePaginatorIndex = function decreasePaginatorIndex() {
+      if (paginatorIndex.value > 1) {
+        paginatorIndex.value--;
+        console.log(paginatorIndex.value);
+        getCurrentPageList(paginatorIndex.value);
+      }
+    };
+    //END PAGINATION
+
     (0,vue__WEBPACK_IMPORTED_MODULE_4__.onMounted)(function () {
       isAssociatedUser.value = verifiyAssociatedUser();
     });
@@ -22559,6 +22598,13 @@ __webpack_require__.r(__webpack_exports__);
       set role(v) {
         role = v;
       },
+      paginatedList: paginatedList,
+      totalPages: totalPages,
+      paginatorIndex: paginatorIndex,
+      pageElements: pageElements,
+      getCurrentPageList: getCurrentPageList,
+      incrementPaginatorIndex: incrementPaginatorIndex,
+      decreasePaginatorIndex: decreasePaginatorIndex,
       changeInputCheck: changeInputCheck,
       changeTypeUserToInvestigator: changeTypeUserToInvestigator,
       changeTypeUserToCollaborator: changeTypeUserToCollaborator,
@@ -22585,6 +22631,7 @@ __webpack_require__.r(__webpack_exports__);
       },
       ref: vue__WEBPACK_IMPORTED_MODULE_4__.ref,
       onMounted: vue__WEBPACK_IMPORTED_MODULE_4__.onMounted,
+      onBeforeMount: vue__WEBPACK_IMPORTED_MODULE_4__.onBeforeMount,
       Icon: _Shared_Icon_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
       get Constants() {
         return _core_appFunctions__WEBPACK_IMPORTED_MODULE_6__.Constants;
@@ -26140,15 +26187,68 @@ var _hoisted_40 = {
   "class": "px-4 py-2 mb-3 border-2 rounded-lg"
 };
 var _hoisted_41 = /*#__PURE__*/_withScopeId(function () {
-  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-    "class": ""
-  }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
     "class": "font-bold pb-2"
-  }, "Investigadores")], -1 /* HOISTED */);
+  }, "Investigadores", -1 /* HOISTED */);
 });
-var _hoisted_42 = ["id", "value"];
-var _hoisted_43 = ["for"];
-var _hoisted_44 = /*#__PURE__*/_withScopeId(function () {
+var _hoisted_42 = {
+  "class": "h-64"
+};
+var _hoisted_43 = {
+  key: 0
+};
+var _hoisted_44 = ["id", "value"];
+var _hoisted_45 = ["for"];
+var _hoisted_46 = {
+  style: {
+    "display": "flex",
+    "flex-direction": "row",
+    "justify-content": "center",
+    "user-select": "none"
+  }
+};
+var _hoisted_47 = {
+  "class": "pagination cursor-pointer mt-1"
+};
+var _hoisted_48 = {
+  "class": "page-item"
+};
+var _hoisted_49 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    "aria-hidden": "true",
+    style: {
+      "color": "#39A900"
+    }
+  }, "«", -1 /* HOISTED */);
+});
+var _hoisted_50 = [_hoisted_49];
+var _hoisted_51 = {
+  key: 0,
+  "class": "page-item"
+};
+var _hoisted_52 = {
+  key: 1,
+  "class": "page-item",
+  "aria-current": "page"
+};
+var _hoisted_53 = {
+  key: 2,
+  "class": "page-item",
+  "aria-current": "page"
+};
+var _hoisted_54 = {
+  "class": "page-item"
+};
+var _hoisted_55 = /*#__PURE__*/_withScopeId(function () {
+  return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("span", {
+    "aria-hidden": "true",
+    style: {
+      "color": "#39A900"
+    }
+  }, "»", -1 /* HOISTED */);
+});
+var _hoisted_56 = [_hoisted_55];
+var _hoisted_57 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
     "class": "row justify-center p-3 my-3"
   }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
@@ -26251,10 +26351,12 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     id: "formFile"
   }, null, 32 /* NEED_HYDRATION */), $setup.formUploadFile.errors.document ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_33, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.formUploadFile.errors.document), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), _hoisted_34], 32 /* NEED_HYDRATION */)])])])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" MODAL associate USERS "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_35, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_36, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_37, [_hoisted_38, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_39, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
     onSubmit: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)($setup.associateUser, ["prevent"])
-  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [_hoisted_41, ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.users, function (user) {
+  }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_40, [_hoisted_41, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div v-for=\"user in users\" :key=\"user.id\">\r\n                                <input class=\"mr-2\" type=\"checkbox\" :id=\"'checkbox-' + user.id\"\r\n                                    v-model=\"formAssociateUser.usersID\" :value=\"user.id\">\r\n                                <label :for=\"'checkbox-' + user.id\">{{ user.name }}</label>\r\n                            </div> "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_42, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.paginatedList, function (user, index) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
-      key: user.id
-    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
+      key: user === null || user === void 0 ? void 0 : user.id,
+      style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)(index % 2 != 0 ? 'background-color: #FFFFFF' : 'background-color: #F3F3F3'),
+      "class": "px-2 py-1"
+    }, [user ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_43, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
       "class": "mr-2",
       type: "checkbox",
       id: 'checkbox-' + user.id,
@@ -26262,10 +26364,37 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         return $setup.formAssociateUser.usersID = $event;
       }),
       value: user.id
-    }, null, 8 /* PROPS */, _hoisted_42), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelCheckbox, $setup.formAssociateUser.usersID]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
+    }, null, 8 /* PROPS */, _hoisted_44), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelCheckbox, $setup.formAssociateUser.usersID]]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("label", {
       "for": 'checkbox-' + user.id
-    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.name), 9 /* TEXT, PROPS */, _hoisted_43)]);
-  }), 128 /* KEYED_FRAGMENT */))]), _hoisted_44], 32 /* NEED_HYDRATION */)])])])])], 64 /* STABLE_FRAGMENT */);
+    }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(user.name), 9 /* TEXT, PROPS */, _hoisted_45)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)], 4 /* STYLE */);
+  }), 128 /* KEYED_FRAGMENT */))]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_46, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("ul", _hoisted_47, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_48, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "page-link",
+    "aria-label": "Previous",
+    onClick: _cache[4] || (_cache[4] = function ($event) {
+      return $setup.decreasePaginatorIndex();
+    })
+  }, [].concat(_hoisted_50))]), $setup.paginatedList.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_51, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "page-link",
+    onClick: _cache[5] || (_cache[5] = function ($event) {
+      return $setup.getCurrentPageList(1);
+    }),
+    style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)($setup.paginatorIndex === 1 ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;')
+  }, " 1 ", 4 /* STYLE */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.totalPages > 2 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_52, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "page-link",
+    style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)($setup.paginatorIndex !== 1 && $setup.paginatorIndex !== $setup.totalPages ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;')
+  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.paginatorIndex != 1 && $setup.paginatorIndex != $setup.totalPages ? $setup.paginatorIndex : '...'), 5 /* TEXT, STYLE */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.totalPages > 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("li", _hoisted_53, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "page-link",
+    onClick: _cache[6] || (_cache[6] = function ($event) {
+      return $setup.getCurrentPageList($setup.totalPages);
+    }),
+    style: (0,vue__WEBPACK_IMPORTED_MODULE_0__.normalizeStyle)($setup.paginatorIndex === $setup.totalPages ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;')
+  }, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.totalPages), 5 /* TEXT, STYLE */)])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("li", _hoisted_54, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
+    "class": "page-link",
+    "aria-label": "Next",
+    onClick: _cache[7] || (_cache[7] = function ($event) {
+      return $setup.incrementPaginatorIndex();
+    })
+  }, [].concat(_hoisted_56))])])])]), _hoisted_57], 32 /* NEED_HYDRATION */)])])])])], 64 /* STABLE_FRAGMENT */);
 }
 
 /***/ }),
