@@ -121,7 +121,7 @@ const verifiyAssociatedUser = () => {
     }
     for (let index = 0; index < props.project.users.length; index++) {
         const user = props.project.users[index];
-        if (user.id == authUser.id) {
+        if (user.id == authUser?.id) {
             return true;
         }
     }
