@@ -188,14 +188,14 @@ class ProjectController extends Controller
         ]);
     }
 
-    private function conditionCollaboratorInvestigator($visualizationRole, $usersID): bool
+    public function conditionCollaboratorInvestigator($visualizationRole, $usersID): bool
     {
         return $visualizationRole == RoleServiceProvider::PUBLIC || $visualizationRole ==
             RoleServiceProvider::GENERAL_PUBLIC || ($visualizationRole == RoleServiceProvider::PRIVATE
                 && in_array(Auth::user()->id, $usersID));
     }
 
-    private function conditionGuest($visualizationRole): bool
+    public function conditionGuest($visualizationRole): bool
     {
         return $visualizationRole == RoleServiceProvider::GENERAL_PUBLIC; 
     }

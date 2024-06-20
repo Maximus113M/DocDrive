@@ -15,6 +15,7 @@ class Folder extends Model
         'description',
         'project_id',
         'visualization_role_id',
+        'father_id'
     ];
 
     public function project()
@@ -31,4 +32,5 @@ class Folder extends Model
     {
         return $this->belongsTo(VisualizationRole::class, "visualization_role_id");
     }
+
 }

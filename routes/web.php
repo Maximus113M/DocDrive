@@ -37,12 +37,19 @@ Route::get('/{validityYear}/projects/{projectID}', [ProjectController::class, 'i
 
 // RUTA PARA SUBIR LOS DOCUMENTOS
 Route::post('/{validityYear}/projects/{projectID}/upload', [DocumentController::class, 'store'])
-    ->name('document.upload')->middleware("protect.project");
+    ->name('document.upload')->middleware(["protect.project", 'auth']);
 
 // RUTA PARA SUBIR LAS CARPETAS
 Route::post('/{validityYear}/projects/{projectID}/folder', [FolderController::class, 'store'])
-    ->name('folder.upload')->middleware("protect.project");
+    ->name('folder.upload')->middleware(["protect.project", "auth"]);
 
+// RUTA PARA MOSTRAR LOS DOCUMENTOS O CARPETAS DE UNA CARPETA
+Route::get('/{validityYear}/projects/{projectID}/folders/{folderID}', [FolderController::class, 'show'])
+    ->name('folder.index')->middleware("protect.documents");
+
+// RUTA PARA VISUALIZAR EL DOCUMENTO
+Route::get('/{validityYear}/projects/{projectID}/files/{documentID}', [DocumentController::class, 'show'])
+    ->name('file.index')->middleware("protect.documents");
 
 // RUTAS PROTEGIDAS PARA EL ADMIN
 Route::middleware(['auth', 'role:admin'])->group(function () {

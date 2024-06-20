@@ -1387,6 +1387,12 @@ select{
 .h-screen{
   height: 100vh;
 }
+.h-48{
+  height: 12rem;
+}
+.h-64{
+  height: 16rem;
+}
 .max-h-12{
   max-height: 3rem;
 }

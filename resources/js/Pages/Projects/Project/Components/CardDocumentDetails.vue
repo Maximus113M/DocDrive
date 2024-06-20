@@ -2,9 +2,11 @@
     <!-- DOCUMENT DESIGN -->
     <div class="col position-relative" style="max-width: 300px;">
 
-        <!-- <Link :href="route('project.index', { 'validityYear': currentYear, 'projectID': props.project.id })" 
-            class="text-decoration-none">-->
-
+        <a target="_blank" :href="route('file.index', { 
+            'validityYear': props.currentYear,
+            'projectID' :  props.project.id,
+            'documentID' : props.document.id,
+         })">
         <!-- BODY -->
         <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40">
             <!-- Options -->
@@ -52,7 +54,7 @@
                 </div>
             </div>
         </div>
-        <!-- </Link> -->
+    </a> 
     </div>
     <!-- DOCUMENT DESIGN -->
 
@@ -92,6 +94,7 @@ import { AppFunctions } from '@/core/appFunctions';
 
 const props = defineProps({
     document: { type: DocumentModel, required: true },
+    currentYear: { type: Number, required: true },
     project: { type: Object, required: true },
 });
 
