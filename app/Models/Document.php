@@ -15,7 +15,6 @@ class Document extends Model
         'description',
         'format',
         'project_id',
-        'folder_id',
         'visualization_role_id'
     ];
 
@@ -26,7 +25,7 @@ class Document extends Model
 
     public function folder()
     {
-        return $this->belongsTo(Folder::class, "folder_id");
+        return $this->belongsToMany(Folder::class, "document_folder");
     }
 
     public function visualizationRole()

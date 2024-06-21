@@ -94,4 +94,27 @@ class FolderController extends Controller
             "collaborators" => CollaboratorController::getCollaborators()
         ]);
     }
+
+    /**
+     * 
+     * Crea un recurso compartido
+     */
+    public function storeSharedFolder()
+    {
+        $validator = Validator::make(request()->all(), [
+            'name' => ['required', 'string'],          
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+        $folder = new Folder();
+        $folder->name = request("name");
+        $folder->project_id = null;
+        $folder->father_id = null;
+        $folder->visualization_role_id = RoleServiceProvider::GENERAL_PUBLIC_ID;
+        $folder->save();
+
+        return redirect()->back()->with("message", "Recurso compartido creado correctamente");
+    }
 }

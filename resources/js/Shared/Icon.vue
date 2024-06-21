@@ -134,8 +134,8 @@
       d="M331-431h37v-83h48q15.73 0 26.36-10.64Q453-535.28 453-551v-48q0-15.72-10.64-26.36Q431.73-636 416-636h-85v205Zm37-120v-48h48v48h-48Zm129 120h84q15 0 26-10.64 11-10.63 11-26.36v-131q0-15.72-11-26.36Q596-636 581-636h-84v205Zm37-37v-131h47v131h-47Zm133 37h37v-83h50v-37h-50v-48h50v-37h-87v205ZM260-200q-24 0-42-18t-18-42v-560q0-24 18-42t42-18h560q24 0 42 18t18 42v560q0 24-18 42t-42 18H260ZM140-80q-24 0-42-18t-18-42v-620h60v620h620v60H140Z" />
   </svg>
   <!-- Word -->
-  <svg v-else-if="name === 'word' || name == 'docx'" xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960"
-    width="48px" fill="#0000F5">
+  <svg v-else-if="name === 'word' || name == 'docx'" xmlns="http://www.w3.org/2000/svg" height="48px"
+    viewBox="0 -960 960 960" width="48px" fill="#0000F5">
     <path
       d="M319-250h322v-60H319v60Zm0-170h322v-60H319v60ZM220-80q-24 0-42-18t-18-42v-680q0-24 18-42t42-18h361l219 219v521q0 24-18 42t-42 18H220Zm331-554h189L551-820v186Z" />
   </svg>
@@ -157,6 +157,22 @@
     height="68px" viewBox="0 0 24 24">
     <path fill="#a51d2d"
       d="M5 21q-.825 0-1.412-.587T3 19V5q0-.825.588-1.412T5 3h14q.825 0 1.413.588T21 5v14q0 .825-.587 1.413T19 21zm0-2h14V5H5zm1-2h12l-3.75-5l-3 4L9 13zm-1 2V5z" />
+  </svg>
+
+  <!-- SHARED FOLDER -->
+
+  <svg v-else-if="name == 'sharedFolder'" xmlns="http://www.w3.org/2000/svg" width="84px" height="84px" viewBox="0 0 32 32">
+    <defs>
+      <clipPath id="vscodeIconsFolderTypeShared0">
+        <path fill="none" d="M0 0h32v32H0z" />
+      </clipPath>
+    </defs>
+    <g clip-path="url(#vscodeIconsFolderTypeShared0)">
+      <path fill="#39A900" d="M27.5 5.5h-9.3l-2.1 4.2H4.4v16.8h25.2v-21Zm0 4.2h-8.2l1.1-2.1h7.1Z" />
+      <path fill="#ade193"
+        d="M15 11a4 4 0 0 0-4 4v6a4 4 0 0 0 4 4h6.17a3 3 0 1 0 0-2H15a2 2 0 0 1-2-2v-6a2 2 0 0 1 2-2h6a2 2 0 0 1 2 2h2a4 4 0 0 0-4-4Zm12 20a4 4 0 0 0 4-4v-6a4 4 0 0 0-4-4h-6.17a3 3 0 1 0 0 2H27a2 2 0 0 1 2 2v6a2 2 0 0 1-2 2h-6a2 2 0 0 1-2-2h-2a4 4 0 0 0 4 4Z" />
+      <path fill="#ade193" d="M17 26.5v.5h2v-.5Z" />
+    </g>
   </svg>
 
   <svg v-else xmlns="http://www.w3.org/2000/svg" width="68px" height="68px" viewBox="0 0 24 24">

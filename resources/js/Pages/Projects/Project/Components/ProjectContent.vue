@@ -93,7 +93,7 @@
     <!-- MODAL NEW FILE-FOLDER -->
     <div class="modal fade" id="modalNewDocument" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" style="width: 350px; height: 600px;">
-            <div class="modal-content position-relative p-3" style="max-height: 400px;">
+            <div class="modal-content position-relative p-3" style="max-height: 450px;">
                 <div class="d-flex flex-row justify-center px-3">
                     <h4 class="my-3" style="color: #39A900;"><strong>Nuevo</strong></h4>
 
@@ -128,7 +128,7 @@
                                     formUploadFile.errors.visualizationRoleSelected }}</div>
                             </select>
                         </div>
-                        <div class="mb-3 inputs-folder" style="display: none;">
+                        <div class="mb-3">
                             <label class="font-bold">Nombre</label>
                             <br>
                             <input v-model="formUploadFile.name" class="form-control" type="text" placeholder="Nombre">

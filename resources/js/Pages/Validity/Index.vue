@@ -7,6 +7,7 @@ defineProps({
     validities: Object,
     isAuthenticated: Boolean,
     role: String,
+    sharedFolders: Array
 })
 
 
@@ -15,7 +16,7 @@ defineProps({
 <template>
     
     <AuthLayout :role="role">
-        <ContentIndex :isAuthenticated="isAuthenticated" :validities="validities" :role="role" #content/> 
+        <ContentIndex  :sharedFolders="sharedFolders" :isAuthenticated="isAuthenticated" :validities="validities" :role="role" #content/> 
     </AuthLayout>
 
 </template>

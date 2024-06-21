@@ -25,7 +25,7 @@ class Folder extends Model
 
     public function documents()
     {
-        return $this->hasMany(Document::class, "folder_id");
+        return $this->belongsToMany(Document::class, "document_folder");
     }
 
     public function visualizationRole()

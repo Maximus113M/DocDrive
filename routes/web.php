@@ -81,6 +81,10 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // RUTA PARA CREAR PROYECTOS
     Route::post('/project/store', [ProjectController::class, 'store'])
         ->name('project.store');
+
+     // RUTA PARA CREAR UN RECURSO COMPARTIDO
+     Route::post('/shared/folder/store', [FolderController::class, 'storeSharedFolder'])
+     ->name('shared.folder.store');
 });
 
 

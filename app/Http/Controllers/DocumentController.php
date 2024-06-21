@@ -21,6 +21,7 @@ class DocumentController extends Controller
         $validator = Validator::make(request()->all(), [
             'document' => 'required|file|max:20240',
             'visualizationRoleSelected' => 'required',
+            'name' => ['required','string','unique:documents']
         ]);
 
         if ($validator->fails()) {
@@ -33,14 +34,18 @@ class DocumentController extends Controller
             return redirect()->back()->with("errorMessage", "Documento ya existe");;
         }
         $document = new Document();
-        $document->name = $file->getClientOriginalName();
+        $document->name = request("name");
         $document->documentPath = $path;
         $document->format = $file->extension() ?? $this->getExtension($document->name);
-        $document->project_id = request("folder_id") !== null ? null : $projectID;
-        $document->folder_id = request("folder_id") !== null ? request("folder_id") : null;
+        if (request("folder_id") == null) {
+            $document->project_id = $projectID;
+        }
         $document->visualization_role_id = request("visualizationRoleSelected");
         $document->save();
-
+        if (request("folder_id") !== null) {
+            $document->folder()->attach(request("folder_id"));
+        }
+            
         return redirect()->back()->with("message", "Documento creado correctamente");
     }
 

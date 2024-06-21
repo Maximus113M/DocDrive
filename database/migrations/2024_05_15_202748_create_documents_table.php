@@ -15,14 +15,12 @@ class CreateDocumentsTable extends Migration
     {
         Schema::create('documents', function (Blueprint $table) {
             $table->id();
-            $table->string("name");
+            $table->string("name")->unique();
             $table->string("documentPath");
             $table->string("description")->nullable();
             $table->string("format");
             $table->unsignedBigInteger('project_id')->nullable();
             $table->foreign('project_id')->references('id')->on('projects');
-            $table->unsignedBigInteger('folder_id')->nullable();
-            $table->foreign('folder_id')->references('id')->on('folders');
             $table->unsignedBigInteger('visualization_role_id');
             $table->foreign('visualization_role_id')->references('id')->on('visualization_roles');
             $table->timestamps();

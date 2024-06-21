@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Folder;
 use App\Models\Validity;
 use App\Models\VisualizationRole;
 use App\Providers\AppServiceProvider;
@@ -24,6 +25,10 @@ class ValidityController extends Controller
     {
         return Inertia::render('Validity/Index', [
             "validities" => Validity::all(),
+            "sharedFolders" => Folder::where([
+                ["father_id", "=", null],
+                ["project_id", "=", null],
+            ])->get(),
             "role" => AuthServiceProvider::getRole(),
             "isAuthenticated" => AuthServiceProvider::checkAuthenticated(),
         ]);
