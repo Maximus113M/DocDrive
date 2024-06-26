@@ -56,7 +56,7 @@ Route::get('/shared/{folderID}', [FolderController::class, 'showSharedResource']
     ->name('shared.index');
 
 // RUTA PARA VISUALIZAR LOS DOCUMENTOS QUE ESTAN DENTRO DEL RECRUSO COMPARTIDO
-Route::get('/shared/{folderID}/document/{documentID}', [DocumentController::class,'showSharedResource'])
+Route::get('/shared/{folderID}/document/{documentID}', [DocumentController::class, 'showSharedResource'])
     ->name('shared.file.index');
 
 // RUTAS PROTEGIDAS PARA EL ADMIN
@@ -92,7 +92,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
 
     // RUTA PARA CREAR UN RECURSO COMPARTIDO
     Route::post('/shared/folder/store', [FolderController::class, 'storeSharedFolder'])
-     ->name('shared.folder.store');
+        ->name('shared.folder.store');
 });
 
 
@@ -136,9 +136,35 @@ Route::middleware(['auth', 'role:admin|investigator'])->group(function () {
     Route::put('project/{projectID}/folder/{folderID}/update', [FolderController::class, 'updateFolder'])
         ->name('folder.update');
 
-    // RUTA PARA ACTUALIZAR UNA CARPETA DENTRO DEL  RECURSO COMPARTIDO
+    // RUTA PARA ELIMINAR UNA CARPETA
+    Route::delete('/project/{projectID}/folder/{folderID}/destroy', [FolderController::class, 'destroyFolder'])
+        ->name('folder.destroy');
+
+    // RUTA PARA ELIMINAR UNA CARPETA DENTRO DEL RECURSO COMPARTIDO
+    Route::delete('/shared/folder/{folderID}/destroy', [FolderController::class, 'destroy'])
+        ->name('shared.folder.destroy');
+
+    // RUTA PARA ACTUALIZAR UNA CARPETA DENTRO DEL RECURSO COMPARTIDO
     Route::put('/folder/{folderID}/update', [FolderController::class, 'updateSharedFolder'])
         ->name('shared.folder.update');
+    
+    // RUTA PARA ELIMINAR UN DOCUMENTO
+    Route::delete('/project/{projectID}/document/{documentID}/destroy', [DocumentController::class, 'destroy'])
+        ->name('document.destroy');
+    
+    // RUTA PARA DESASOCIAR UN DOCUMENTO A UN RECURSO COMPARTIDO
+    Route::delete('/shared/{folderID}/document/{documentID}/destroy', [DocumentController::class, 'disassociatedDocument'])
+        ->name('shared.document.destroy');
+
+    // RUTA PARA ACTUALIZAR UN DOCUMENTO
+    Route::put('/project/{projectID}/document/{documentID}/update', [DocumentController::class, 'updateDocument'])
+        ->name('document.update');
+
+    //RUTA PARA ASOCIAR DOCUMENTOS AL RECURSO COMPARTIDO
+    Route::post('/shared/{folderID}/document', [DocumentController::class, 'associatedDocument'])
+        ->name('shared.document.associated');
+
+    
 });
 
 

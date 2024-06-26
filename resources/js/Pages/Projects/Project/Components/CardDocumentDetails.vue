@@ -25,7 +25,7 @@
                         </template>
 
                         <template #content>
-                            <button
+                            <button v-if="props.project"
                                 class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
                                 @click="openModalUpdate">
                                 Editar
@@ -33,7 +33,7 @@
                             <button
                                 class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
                                 @click="openModalDelete">
-                                Eliminar
+                                {{ project ? 'Eliminar' : 'Desasociar' }}
                             </button>
                         </template>
                     </FoldersDropdown>
@@ -55,8 +55,8 @@
     <!-- DOCUMENT DESIGN -->
 
     <!-- MODAL EDITAR-->
-    <div class="modal fade" :id="``" tabindex="-1"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" :id="`modal-update-${props.document.id}`" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
         <div class="modal-dialog" style="width: 350px;">
             <div class="modal-content position-relative p-3" style="max-height: 800px;">
                 <div class="d-flex flex-row justify-center px-3">
@@ -66,12 +66,36 @@
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body px-3">
-                    <form @submit.prevent="updateProject">
+                    <form @submit.prevent="update">
                         <div class="mb-3">
                             <label for="name" class="form-label">Nombre:</label>
                             <input v-model="documentForm.name" type="text" class="form-control" id="name">
                             <div v-if="documentForm.errors.name">{{
                                 AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}</div>
+                        </div>
+                        <div v-if="props.project" class="mb-3">
+                            <label class="font-bold form-label">Visualización</label>
+                            <select v-model="documentForm.visualizationRoleSelected" class="form-select">
+                                <option v-for="vRole in visualizationsRole" :value="vRole.id" :key="vRole.id">{{
+                                    nameRoleVisualization[vRole.name] }}</option>
+                            </select>
+                            <div v-if="documentForm.errors.visualizationRoleSelected" class="text-red-400 text-center">
+                                {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
+                            </div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="description" class="font-bold form-label">Ingrese la descripción:</label>
+                            <textarea v-model="documentForm.description" type="text-area"
+                                class="form-control h-48 max-h-48" id="description" />
+                            <div v-if="documentForm.errors.description" class="text-red-400 text-center">
+                                {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
+                            </div>
+                        </div>
+                        <div class="col-span-2 row justify-center p-3 ">
+                            <button type="submit" class="btn py-2"
+                                style="background-color: #39A900; color: white; "><strong>Actualizar
+                                    documento</strong></button>
                         </div>
                     </form>
                 </div>
@@ -94,11 +118,13 @@ const props = defineProps({
     currentYear: { type: Number, },
     project: { type: Object, },
     folderID: { type: Number },
+    visualizationsRole: { type: Array },
 });
 
 const documentForm = useForm({
     name: props.document.name,
     description: props.document.description,
+    visualizationRoleSelected: props.document.visualization_role_id,
 })
 const isAssociatedUser = ref(null);
 const authUser = usePage().props.value.auth.user;
@@ -106,14 +132,14 @@ const authUser = usePage().props.value.auth.user;
 const documentType = ref(props.document.format)
 
 const showDocumentRoute = props.project ? route('file.index', {
-        'validityYear': props.currentYear,
-        'projectID': props.project.id,
-        'documentID': props.document.id,
-    })
+    'validityYear': props.currentYear,
+    'projectID': props.project.id,
+    'documentID': props.document.id,
+})
     : route('shared.file.index', {
         'folderID': props.folderID,
         'documentID': props.document.id,
-    })        
+    })
 
 onMounted(() => {
     isAssociatedUser.value = verifiyAssociatedUser()
@@ -139,12 +165,26 @@ const verifiyAssociatedUser = () => {
     return false;
 }
 
-const updateProject = () => {
-    documentForm.put(route("project.update", { "projectID": props.document.id }), {
-        onSuccess: () => showMessage(),
-    })
+const nameRoleVisualization = {
+    "private": "Privado",
+    "public": "Público",
+    "general-public": "Publico en general"
 }
-/*
+
+const update = () => {
+    if (props.project) {
+        documentForm.put(route("document.update", { 
+            "projectID": props.project.id,
+            "documentID": props.document.id, 
+        }), {
+            onSuccess: () => {
+                showMessage()
+                closeModalUpdate()
+            },
+        })
+    }
+}
+
 
 const showMessage = () => {
     const flashMessage = usePage().props.value.flash.message
@@ -162,38 +202,44 @@ const showMessage = () => {
             isToast: true,
         })
     }
-    closeModalUpdate()
 }
 
+const idModal = "modal-update-".concat(props.document.id)
+
+
 const openModalUpdate = () => {
-    const modal = document.getElementById("modal-update-document-" + props.document.id)
+    documentForm.clearErrors();
+    documentForm.reset();
+    const modal = document.getElementById(idModal)
     const modalBootstrap = new bootstrap.Modal(modal)
     modalBootstrap.show()
 }
 
 
 const closeModalUpdate = () => {
-    const modal = document.getElementById("modal-update-document-" + props.document.id)
+    const modal = document.getElementById(idModal)
     const modalBootstrap = bootstrap.Modal.getInstance(modal)
     modalBootstrap.hide()
 }
 
 const openModalDelete = () => {
+    let text = !props.project ? "desasociar" : "eliminar"
+    let route = !props.project ? `/shared/${props.folderID}/document/${props.document.id}/destroy`
+        : `/project/${props.project.id}/document/${props.document.id}/destroy`
+    console.log(route);
     CustomAlertsService.deleteConfirmAlert({
-        title: 'Eliminar Documento',
-        text: '¿Deseas eliminar el documento seleccionado? Esta acción no se puede revertir'
+        title: `${props.project ? 'Eliminar' : 'Desasociar'} Documento`,
+        text: `¿Deseas ${text} el documento seleccionado? Esta acción no se puede revertir`
     }).then((result) => {
         if (result.isConfirmed) {
-
-            // TODO CAMBIAR A RUTA VERDADERA
-            documentForm.delete(route("project.destroy", { "projectID": props.document.id }), {
+            documentForm.delete(route, {
                 onSuccess: () => {
                     showMessage()
                 },
                 onError: () => {
                     CustomAlertsService.generalAlert({
                         title: 'Error',
-                        text: `Ha ocurrido un error al eliminar el documento`,
+                        text: `Ha ocurrido un error al ${text} el documento`,
                         icon: "error",
                         isToast: true,
                     })
@@ -201,7 +247,7 @@ const openModalDelete = () => {
             })
         }
     })
-}*/
+}
 </script>
 
 <style scoped>

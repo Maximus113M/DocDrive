@@ -1,7 +1,7 @@
 <template>
 
     <AuthLayout :role="role">
-        <SharedFolderContent :folder="folder" :childrenFolders="childrenFolders" />
+        <SharedFolderContent :documents="documents" :folder="folder" :childrenFolders="childrenFolders" />
     </AuthLayout>
 
 </template>
@@ -15,6 +15,7 @@ import { usePage } from '@inertiajs/inertia-vue3';
 defineProps({
     folder: Object,
     childrenFolders: Object,
+    documents: Array
 })
 
 

@@ -89,10 +89,9 @@ class ProjectController extends Controller
         if (!in_array(Auth::user()->id, $usersID) && $role != RoleServiceProvider::ADMIN) {
             abort(403, "No tienes persmisos para estar aqui");
         }
-        $year= $project->validity->first()->year;
+        $year= $project->validity->year;
         $startDate = "{$year}-01-01";
         $endDate = "{$year}-12-31";
-
 
         $validator = Validator::make(request()->all(), [
             'name' => 'required|string|max:255',
@@ -102,7 +101,9 @@ class ProjectController extends Controller
             'visualizationRoleSelected' => 'required|numeric',
             //'target' => 'required'
         ]);
+
         if ($validator->fails()) {
+            return $validator->errors();
             return redirect()->back()->withErrors($validator)->withInput();
         }
 
@@ -132,11 +133,8 @@ class ProjectController extends Controller
         if ($project->folders->count() > 0 || $project->documents->count() > 0) {
             return redirect()->back()->with("errorMessage", "¡No se puede eliminar un proyecto con documentos o carpetas asociados!");
         }
-        // TODO: TECNICAMENTE SI PODRIA ELIMINAR SI TIENE USUARIOS, SE DEBE ELIMINAR AL ASOCIACION DE PROJECTS-USERS
-        if ($project->users->count() > 0) {
-            return redirect()->back()->with("errorMessage", "¡No se puede eliminar un proyecto con usuarios asociados!");
-        }
-
+        
+        $project->users()->detach();
         $project->delete();
 
         return redirect()->back()->with("message", "Proyecto eliminado.");

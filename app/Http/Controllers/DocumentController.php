@@ -3,8 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Document;
+use App\Models\Folder;
+use App\Models\Project;
 use App\Providers\AuthServiceProvider;
+use App\Providers\RoleServiceProvider;
+use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -113,4 +118,106 @@ class DocumentController extends Controller
     {
         return $this->show($documentID);
     }
+
+    /**
+     * Eliminar un documento
+     */
+    public function destroy($projectID, $documentID)
+    {
+        $project = Project::find($projectID);
+        $usersID =  $project->users->pluck('id')->toArray();
+        $role = AuthServiceProvider::getRole();
+
+        if (!in_array(Auth::user()->id, $usersID) && $role != RoleServiceProvider::ADMIN) {
+            abort(403, "No tienes persmisos para estar aqui");
+        }
+
+
+        $document = Document::find($documentID);
+        $rutaArreglada = str_replace('/storage/', '', $document->documentPath);
+        Storage::delete($rutaArreglada);
+        $document->folder()->detach();
+        $document->delete();
+
+        return redirect()->back()->with("message", "Documento eliminada correctamente");
+    }
+
+    /**
+     * Desasociar un document a una carpeta compartida
+     */
+    public function disassociatedDocument($folderID, $documentID)
+    {
+        $document = Document::find($documentID);
+        $document->folder()->detach($folderID);
+
+        return redirect()->back()->with("message", "Documento desasociado correctamente");
+    }
+
+    /**
+     * Actualizar un documento normal
+     */
+    public function updateDocument($projectID, $documentID)
+    {
+        $project = Project::find($projectID);
+        $usersID =  $project->users->pluck('id')->toArray();
+        $role = AuthServiceProvider::getRole();
+
+        if (!in_array(Auth::user()->id, $usersID) && $role != RoleServiceProvider::ADMIN) {
+            abort(403, "No tienes persmisos para estar aqui");
+        }
+
+        return $this->update($documentID);
+    }
+
+    /**
+     * Actualizar un documento
+     */
+    public function update($documentID)
+    {
+        $validator = Validator::make(request()->all(), [
+            'visualizationRoleSelected' => 'required|numeric',
+            'name' => ['required','string'],
+            'description' => ['required','string']
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $document = Document::find($documentID);
+        $document->name = request("name");
+        $document->description = request("description");
+        $document->visualization_role_id = request("visualizationRoleSelected");
+
+        $document->update();
+
+        return redirect()->back()->with("message", "Documento actualizado correctamente");
+    }
+
+
+    /**
+     * Asociar documentos
+     */
+    public function associatedDocument($folderID)
+    {
+        $validator = Validator::make(request()->all(), [
+            'documentsID' => 'required',
+        ]);
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        } 
+
+        $folder = Folder::find($folderID);
+        $documentsID = $folder->documents->pluck('id')->toArray();
+        foreach (request("documentsID") as $documentID) {
+            if (!in_array($documentID, $documentsID)) {
+                $folder->documents()->attach($documentID);
+            }
+        }
+
+        return redirect()->back()->with("message", "Documentos asociados correctamente");
+    }
+
+
 }

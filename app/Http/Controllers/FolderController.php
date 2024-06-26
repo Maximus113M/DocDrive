@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Document;
 use App\Models\Folder;
 use App\Models\Project;
 use App\Models\VisualizationRole;
@@ -131,6 +132,7 @@ class FolderController extends Controller
             return;
         }
         return Inertia::render("SharedFolder/Index", [
+            "documents" => Document::all(),
             "folder" => $folder,
             "childrenFolders" => Folder::where("father_id", "=", $folderID)->get()
         ]);
@@ -154,7 +156,7 @@ class FolderController extends Controller
     }
 
     /**
-     * Actualizar recurso compartido
+     * Actualizar una carpeta dentro del recurso compartido
      */
     public function updateSharedFolder($folderID)
     {
@@ -183,5 +185,37 @@ class FolderController extends Controller
         $folder->update();
 
         return redirect()->back()->with("message", "Carpeta actualizada correctamente");
+    }
+
+
+    /**
+     * Eliminar carpeta
+     */
+    public function destroyFolder($projectID, $folderID)
+    {
+        $project = Project::find($projectID);
+        $usersID =  $project->users->pluck('id')->toArray();
+        $role = AuthServiceProvider::getRole();
+
+        if (!in_array(Auth::user()->id, $usersID) && $role != RoleServiceProvider::ADMIN) {
+            abort(403, "No tienes persmisos para estar aqui");
+        }
+        return $this->destroy($folderID);
+    }
+
+    /**
+     * Eliminar recurso compartido
+     */
+    public function destroy($folderID)
+    {
+        $folder = Folder::find($folderID);
+        $childrenFolders = Folder::where('father_id', '=', $folder->id)->get();
+        if ($folder->documents->count() > 0 || $childrenFolders->count() > 0){
+            return redirect()->back()->with("errorMessage", "¡No se puede eliminar una carpeta con documentos o carpetas asociados!");
+        }
+
+        $folder->delete();
+
+        return redirect()->back()->with("message", "Carpeta eliminada correctamente");
     }
 }

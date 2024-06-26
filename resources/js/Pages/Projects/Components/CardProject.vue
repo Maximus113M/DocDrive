@@ -118,19 +118,31 @@ const closeModalUpdate = () => {
 }
 
 const openModalDelete = () => {
+    let text = ""
+    let route = ""
+    if (props.folder && !props.isSharedResource) {
+        text = "la carpeta"
+        route = `/project/${props.project.id}/folder/${props.folder.id}/destroy`
+    } else if (props.folder && props.isSharedResource) {
+        text = "la carpeta"
+        route = `/shared/folder/${props.folder.id}/destroy`
+    } else {
+        text = "el proyecto"
+        route = `/project/${props.project.id}/destroy`
+    }
     CustomAlertsService.deleteConfirmAlert({
-        title: 'Eliminar Proyecto',
-        text: '¿Deseas eliminar el proyecto seleccionado? Esta acción no se puede revertir'
+        title: 'Eliminar ' + text,
+        text: `¿Deseas eliminar ${text} ? Esta acción no se puede revertir`
     }).then((result) => {
         if (result.isConfirmed) {
-            form.delete(route("project.destroy", { "projectID": props.project.id }), {
+            form.delete(route, {
                 onSuccess: () => {
                     showMessage()
                 },
                 onError: () => {
                     CustomAlertsService.generalAlert({
                         title: 'Error',
-                        text: `Ha ocurrido un error al eliminar el proyecto`,
+                        text: `Ha ocurrido un error al ${text}`,
                         icon: "error",
                         isToast: true,
                     })
@@ -138,7 +150,9 @@ const openModalDelete = () => {
             })
         }
     })
+
 }
+
 const selectRoute = () => {
     if (props.folder && !props.isSharedResource) {
         return `/${props.currentYear}/projects/${props.project.id}/folders/${props.folder.id}`
@@ -148,8 +162,6 @@ const selectRoute = () => {
         return `/${props.currentYear}/projects/${props.project.id}`
     }
 }
-
-
 
 </script>
 
@@ -228,13 +240,12 @@ const selectRoute = () => {
     <!--  -->
 
     <!-- MODAL EDIT PROJECT -->
-    <div class="modal fade"
-        :id="!props.folder ? `modal-update-${props.project.id}` : `modal-update-${props.folder.id}`" tabindex="-1"
-        aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal fade" :id="!props.folder ? `modal-update-${props.project.id}` : `modal-update-${props.folder.id}`"
+        tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="width: 600px;">
             <div class="modal-content position-relative p-3">
                 <div class="d-flex flex-row justify-center px-3">
-                    <h4 class="my-3" style="color: #39A900;"><strong>Actualizar proyecto</strong></h4>
+                    <h4 class="my-3" style="color: #39A900;"><strong>Actualizar</strong></h4>
 
                     <button type="button" class="btn-close position-absolute top-1 end-3" data-bs-dismiss="modal"
                         aria-label="Close"></button>
@@ -285,8 +296,7 @@ const selectRoute = () => {
                         </div>
                         <div class="col-span-2 row justify-center p-3 ">
                             <button type="submit" class="btn py-2"
-                                style="background-color: #39A900; color: white; "><strong>Actualizar
-                                    proyecto</strong></button>
+                                style="background-color: #39A900; color: white; "><strong>Actualizar</strong></button>
                         </div>
                     </form>
                 </div>

@@ -84,7 +84,7 @@
                     :visualizations-role="props.visualizationsRole" />
             </div>
             <div v-for="document in props.project.documents">
-                <CardDocumentDetails :currentYear="currentYear" :document="document" :current-year="currentYear"
+                <CardDocumentDetails :visualizations-role="props.visualizationsRole" :currentYear="currentYear" :document="document" :current-year="currentYear"
                     :project="project" />
             </div>
         </div>
@@ -433,7 +433,6 @@ const upload = () => {
 }
 
 const associateUser = () => {
-    console.log(formAssociateUser.usersID);
     formAssociateUser.role = role
     formAssociateUser.post(route("project.associated.users", {
         "projectID": props.project.id,
