@@ -21,7 +21,7 @@ const onClicks = (event) => {
     <!-- PROJECT DESIGN -->
     <div class="col position-relative" style="max-width: 300px;">
 
-        <Link :href="''"
+        <Link :href="route('shared.index', {'folderID': id})"
             class="text-decoration-none">
 
         <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40">

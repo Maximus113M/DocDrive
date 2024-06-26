@@ -1778,6 +1778,9 @@ select{
 .pr-4{
   padding-right: 1rem;
 }
+.pt-0{
+  padding-top: 0px;
+}
 .pt-1{
   padding-top: 0.25rem;
 }
@@ -1792,9 +1795,6 @@ select{
 }
 .pt-8{
   padding-top: 2rem;
-}
-.pt-0{
-  padding-top: 0px;
 }
 .text-left{
   text-align: left;

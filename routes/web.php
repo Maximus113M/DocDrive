@@ -48,8 +48,16 @@ Route::get('/{validityYear}/projects/{projectID}/folders/{folderID}', [FolderCon
     ->name('folder.index')->middleware("protect.documents");
 
 // RUTA PARA VISUALIZAR EL DOCUMENTO
-Route::get('/{validityYear}/projects/{projectID}/files/{documentID}', [DocumentController::class, 'show'])
+Route::get('/{validityYear}/projects/{projectID}/files/{documentID}', [DocumentController::class, 'showProtected'])
     ->name('file.index')->middleware("protect.documents");
+
+// RUTA PARA VISUALIZAR LOS DOCUMENTOS O CARPETAS DE UN RECURSO COMPARTIDO
+Route::get('/shared/{folderID}', [FolderController::class, 'showSharedResource'])
+    ->name('shared.index');
+
+// RUTA PARA VISUALIZAR LOS DOCUMENTOS QUE ESTAN DENTRO DEL RECRUSO COMPARTIDO
+Route::get('/shared/{folderID}/document/{documentID}', [DocumentController::class,'showSharedResource'])
+    ->name('shared.file.index');
 
 // RUTAS PROTEGIDAS PARA EL ADMIN
 Route::middleware(['auth', 'role:admin'])->group(function () {
@@ -82,8 +90,8 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     Route::post('/project/store', [ProjectController::class, 'store'])
         ->name('project.store');
 
-     // RUTA PARA CREAR UN RECURSO COMPARTIDO
-     Route::post('/shared/folder/store', [FolderController::class, 'storeSharedFolder'])
+    // RUTA PARA CREAR UN RECURSO COMPARTIDO
+    Route::post('/shared/folder/store', [FolderController::class, 'storeSharedFolder'])
      ->name('shared.folder.store');
 });
 
@@ -123,6 +131,14 @@ Route::middleware(['auth', 'role:admin|investigator'])->group(function () {
     // RUTA PARA ASOCIAR USUARIOS A UN PROYECTO
     Route::post('/project/{projectID}/users', [ProjectController::class, 'associatedUsers'])
         ->name('project.associated.users');
+
+    // RUTA PARA ACTUALIZAR UNA CARPETA
+    Route::put('project/{projectID}/folder/{folderID}/update', [FolderController::class, 'updateFolder'])
+        ->name('folder.update');
+
+    // RUTA PARA ACTUALIZAR UNA CARPETA DENTRO DEL  RECURSO COMPARTIDO
+    Route::put('/folder/{folderID}/update', [FolderController::class, 'updateSharedFolder'])
+        ->name('shared.folder.update');
 });
 
 

@@ -1,7 +1,7 @@
 <script setup>
 import Card from '@/Pages/Validity/Components/CardValidity.vue';
 import Icon from '@/Shared/Icon.vue';
-import SharedFolderCard from './CardSharedFolder.vue'
+import SharedFolderCard from '../../SharedFolder/Components/CardSharedFolder.vue'
 import { CustomAlertsService } from '@/services/customAlerts';
 import { useForm, usePage } from '@inertiajs/inertia-vue3'
 import { ref, onUpdated, onMounted, watch } from 'vue';
@@ -81,7 +81,7 @@ const onClicks = (event) => {
 const changeInputCheck = (e) => {
     const inputsValidity = document.getElementsByClassName("inputs-validity")
     const inputsSharedFolder = document.getElementsByClassName("inputs-shared-folder")
-    if (e.target.value == "validty") {
+    if (e.target.value == "validity") {
         changeDisplayCheckBox(inputsValidity, "block")
         changeDisplayCheckBox(inputsSharedFolder, "none")
     } else {

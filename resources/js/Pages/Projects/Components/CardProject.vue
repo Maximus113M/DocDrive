@@ -7,21 +7,24 @@ import { onMounted, ref } from 'vue';
 import { CustomAlertsService } from '@/services/customAlerts';
 import { AppFunctions } from '@/core/appFunctions';
 
+
+
 const props = defineProps({
     folder: { type: Object },
-    project: { type: Object, required: true },
-    currentYear: { type: String, required: true },
-    visualizationsRole: { type: Array, required: true },
+    project: { type: Object },
+    currentYear: { type: String },
+    visualizationsRole: { type: Array },
+    isSharedResource: { type: Boolean }
 });
 
 
-
 const form = useForm({
-    name: props.project.name,
-    description: props.project.description,
-    startDate: props.project.startDate,
-    endDate: props.project.endDate,
-    visualizationRoleSelected: props.project.visualization_role_id
+    name: !props.folder ? props.project.name : props.folder.name,
+    description: !props.folder ? props.project.description : props.folder.description,
+    startDate: !props.folder ? props.project.startDate : null,
+    endDate: !props.folder ? props.project.endDate : null,
+    visualizationRoleSelected: !props.folder ? props.project.visualization_role_id : props.folder.visualization_role_id,
+    isSharedResource: !props.isSharedResource ?? null
     //target: project.target,
 })
 
@@ -34,11 +37,16 @@ onMounted(() => {
     isAssociatedUser.value = verifiyAssociatedUser()
 })
 
+
 const onClicks = (event) => {
     event.preventDefault();
 }
+const idModal = "modal-update-".concat(props.folder ? props.folder.id : props.project.id)
 
 const verifiyAssociatedUser = () => {
+    if (!props.project) {
+        return false
+    }
     if (authUser == null || !props.project.users) {
         return false;
     }
@@ -51,17 +59,28 @@ const verifiyAssociatedUser = () => {
     return false;
 }
 
-const updateProject = () => {
-    form.put(route("project.update", { "projectID": props.project.id }), {
-        onSuccess: () => showMessage(),
-    })
-}
-
 const nameRoleVisualization = {
     "private": "Privado",
     "public": "Público",
     "general-public": "Publico en general"
 }
+
+const update = () => {
+    if (!props.project && props.isSharedResource) {
+        form.put(route("shared.folder.update", { "folderID": props.folder.id }), {
+            onSuccess: () => showMessage(),
+        })
+    } else if (props.folder && !props.isSharedResource) {
+        form.put(route("folder.update", { "folderID": props.project.id, "projectID": props.project.id }), {
+            onSuccess: () => showMessage(),
+        })
+    } else {
+        form.put(route("project.update", { "projectID": props.project.id }), {
+            onSuccess: () => showMessage(),
+        })
+    }
+}
+
 
 const showMessage = () => {
     const flashMessage = usePage().props.value.flash.message
@@ -85,14 +104,15 @@ const showMessage = () => {
 const openModalUpdate = () => {
     form.clearErrors();
     form.reset();
-    const modal = document.getElementById("modal-update-project-" + props.project.id)
+    console.log(modal);
+    const modal = document.getElementById(idModal)
     const modalBootstrap = new bootstrap.Modal(modal)
     modalBootstrap.show()
 }
 
 
 const closeModalUpdate = () => {
-    const modal = document.getElementById("modal-update-project-" + props.project.id)
+    const modal = document.getElementById(idModal)
     const modalBootstrap = bootstrap.Modal.getInstance(modal)
     modalBootstrap.hide()
 }
@@ -119,19 +139,29 @@ const openModalDelete = () => {
         }
     })
 }
+const selectRoute = () => {
+    if (props.folder && !props.isSharedResource) {
+        return `/${props.currentYear}/projects/${props.project.id}/folders/${props.folder.id}`
+    } else if (props.folder && props.isSharedResource) {
+        return `/shared/${props.folder.id}`
+    } else {
+        return `/${props.currentYear}/projects/${props.project.id}`
+    }
+}
+
+
+
 </script>
 
 <template>
     <!-- PROJECT DESIGN -->
     <div class="col position-relative" style="max-width: 300px;">
 
-        <Link :href="props.folder == null ? route('project.index', { 'validityYear': currentYear, 'projectID': props.project.id })
-            : route('folder.index', { 'validityYear': currentYear, 'projectID': props.project.id, 'folderID': props.folder.id })"
-            class="text-decoration-none">
-
+        <Link method="get" :href="selectRoute()" class="text-decoration-none">
         <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40">
             <div class="cursor-auto absolute left-0 ml-2" data-toggle="tooltip" data-placement="top"
-                title="¡Datos del proyecto incompleto!" v-if="props.project.isIncomplete && isAssociatedUser">
+                title="¡Datos del proyecto incompleto!"
+                v-if="props.project && props.project.isIncomplete && isAssociatedUser">
                 <svg xmlns="http://www.w3.org/2000/svg" width="35px" height="35px" viewBox="0 0 24 24">
                     <g fill="none">
                         <path
@@ -197,8 +227,9 @@ const openModalDelete = () => {
 
     <!--  -->
 
-    <!-- MODAL EDIT PROJECT-->
-    <div class="modal fade" :id="`modal-update-project-${props.project.id}`" tabindex="-1"
+    <!-- MODAL EDIT PROJECT -->
+    <div class="modal fade"
+        :id="!props.folder ? `modal-update-${props.project.id}` : `modal-update-${props.folder.id}`" tabindex="-1"
         aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="width: 600px;">
             <div class="modal-content position-relative p-3">
@@ -209,7 +240,7 @@ const openModalDelete = () => {
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body px-3">
-                    <form class="sm:grid sm:grid-cols-2" @submit.prevent="updateProject">
+                    <form class="sm:grid sm:grid-cols-2" @submit.prevent="update">
                         <div class="col-span-2 mb-3">
                             <label for="name" class="font-bold form-label">Ingrese el nombre:</label>
                             <input v-model="form.name" type="text" class="form-control" id="name">
@@ -218,22 +249,22 @@ const openModalDelete = () => {
                             </div>
                         </div>
 
-                        <div class="mb-3">
+                        <div v-if="!props.folder" class="mb-3">
                             <label for="startDate" class="font-bold form-label">Ingrese la fecha de inicio:</label>
                             <input v-model="form.startDate" type="date" class="form-control" id="startDate">
                             <div v-if="form.errors.startDate" class="text-center">
                                 {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.startDate) }}
                             </div>
                         </div>
-                        <div class="mb-3">
+                        <div v-if="!props.folder" class="mb-3">
                             <label for="endDate" class="font-bold form-label">Ingrese la fecha de fin:</label>
                             <input v-model="form.endDate" type="date" class="form-control" id="endDate">
                             <div v-if="form.errors.endDate" class="text-red-400">
                                 {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.endDate) }}
                             </div>
                         </div>
-                        
-                        <div class="mb-3">
+
+                        <div v-if="!props.isSharedResource" class="mb-3">
                             <label class="font-bold form-label">Visualización</label>
                             <select v-model="form.visualizationRoleSelected" class="form-select">
                                 <option v-for="vRole in visualizationsRole" :value="vRole.id" :key="vRole.id">{{

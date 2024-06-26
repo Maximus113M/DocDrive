@@ -78,7 +78,7 @@ class DocumentController extends Controller
     /**
      * Mostrar el documento
      */
-    public function show($validityYear, $projectID, $documentID)
+    public function show($documentID)
     {
         $document = Document::find($documentID);
 
@@ -96,5 +96,21 @@ class DocumentController extends Controller
             'Content-Type' => $type,
             'Content-Disposition' => 'inline',
         ]);
+    }
+
+    /**
+     * Mostrar el documento protegido
+     */
+    public function showProtected($validityYear, $projectID, $documentID)
+    {
+        return $this->show($documentID);
+    }
+
+    /**
+     * Mostrar el documento que esta dentro de los recursos compartidos
+     */
+    public function showSharedResource($folderID, $documentID)
+    {
+        return $this->show($documentID);
     }
 }
