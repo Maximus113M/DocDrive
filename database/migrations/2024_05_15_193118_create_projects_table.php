@@ -19,7 +19,7 @@ class CreateProjectsTable extends Migration
             $table->date("startDate")->nullable();
             $table->date("endDate")->nullable();
             $table->json("target")->nullable();
-            $table->string("description")->nullable();
+            $table->text("description")->nullable();
             $table->unsignedBigInteger('visualization_role_id');
             $table->foreign('visualization_role_id')->references('id')->on('visualization_roles');
             $table->unsignedBigInteger('validity_id');

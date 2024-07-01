@@ -32,4 +32,9 @@ class Document extends Model
     {
         return $this->belongsTo(VisualizationRole::class, "visualization_role_id");
     }
+    
+    public function categories()
+    {
+        return $this->belongsToMany(DocumentCategory::class, "document_categories_documents");
+    }
 }

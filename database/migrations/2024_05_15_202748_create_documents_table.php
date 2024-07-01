@@ -17,7 +17,6 @@ class CreateDocumentsTable extends Migration
             $table->id();
             $table->string("name")->unique();
             $table->string("documentPath");
-            $table->string("description")->nullable();
             $table->string("format");
             $table->unsignedBigInteger('project_id')->nullable();
             $table->foreign('project_id')->references('id')->on('projects');
