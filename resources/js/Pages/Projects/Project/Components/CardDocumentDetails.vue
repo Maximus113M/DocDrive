@@ -7,7 +7,7 @@
             <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40">
                 <!-- Options -->
                 <div v-if="authUser != null && (authUser.role.name == 'admin'
-                    || (isAssociatedUser))" class="position-absolute top-1 end-1" @click="onClicks">
+                    || (isAssociatedUser)) && project" class="position-absolute top-1 end-1" @click="onClicks">
                     <FoldersDropdown align="right" width="45">
 
                         <template #trigger>
@@ -33,7 +33,7 @@
                             <button
                                 class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
                                 @click="openModalDelete">
-                                {{ project ? 'Eliminar' : 'Desasociar' }}
+                                Eliminar
                             </button>
                         </template>
                     </FoldersDropdown>

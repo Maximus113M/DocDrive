@@ -171,7 +171,7 @@ class FolderController extends Controller
         $validator = Validator::make(request()->all(), [
             'name' => ['required', 'string'],
             'visualizationRoleSelected' => 'numeric',
-            'description' => ['required', 'string']
+            'description' => ['string']
         ]);
 
         if ($validator->fails()) {
@@ -180,7 +180,9 @@ class FolderController extends Controller
 
         $folder = Folder::find($folderID);
         $folder->name = request("name");
-        $folder->visualization_role_id = request("visualizationRoleSelected");
+        if (request("visualizationRoleSelected") !== null) {
+            $folder->visualization_role_id = request("visualizationRoleSelected");
+        }
         $folder->description = request("description");
         $folder->update();
 

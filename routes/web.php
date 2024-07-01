@@ -153,8 +153,8 @@ Route::middleware(['auth', 'role:admin|investigator'])->group(function () {
         ->name('document.destroy');
     
     // RUTA PARA DESASOCIAR UN DOCUMENTO A UN RECURSO COMPARTIDO
-    Route::delete('/shared/{folderID}/document/{documentID}/destroy', [DocumentController::class, 'disassociatedDocument'])
-        ->name('shared.document.destroy');
+    /*Route::delete('/shared/{folderID}/document/{documentID}/destroy', [DocumentController::class, 'disassociatedDocument'])
+        ->name('shared.document.destroy');*/
 
     // RUTA PARA ACTUALIZAR UN DOCUMENTO
     Route::put('/project/{projectID}/document/{documentID}/update', [DocumentController::class, 'updateDocument'])
