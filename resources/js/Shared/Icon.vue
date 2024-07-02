@@ -53,6 +53,12 @@
     <path
       d="M80-160v-95q0-34 18-62.5t50-42.5q60-27 123.18-43.5Q334.37-420 400-420q33 0 66 4.67 33 4.66 66 11.33v53q-45 17-74.5 55T428-210v50H80Zm408 0v-51q0-22.89 11-42.45Q510-273 530-284q36-18.5 74.5-27.75T684-321q41 0 80 9t74 28q20 10 31 29.87T880-211v51H488Zm196-221q-39.48 0-66.74-27.26Q590-435.52 590-475q0-39.48 27.26-66.74Q644.52-569 684-569q39.48 0 66.74 27.26Q778-514.48 778-475q0 39.48-27.26 66.74Q723.48-381 684-381ZM400-481q-63 0-106.5-43.5T250-631q0-63 43.5-106.5T400-781q63 0 106.5 43.5T550-631q0 63-43.5 106.5T400-481Z" />
   </svg>
+  <!-- MENU-document-categories-->
+  <svg v-else-if="name === 'document-categories'" xmlns="http://www.w3.org/2000/svg" height="35px"
+    viewBox="0 -960 960 960" width="35px" fill="#FFFFFF">
+    <path
+      d="m159-168-34-14q-31-13-41.5-45t3.5-63l72-156v278Zm160 88q-33 0-56.5-23.5T239-160v-240l106 294q3 7 6 13.5t8 12.5h-40Zm206-4q-32 12-62-3t-42-47L243-622q-12-32 2-62.5t46-41.5l302-110q32-12 62 3t42 47l178 488q12 32-2 62.5T827-194L525-84Zm-86-476q17 0 28.5-11.5T479-600q0-17-11.5-28.5T439-640q-17 0-28.5 11.5T399-600q0 17 11.5 28.5T439-560Z" />
+  </svg>
   <!-- MENU-settings -->
   <svg v-else-if="name === 'settings'" xmlns="http://www.w3.org/2000/svg" height="35px" viewBox="0 -960 960 960"
     width="35px" fill="#FFFFFF">
@@ -161,7 +167,8 @@
 
   <!-- SHARED FOLDER -->
 
-  <svg v-else-if="name == 'sharedFolder'" xmlns="http://www.w3.org/2000/svg" width="84px" height="84px" viewBox="0 0 32 32">
+  <svg v-else-if="name == 'sharedFolder'" xmlns="http://www.w3.org/2000/svg" width="84px" height="84px"
+    viewBox="0 0 32 32">
     <defs>
       <clipPath id="vscodeIconsFolderTypeShared0">
         <path fill="none" d="M0 0h32v32H0z" />

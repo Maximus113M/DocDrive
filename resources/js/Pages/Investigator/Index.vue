@@ -2,25 +2,10 @@
 import AuthLayout from '@/Layouts/Authenticated.vue';
 import Table from '@/Shared/users/UsersTable.vue'
 import CreateUserModal from '@/Shared/users/CreateUserModal.vue';
-import { onUpdated } from 'vue';
-import { CustomAlertsService } from '@/services/customAlerts';
 const props= defineProps({
     investigators: Object,
     isAuthenticated: Boolean,
     role: String,
-    sucessDelete: Boolean,
-})
-
-onUpdated(() => {
-    if (props.sucessDelete === true) {
-        CustomAlertsService.generalAlert({
-            title: 'Usuario Eliminado',
-            text: 'El usuario ha sido eliminado correctamente',
-            isToast: true,
-            timer: 3000,
-            showTimer: true,
-        })
-    }
 })
 
 </script>

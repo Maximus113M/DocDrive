@@ -3,10 +3,12 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\DocumentCategory;
-
+use App\Providers\AuthServiceProvider;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
+use App\Models\DocumentCategory;
+
 class DocumentCategoryController extends Controller
 {
     /**
@@ -19,6 +21,7 @@ class DocumentCategoryController extends Controller
         return Inertia::render("DocumentCategories/Index", [
             "categories" => DocumentCategory::all(),
             "isAuthenticated" => AuthServiceProvider::checkAuthenticated(),
+            "role" => AuthServiceProvider::getRole()
         ]);
     }
 

@@ -56,7 +56,6 @@ import { AppFunctions } from "@/core/appFunctions";
 const props = defineProps({
     userType: { type: String, required: true },
     modalId: { type: String, required: true },
-    userModel: Object
 });
 
 const modal = ref(null);
