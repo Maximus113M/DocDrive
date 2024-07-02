@@ -84,14 +84,6 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="description" class="font-bold form-label">Ingrese la descripción:</label>
-                            <textarea v-model="documentForm.description" type="text-area"
-                                class="form-control h-48 max-h-48" id="description" />
-                            <div v-if="documentForm.errors.description" class="text-red-400 text-center">
-                                {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
-                            </div>
-                        </div>
                         <div class="col-span-2 row justify-center p-3 ">
                             <button type="submit" class="btn py-2"
                                 style="background-color: #39A900; color: white; "><strong>Actualizar
@@ -123,7 +115,6 @@ const props = defineProps({
 
 const documentForm = useForm({
     name: props.document.name,
-    description: props.document.description,
     visualizationRoleSelected: props.document.visualization_role_id,
 })
 const isAssociatedUser = ref(null);

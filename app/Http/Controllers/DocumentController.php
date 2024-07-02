@@ -167,7 +167,6 @@ class DocumentController extends Controller
         $validator = Validator::make(request()->all(), [
             'visualizationRoleSelected' => 'required|numeric',
             'name' => ['required', 'string'],
-            'description' => ['required', 'string']
         ]);
 
         if ($validator->fails()) {
@@ -176,7 +175,6 @@ class DocumentController extends Controller
 
         $document = Document::find($documentID);
         $document->name = request("name");
-        $document->description = request("description");
         $document->visualization_role_id = request("visualizationRoleSelected");
 
         $document->update();

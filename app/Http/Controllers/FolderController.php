@@ -171,19 +171,16 @@ class FolderController extends Controller
         $validator = Validator::make(request()->all(), [
             'name' => ['required', 'string'],
             'visualizationRoleSelected' => 'numeric',
-            'description' => ['string']
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-
         $folder = Folder::find($folderID);
         $folder->name = request("name");
         if (request("visualizationRoleSelected") !== null) {
             $folder->visualization_role_id = request("visualizationRoleSelected");
         }
-        $folder->description = request("description");
         $folder->update();
 
         return redirect()->back()->with("message", "Carpeta actualizada correctamente");

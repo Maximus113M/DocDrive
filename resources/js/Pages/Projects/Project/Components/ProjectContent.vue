@@ -3,8 +3,9 @@
         <!-- Buscador -->
         <div class="py-3">
             <div class="ml-5 flex justify-start items-center">
-                <Link class="mr-3" method="get" :href="!folder ? route('validity.projects', { 'validityYear': props.currentYear })
-                    : route('project.index', { 'validityYear': currentYear, 'projectID': props.project.id })">
+                <!--<Link class="mr-3" method="get" :href="!folder ? route('validity.projects', { 'validityYear': props.currentYear })
+                    : route('project.index', { 'validityYear': currentYear, 'projectID': props.project.id })">-->
+                    <Link class="mr-3" method="get" :href="backRoute()">
                 <Icon name="back" />
                 </Link>
 
@@ -256,6 +257,15 @@ const props = defineProps({
     investigators: { type: Array, required: true },
     collaborators: { type: Array, required: true }
 })
+const backRoute = () => {
+    if (props.folder && props.folder.father_id) {
+        return `/${props.currentYear}/projects/${props.project.id}/folders/${props.folder.father_id}`
+    } else if (props.folder) {
+        return `/${props.currentYear}/projects/${props.project.id}`
+    } else {
+        return `/${props.currentYear}/projects`
+    }
+}
 
 const users = ref([])
 
