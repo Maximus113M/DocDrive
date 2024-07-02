@@ -7,6 +7,7 @@ use App\Http\Controllers\DocumentController;
 use App\Http\Controllers\FolderController;
 use App\Http\Controllers\InvestigatorController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\DocumentCategoryController;
 use App\Http\Controllers\ValidityController;
 use Illuminate\Foundation\Application;
 use Illuminate\Support\Facades\Route;
@@ -93,6 +94,20 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
     // RUTA PARA CREAR UN RECURSO COMPARTIDO
     Route::post('/shared/folder/store', [FolderController::class, 'storeSharedFolder'])
         ->name('shared.folder.store');
+
+    //DOCUMENT CATEGORIES
+    // RUTA PARA MOSTRAR CATEGORIAS DE DOCUMENTOS
+    Route::get('/document-category/index', [DocumentCategoryController::class, 'index'])
+        ->name('document-category.index');
+    // RUTA PARA CREAR UNA CATEGORIA DE DOCUMENTO
+    Route::post('/document-category/store', [DocumentCategoryController::class, 'store'])
+        ->name('document-category.store');
+    // RUTA PARA EDITAR UNA CATEGORIA DE DOCUMENTO
+    Route::put('/document-category/{categoryID}/update', [DocumentCategoryController::class, 'update'])
+    ->name('document-category.update');
+    // RUTA PARA ELIMINAR UNA CATEGORIA DE DOCUMENTO
+    Route::delete('/document-category/{categoryID}/destroy', [DocumentCategoryController::class, 'destroy'])
+        ->name('document-category.destroy');
 });
 
 
