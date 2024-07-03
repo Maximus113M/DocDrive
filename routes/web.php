@@ -60,6 +60,10 @@ Route::get('/shared/{folderID}', [FolderController::class, 'showSharedResource']
 Route::get('/shared/{folderID}/document/{documentID}', [DocumentController::class, 'showSharedResource'])
     ->name('shared.file.index');
 
+// RUTA PARA HACER LA BUSQUEDA
+Route::get('/search/{consulta}', [ValidityController::class,'search'])
+    ->name('search.index');
+
 // RUTAS PROTEGIDAS PARA EL ADMIN
 Route::middleware(['auth', 'role:admin'])->group(function () {
 

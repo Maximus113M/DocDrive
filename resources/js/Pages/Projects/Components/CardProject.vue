@@ -66,7 +66,6 @@ const nameRoleVisualization = {
 }
 
 const update = () => {
-    console.log(props.folder.id);
     if (!props.project && props.isSharedResource) {
         form.put(route("shared.folder.update", { "folderID": props.folder.id }), {
             onSuccess: () => showMessage(),
