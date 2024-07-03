@@ -26,7 +26,7 @@ class DocumentController extends Controller
         $validator = Validator::make(request()->all(), [
             'document' => 'required|file|max:20240',
             'visualizationRoleSelected' => 'required',
-            'name' => ['required','string','unique:documents']
+            'name' => ['required', 'string', 'unique:documents']
         ]);
 
         if ($validator->fails()) {
@@ -50,7 +50,7 @@ class DocumentController extends Controller
         if (request("folder_id") !== null) {
             $document->folder()->attach(request("folder_id"));
         }
-            
+
         return redirect()->back()->with("message", "Documento creado correctamente");
     }
 
@@ -139,19 +139,9 @@ class DocumentController extends Controller
         $document->folder()->detach();
         $document->delete();
 
-        return redirect()->back()->with("message", "Documento eliminada correctamente");
+        return redirect()->back()->with("message", "Documento eliminado correctamente");
     }
 
-    /**
-     * Desasociar un document a una carpeta compartida
-     */
-    public function disassociatedDocument($folderID, $documentID)
-    {
-        $document = Document::find($documentID);
-        $document->folder()->detach($folderID);
-
-        return redirect()->back()->with("message", "Documento desasociado correctamente");
-    }
 
     /**
      * Actualizar un documento normal
@@ -176,8 +166,7 @@ class DocumentController extends Controller
     {
         $validator = Validator::make(request()->all(), [
             'visualizationRoleSelected' => 'required|numeric',
-            'name' => ['required','string'],
-            'description' => ['required','string']
+            'name' => ['required', 'string'],
         ]);
 
         if ($validator->fails()) {
@@ -186,7 +175,6 @@ class DocumentController extends Controller
 
         $document = Document::find($documentID);
         $document->name = request("name");
-        $document->description = request("description");
         $document->visualization_role_id = request("visualizationRoleSelected");
 
         $document->update();
@@ -201,23 +189,45 @@ class DocumentController extends Controller
     public function associatedDocument($folderID)
     {
         $validator = Validator::make(request()->all(), [
-            'documentsID' => 'required',
+            'documentsID' => '',
         ]);
 
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
-        } 
+        }
 
         $folder = Folder::find($folderID);
         $documentsID = $folder->documents->pluck('id')->toArray();
+        $this->disassociatedDocuments($folder, request("documentsID"));        
+
         foreach (request("documentsID") as $documentID) {
             if (!in_array($documentID, $documentsID)) {
                 $folder->documents()->attach($documentID);
             }
         }
 
-        return redirect()->back()->with("message", "Documentos asociados correctamente");
+        return redirect()->back()->with("message", "Documentos asociados/desasociados correctamente");
+    }
+
+    /**
+     * 
+     * Desasociar documentos
+     */
+    public function disassociatedDocuments($folder, $inputDocumentsID)
+    {
+        $documentsID = Document::pluck("id");
+        $documentsIDToRemove = $this->removeDuplicates($inputDocumentsID, $documentsID);
+        $folder->documents()->detach($documentsIDToRemove);
     }
 
 
+     /**
+     * Remover los ids repetidos de los documents para tener los ids no seleccionados a eliminar
+     */
+    private function removeDuplicates($inputDocumentsID, $documentsID)
+    {
+        return array_filter($documentsID->toArray(), function ($documentID) use ($inputDocumentsID) {
+            return !in_array($documentID, $inputDocumentsID);
+        });
+    }
 }

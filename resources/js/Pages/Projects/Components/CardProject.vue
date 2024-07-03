@@ -66,12 +66,13 @@ const nameRoleVisualization = {
 }
 
 const update = () => {
+    console.log(props.folder.id);
     if (!props.project && props.isSharedResource) {
         form.put(route("shared.folder.update", { "folderID": props.folder.id }), {
             onSuccess: () => showMessage(),
         })
     } else if (props.folder && !props.isSharedResource) {
-        form.put(route("folder.update", { "folderID": props.project.id, "projectID": props.project.id }), {
+        form.put(route("folder.update", { "folderID": props.folder.id, "projectID": props.project.id }), {
             onSuccess: () => showMessage(),
         })
     } else {
@@ -286,7 +287,7 @@ const selectRoute = () => {
                             </div>
                         </div>
 
-                        <div class="col-span-2 mb-3">
+                        <div v-if="!props.folder" class="col-span-2 mb-3">
                             <label for="description" class="font-bold form-label">Ingrese la descripción:</label>
                             <textarea v-model="form.description" type="text-area" class="form-control h-48 max-h-48"
                                 id="description" />

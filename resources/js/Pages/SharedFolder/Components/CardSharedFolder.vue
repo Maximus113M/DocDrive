@@ -1,7 +1,9 @@
 <script setup>
-import { Link } from '@inertiajs/inertia-vue3';
+import { Link, useForm, usePage } from '@inertiajs/inertia-vue3';
 import FoldersDropdown from '@/Shared/FoldersDropdown.vue';
 import Icon from '@/Shared/Icon.vue';
+import { AppFunctions } from '@/core/appFunctions';
+import { CustomAlertsService } from '@/services/customAlerts';
 
 
 const props = defineProps({
@@ -9,11 +11,81 @@ const props = defineProps({
     name: { type: Object, required: true },
 });
 
+const form = useForm({
+    name: props.name,
+})
 
 const onClicks = (event) => {
     event.preventDefault();
 }
 
+const idModal = "modal-update-".concat(props.id)
+
+
+const update = () => {
+    form.put(route("shared.folder.update", { "folderID": props.id }), {
+        onSuccess: () => showMessage(),
+    })
+}
+
+const showMessage = () => {
+    const flashMessage = usePage().props.value.flash.message
+    const errorMessage = usePage().props.value.flash.errorMessage
+
+    if (flashMessage) {
+        CustomAlertsService.successConfirmAlert({
+            title: flashMessage,
+        })
+    } else if (errorMessage) {
+        CustomAlertsService.generalAlert({
+            title: 'Error',
+            text: errorMessage,
+            icon: "error",
+            isToast: true,
+        })
+    }
+    closeModalUpdate()
+}
+
+const openModalUpdate = () => {
+    form.clearErrors();
+    form.reset();
+    const modal = document.getElementById(idModal)
+    const modalBootstrap = new bootstrap.Modal(modal)
+    modalBootstrap.show()
+}
+
+
+const closeModalUpdate = () => {
+    const modal = document.getElementById(idModal)
+    const modalBootstrap = bootstrap.Modal.getInstance(modal)
+    modalBootstrap.hide()
+}
+
+const openModalDelete = () => {
+
+    CustomAlertsService.deleteConfirmAlert({
+        title: 'Eliminar el recurso compartido',
+        text: `¿Deseas eliminar el recurso compartido ? Esta acción no se puede revertir`
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.delete(`/shared/folder/${props.id}/destroy`, {
+                onSuccess: () => {
+                    showMessage()
+                },
+                onError: () => {
+                    CustomAlertsService.generalAlert({
+                        title: 'Error',
+                        text: `Ha ocurrido un error al eliminar el recurso compartido`,
+                        icon: "error",
+                        isToast: true,
+                    })
+                }
+            })
+        }
+    })
+
+}
 
 </script>
 
@@ -21,13 +93,12 @@ const onClicks = (event) => {
     <!-- PROJECT DESIGN -->
     <div class="col position-relative" style="max-width: 300px;">
 
-        <Link :href="route('shared.index', {'folderID': id})"
-            class="text-decoration-none">
+        <Link :href="route('shared.index', { 'folderID': id })" class="text-decoration-none">
 
         <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40">
             <!-- BODY -->
-            <div v-if="$page.props.auth.user != null && $page.props.auth.user.role.name == 'admin'" class="position-absolute top-1 end-1"
-                @click="onClicks">
+            <div v-if="$page.props.auth.user != null && $page.props.auth.user.role.name == 'admin'"
+                class="position-absolute top-1 end-1" @click="onClicks">
                 <FoldersDropdown align="right" width="45">
 
                     <template #trigger>
@@ -80,7 +151,37 @@ const onClicks = (event) => {
 
 
     <!-- MODAL EDIT SHARED FOLDER-->
-   
+    <div class="modal fade" :id="`modal-update-${props.id}`" tabindex="-1" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" style="width: 600px;">
+            <div class="modal-content position-relative p-3">
+                <div class="d-flex flex-row justify-center px-3">
+                    <h4 class="my-3" style="color: #39A900;"><strong>Actualizar</strong></h4>
+
+                    <button type="button" class="btn-close position-absolute top-1 end-3" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body px-3">
+                    <form class="sm:grid sm:grid-cols-2" @submit.prevent="update">
+                        <div class="col-span-2 mb-3">
+                            <label for="name" class="font-bold form-label">Ingrese el nombre:</label>
+                            <input v-model="form.name" type="text" class="form-control" id="name">
+                            <div v-if="form.errors.name" class="text-red-400 text-center">
+                                {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
+                            </div>
+                        </div>
+
+            
+                        <div class="col-span-2 row justify-center p-3 ">
+                            <button type="submit" class="btn py-2"
+                                style="background-color: #39A900; color: white; "><strong>Actualizar</strong></button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <style scoped>

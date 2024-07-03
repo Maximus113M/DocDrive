@@ -258,7 +258,7 @@ class ProjectController extends Controller
     }
 
     /**
-     * Remover los ids repetidos de los usuarios (investigadores o colaboradores)
+     * Remover los ids repetidos de los usuarios (investigadores o colaboradores) para tener los ids no seleccionados a eliminar
      */
     private function removeDuplicates($usersID, $roleUsersID)
     {

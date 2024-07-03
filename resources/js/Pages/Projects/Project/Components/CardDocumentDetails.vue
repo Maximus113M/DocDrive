@@ -7,7 +7,7 @@
             <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40">
                 <!-- Options -->
                 <div v-if="authUser != null && (authUser.role.name == 'admin'
-                    || (isAssociatedUser))" class="position-absolute top-1 end-1" @click="onClicks">
+                    || (isAssociatedUser)) && project" class="position-absolute top-1 end-1" @click="onClicks">
                     <FoldersDropdown align="right" width="45">
 
                         <template #trigger>
@@ -33,7 +33,7 @@
                             <button
                                 class="block w-full px-4 py-2 text-left text-sm leading-5 text-gray-700 hover:bg-gray-100 focus:outline-none focus:bg-gray-100 transition duration-150 ease-in-out"
                                 @click="openModalDelete">
-                                {{ project ? 'Eliminar' : 'Desasociar' }}
+                                Eliminar
                             </button>
                         </template>
                     </FoldersDropdown>
@@ -84,14 +84,6 @@
                             </div>
                         </div>
 
-                        <div class="mb-3">
-                            <label for="description" class="font-bold form-label">Ingrese la descripción:</label>
-                            <textarea v-model="documentForm.description" type="text-area"
-                                class="form-control h-48 max-h-48" id="description" />
-                            <div v-if="documentForm.errors.description" class="text-red-400 text-center">
-                                {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
-                            </div>
-                        </div>
                         <div class="col-span-2 row justify-center p-3 ">
                             <button type="submit" class="btn py-2"
                                 style="background-color: #39A900; color: white; "><strong>Actualizar
@@ -123,7 +115,6 @@ const props = defineProps({
 
 const documentForm = useForm({
     name: props.document.name,
-    description: props.document.description,
     visualizationRoleSelected: props.document.visualization_role_id,
 })
 const isAssociatedUser = ref(null);
