@@ -111,7 +111,7 @@ import { DocumentModel } from '@/models/documentModel';
 import { AppFunctions } from '@/core/appFunctions';
 
 const props = defineProps({
-    document: { type: DocumentModel, required: true },
+    document: { type: /*DocumentModel*/Object, required: true },
     currentYear: { type: Number, },
     project: { type: Object, },
     folderID: { type: Number },

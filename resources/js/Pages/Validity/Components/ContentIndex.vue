@@ -108,7 +108,7 @@ const changeDisplayCheckBox = (inputs, display) => {
                 <Icon name="search" />
                 <input type="text" v-model="searchValue" style="all: unset" placeholder="Buscar">
                 <button>
-                    <Link :href="route('search.index', { 'consulta': searchValue })">
+                    <Link :href="searchValue.length > 0 ? route('search.index', { 'consulta': searchValue }) : ''">
                         <Icon name="send" />
                     </Link>
                 </button>

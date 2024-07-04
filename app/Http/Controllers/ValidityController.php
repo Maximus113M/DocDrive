@@ -153,10 +153,12 @@ class ValidityController extends Controller
             ->whereNull("project_id")
             ->where("name", "like", "%{$consulta}%")
             ->get();
+
         $projects = null;
         $documents = null;
         $folders = null;
         $userRole = AuthServiceProvider::getRole();
+
         if ($userRole == RoleServiceProvider::GUEST) {
             $projects = Project::whereHas("visualizationRole", function ($query) {
                 $query->where('name', '=', RoleServiceProvider::GENERAL_PUBLIC);
@@ -221,26 +223,36 @@ class ValidityController extends Controller
                 ->distinct()
                 ->get();
         } else {
+
             $projects = Project::where("name", "like", "%{$consulta}%")->get();
-            $documents = Document::where("name", "=", "%{$consulta}%")->get();
+            $documents = Document::where("name", "like", "%{$consulta}%")->with('project')->get();
             $folders = Folder::where("name", "like", "%{$consulta}%")
                 ->where(function ($query) {
                     $query->whereNotNull('father_id')
                         ->orWhereNotNull('project_id');
                 })->get();
         }
-        return $folders;
+        //return $folders;
 
         /**
          @TODO: CAMBIAR VISTA A RENDERIZAR
          */
-        echo('Mamaheuvo');
+        error_log("-------------------------------------");
+        error_log("Project $projects");
+        error_log("Documents $documents");
+        error_log("Folders $folders");
+        error_log("Validities $validities");
+        error_log("SharedResources $sharedResources");
+
         return Inertia::render("Search/Index", [
             "projects" => $projects,
             "documents" => $documents,
             "folders" => $folders,
             "validities" => $validities,
-            "shared-resources" => $sharedResources
+            "shared-resources" => $sharedResources,
+            "isAuthenticated" => AuthServiceProvider::checkAuthenticated(),
+            "role" => AuthServiceProvider::getRole(),
+            "visualizationsRole" => VisualizationRole::all(),
         ]);
     }
 }
