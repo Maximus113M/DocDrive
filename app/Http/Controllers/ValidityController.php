@@ -234,6 +234,7 @@ class ValidityController extends Controller
         /**
          @TODO: CAMBIAR VISTA A RENDERIZAR
          */
+        echo('Mamaheuvo');
         return Inertia::render("Search/Index", [
             "projects" => $projects,
             "documents" => $documents,

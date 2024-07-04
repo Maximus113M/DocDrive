@@ -226,11 +226,11 @@ const selectRoute = () => {
                 Proyecto
             </div>
             <div class="max-h-12 max-w-44 overflow-hidden text-center">
-                <h5 v-if="!folder" class="text-black text-wrap text-ellipsis"><strong> {{ props.project.name.length > 25
+                <h6 v-if="!folder" class="text-black text-wrap text-ellipsis"><strong> {{ props.project.name.length > 40
                     ?
-                    `${props.project.name.substring(0, 25)}...` : props.project.name }} </strong></h5>
-                <h5 v-else class="text-black text-wrap text-ellipsis"><strong> {{ props.folder.name.length > 25 ?
-                    `${props.folder.name.substring(0, 25)}...` : props.folder.name }} </strong></h5>
+                    `${props.project.name.substring(0, 40)}...` : props.project.name }} </strong></h6>
+                <h6 v-else class="text-black text-wrap text-ellipsis"><strong> {{ props.folder.name.length > 40 ?
+                    `${props.folder.name.substring(0, 40)}...` : props.folder.name }} </strong></h6>
 
             </div>
         </div>

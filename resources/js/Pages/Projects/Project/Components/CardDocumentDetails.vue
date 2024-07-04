@@ -4,7 +4,8 @@
 
         <a target="_blank" :href="showDocumentRoute">
             <!-- BODY -->
-            <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40" style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.06);">
+            <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40"
+                style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.06);">
                 <!-- Options -->
                 <div v-if="authUser != null && (authUser.role.name == 'admin'
                     || (isAssociatedUser)) && project" class="position-absolute top-1 end-1" @click="onClicks">
@@ -38,15 +39,17 @@
                         </template>
                     </FoldersDropdown>
                 </div>
-                <!-- Options -->
+                <!-- End-Options -->
 
                 <Icon :name="documentType" />
 
-
                 <div class="validity-font">
                     <div class="max-h-20 max-w-44 overflow-hidden text-center text-black text-wrap text-ellipsis">
-                        <div class=""><strong> {{ props.document.name.length > 40 ?
-                            `${props.document.name.substring(0, 40)}...` : props.document.name }} </strong></div>
+                        <div class="">
+                            <strong> {{ props.document.name.length > 40 ?
+                                `${props.document.name.substring(0, 40)}...` : props.document.name }}
+                            </strong>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -87,9 +90,9 @@
                         </div>
 
                         <div class="col-span-2 row justify-center p-3 ">
-                            <button type="submit" class="btn py-2"
-                                style="background-color: #39A900; color: white; "><strong>Actualizar
-                                    documento</strong></button>
+                            <button type="submit" class="btn py-2" style="background-color: #39A900; color: white; ">
+                                <strong>Actualizar</strong>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -166,9 +169,9 @@ const nameRoleVisualization = {
 
 const update = () => {
     if (props.project) {
-        documentForm.put(route("document.update", { 
+        documentForm.put(route("document.update", {
             "projectID": props.project.id,
-            "documentID": props.document.id, 
+            "documentID": props.document.id,
         }), {
             onSuccess: () => {
                 showMessage()

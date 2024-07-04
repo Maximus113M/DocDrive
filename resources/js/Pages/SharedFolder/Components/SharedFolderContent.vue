@@ -14,7 +14,7 @@
         </div>
 
 
-        <div class="px-5 pt-1 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
+        <div class="w-full px-5 pt-1 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
 
             <button v-if="authUser != null && (authUser?.role.name == 'admin')" class="col" data-bs-toggle="modal"
                 data-bs-target="#modalAssociateDocument">
@@ -24,7 +24,9 @@
                         <path
                             d="M453-280h60v-166h167v-60H513v-174h-60v174H280v60h173v166Zm27.27 200q-82.74 0-155.5-31.5Q252-143 197.5-197.5t-86-127.34Q80-397.68 80-480.5t31.5-155.66Q143-709 197.5-763t127.34-85.5Q397.68-880 480.5-880t155.66 31.5Q709-817 763-763t85.5 127Q880-563 880-480.27q0 82.74-31.5 155.5Q817-252 763-197.68q-54 54.31-127 86Q563-80 480.27-80Z" />
                     </svg>
-                    <h6 class="py-1 text-gray-400"><strong>Asociar/Desasociar Documento</strong></h6>
+                    <h6 class="py-1 px-2 text-gray-400">
+                        <strong>Asociar/Desasociar Documento</strong>
+                    </h6>
                 </div>
             </button>
 
@@ -40,10 +42,9 @@
 
     <!-- MODAL ASOCIAR DOCUMENTO -->
 
-
     <div class="modal fade" id="modalAssociateDocument" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog" style="width: 420px; height: 580px;">
-            <div class="modal-content position-relative p-3" style="max-height: 580px;">
+        <div class="modal-dialog" style="width: 420px; height: 600px;">
+            <div class="modal-content position-relative p-3" style="max-height: 600px;">
                 <div class="d-flex flex-row justify-center px-3">
                     <h4 class="my-3" style="color: #39A900">
                         <strong>
@@ -56,12 +57,11 @@
                 <div class="modal-body px-3">
                     <form @submit.prevent="associateDocument">
                         <div class="px-4 py-2 mb-3 border-2 rounded-lg">
-                            <div class="flex">
-                                <label class="font-bold pb-2">
-                                    Documentos
-                                </label>
-                                <input @keyup="search" class="w-50 h-6 absolute right-0" type="text" name="search"
-                                    placeholder="Buscar">
+                            <div class="row justify-center mb-3">
+                                <div class="col-11 flex pl-1 pr-3 py-2 rounded-2xl border-1 border-gray-300">
+                                    <Icon name="search" />
+                                    <input @keyup="search" type="text" v-model="searchValue" style="all: unset" placeholder="Buscar">
+                                </div>
                             </div>
                             <div class="h-64">
                                 <div v-for="(doc, index) in paginatedList" :key="doc?.id"
@@ -82,7 +82,7 @@
                                     <li class="page-item">
                                         <div class="page-link" aria-label="Previous" @click="decreasePaginatorIndex()">
                                             <span aria-hidden="true"
-                                                :style="`color: ${role == 'investigator' ? '#39A900' : '#FF6624'};`">&laquo;</span>
+                                                :style="`color: #39A900;`">&laquo;</span>
                                         </div>
                                     </li>
                                     <li v-if="paginatedList.length > 0" class="page-item">
@@ -146,7 +146,7 @@ const formAssociateDocument = useForm({
     documentsID: props.folder.documents.map(doc => doc.id),
 })
 
-const currentColor = ref('')
+const currentColor = ref('color: #FFFFFF; background-color: #39A900;')
 const paginatedList = ref([])
 const totalPages = ref(0);
 const paginatorIndex = ref(1);
@@ -194,9 +194,9 @@ const decreasePaginatorIndex = () => {
 
 const search = (e) => {
     const inputSearch = e.target.value
-    let filtered = props.documents.filter((document) => {
-        return document.name.toLowerCase().includes(inputSearch.toLowerCase())
-    })
+    let filtered = props.documents.filter((document) =>
+        document.name.toLowerCase().includes(inputSearch.toLowerCase()));
+
     if (filtered.length <= pageElements) {
         totalPages.value = 1
     } else {

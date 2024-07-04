@@ -42,7 +42,7 @@
             </article>
         </div>
 
-        <div class="px-5 pt-1 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
+        <div class="w-full px-5 pt-1 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
 
             <button v-if="authUser != null && (authUser?.role.name == 'admin'
                 || (isAssociatedUser))" class="col" data-bs-toggle="modal" data-bs-target="#modalNewDocument">

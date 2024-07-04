@@ -7,8 +7,8 @@ import { CustomAlertsService } from '@/services/customAlerts';
 
 
 const props = defineProps({
-    id: { type: Object },
-    name: { type: Object, required: true },
+    id: { type: Number },
+    name: { type: String, required: true },
 });
 
 const form = useForm({
@@ -95,7 +95,7 @@ const openModalDelete = () => {
 
         <Link :href="route('shared.index', { 'folderID': id })" class="text-decoration-none">
 
-        <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40"
+        <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 pt-1 pb-2 bg-white h-40"
             style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.06);">
             <!-- BODY -->
             <div v-if="$page.props.auth.user != null && $page.props.auth.user.role.name == 'admin'"
@@ -136,12 +136,18 @@ const openModalDelete = () => {
             <div v-if="!folder" class="validity-font">
                 Recurso compartido
             </div>
-            <div class="max-h-12 max-w-44 overflow-hidden text-center">
-                <h5 v-if="!folder" class="text-black text-wrap text-ellipsis"><strong> {{ props.name.length > 25
-                    ?
-                    `${props.name.substring(0, 25)}...` : props.name }} </strong></h5>
-                <h5 v-else class="text-black text-wrap text-ellipsis"><strong> {{ props.name.length > 25 ?
-                    `${props.name.substring(0, 25)}...` : props.name }} </strong></h5>
+            <div class="max-h-12 max-w-44 overflow-hidden text-center text-lg">
+                <div v-if="!folder" class="text-black text-wrap text-ellipsis">
+                    <strong> {{ props.name.length > 40
+                        ?
+                        `${props.name.substring(0, 40)}...` : props.name }}
+                    </strong>
+                </div>
+                <div v-else class="text-black text-wrap text-ellipsis">
+                    <strong> {{ props.name.length > 40 ?
+                        `${props.name.substring(0, 40)}...` : props.name }}
+                    </strong>
+                </div>
 
             </div>
         </div>
@@ -154,17 +160,19 @@ const openModalDelete = () => {
     <!-- MODAL EDIT SHARED FOLDER-->
     <div class="modal fade" :id="`modal-update-${props.id}`" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
-        <div class="modal-dialog" style="width: 600px;">
+        <div class="modal-dialog" style="width: 380px">
             <div class="modal-content position-relative p-3">
                 <div class="d-flex flex-row justify-center px-3">
-                    <h4 class="my-3" style="color: #39A900;"><strong>Actualizar</strong></h4>
+                    <h4 class="my-3" style="color: #39A900;">
+                        <strong>Actualizar Recursos</strong>
+                    </h4>
 
                     <button type="button" class="btn-close position-absolute top-1 end-3" data-bs-dismiss="modal"
                         aria-label="Close"></button>
                 </div>
                 <div class="modal-body px-3">
-                    <form class="sm:grid sm:grid-cols-2" @submit.prevent="update">
-                        <div class="col-span-2 mb-3">
+                    <form @submit.prevent="update">
+                        <div class="mb-5">
                             <label for="name" class="font-bold form-label">Ingrese el nombre:</label>
                             <input v-model="form.name" type="text" class="form-control" id="name">
                             <div v-if="form.errors.name" class="text-red-400 text-center">
@@ -173,7 +181,7 @@ const openModalDelete = () => {
                         </div>
 
 
-                        <div class="col-span-2 row justify-center p-3 ">
+                        <div class="row justify-center p-3 ">
                             <button type="submit" class="btn py-2"
                                 style="background-color: #39A900; color: white; "><strong>Actualizar</strong></button>
                         </div>
