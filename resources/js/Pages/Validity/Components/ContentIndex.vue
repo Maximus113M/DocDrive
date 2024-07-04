@@ -3,7 +3,7 @@ import Card from '@/Pages/Validity/Components/CardValidity.vue';
 import Icon from '@/Shared/Icon.vue';
 import SharedFolderCard from '../../SharedFolder/Components/CardSharedFolder.vue'
 import { CustomAlertsService } from '@/services/customAlerts';
-import { useForm, usePage } from '@inertiajs/inertia-vue3'
+import { Link, useForm, usePage } from '@inertiajs/inertia-vue3'
 import { ref, onUpdated, onMounted, watch } from 'vue';
 
 const props = defineProps({
@@ -29,19 +29,19 @@ const form = useForm({
 onMounted(() => {
     validityList.value = props.validities;
 });
-onUpdated(() => {
-    if (searchValue.value.length === 0) {
-        validityList.value = props.validities.sort((a, b) => a.year - b.year);
-    }
-});
+// onUpdated(() => {
+//     if (searchValue.value.length === 0) {
+//         validityList.value = props.validities.sort((a, b) => a.year - b.year);
+//     }
+// });
 
-watch(searchValue, (newValue, oldValue) => {
-    if (newValue.length > 0) {
-        validityList.value = props.validities.filter((validity) => validity.year == searchValue.value);
-    } else {
-        validityList.value = props.validities.sort((a, b) => a.year - b.year);
-    }
-})
+// watch(searchValue, (newValue, oldValue) => {
+//     if (newValue.length > 0) {
+//         validityList.value = props.validities.filter((validity) => validity.year == searchValue.value);
+//     } else {
+//         validityList.value = props.validities.sort((a, b) => a.year - b.year);
+//     }
+// })
 
 
 const saveValidity = () => {
@@ -101,11 +101,17 @@ const changeDisplayCheckBox = (inputs, display) => {
 
 <template>
     <div class="p-5 relative">
+        <!-- TODO -->
         <!-- Buscador -->
         <div class="absolute top-3 right-12">
             <div class="flex pl-1 pr-3 py-2 rounded-2xl border-1 border-gray-300">
                 <Icon name="search" />
                 <input type="text" v-model="searchValue" style="all: unset" placeholder="Buscar">
+                <button>
+                    <Link :href="route('validity.projects', { 'validityYear': 2020 })">
+                        <Icon name="send" />
+                    </Link>
+                </button>
             </div>
         </div>
 
@@ -113,13 +119,15 @@ const changeDisplayCheckBox = (inputs, display) => {
 
             <button v-if="props.role == 'admin' && props.isAuthenticated" class="col" data-bs-toggle="modal"
                 data-bs-target="#modalSaveValidity">
-                <div class="folder border-3 rounded-4 py-3 bg-white">
+                <div class="folder border-3 rounded-4 py-3 bg-white" style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.07);">
                     <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
                         fill="#000000">
                         <path
                             d="M453-280h60v-166h167v-60H513v-174h-60v174H280v60h173v166Zm27.27 200q-82.74 0-155.5-31.5Q252-143 197.5-197.5t-86-127.34Q80-397.68 80-480.5t31.5-155.66Q143-709 197.5-763t127.34-85.5Q397.68-880 480.5-880t155.66 31.5Q709-817 763-763t85.5 127Q880-563 880-480.27q0 82.74-31.5 155.5Q817-252 763-197.68q-54 54.31-127 86Q563-80 480.27-80Z" />
                     </svg>
-                    <h6 class="py-1 text-gray-400"><strong>Nueva</strong></h6>
+                    <h6 class="py-1 text-gray-400">
+                        <strong>Nueva</strong>
+                    </h6>
                 </div>
             </button>
 

@@ -54,6 +54,15 @@
       </div>
     </Link>
   </div>
+
+  <div v-if="role == 'guest'" class="mb-3">
+    <Link class="group flex items-center py-3 text-decoration-none"  method="get" :href="route('login')" >
+    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex lg:ml-2">
+      <div class="font-bold no-underline cursor-pointer text-lime-600 bg-white px-5 py-2 rounded-lg">
+      Ingresar</div>
+    </div>
+    </Link>
+  </div>
   
   <div v-if="isSideMenu" class="flex justify-center opacity-30 lg:mt-4 lg:mb-5  xxl:my-5 select-none">
     <img src="/images/logos/logo-sena-blanco-fix.png" width="140px" alt="logo-sena">
@@ -66,15 +75,6 @@
       <div :class="selectedIndex === 5 ? 'text-white text-lg font-bold' : 'text-gray-300 group-hover:text-white'">Cerrar
         Sesión
       </div>
-    </Link>
-  </div>
-
-  <div v-if="role == 'guest'" class="mb-3">
-    <Link class="group flex items-center py-3 text-decoration-none"  method="get" :href="route('login')" >
-    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex lg:ml-2">
-      <div class="font-bold no-underline cursor-pointer text-lime-600 bg-white px-5 py-2 rounded-lg">
-      Ingresar</div>
-    </div>
     </Link>
   </div>
 

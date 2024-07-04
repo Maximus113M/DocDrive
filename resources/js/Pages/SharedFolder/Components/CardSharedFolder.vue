@@ -90,12 +90,13 @@ const openModalDelete = () => {
 </script>
 
 <template>
-    <!-- PROJECT DESIGN -->
+    <!-- DESIGN -->
     <div class="col position-relative" style="max-width: 300px;">
 
         <Link :href="route('shared.index', { 'folderID': id })" class="text-decoration-none">
 
-        <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40">
+        <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40"
+            style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.06);">
             <!-- BODY -->
             <div v-if="$page.props.auth.user != null && $page.props.auth.user.role.name == 'admin'"
                 class="position-absolute top-1 end-1" @click="onClicks">
@@ -171,7 +172,7 @@ const openModalDelete = () => {
                             </div>
                         </div>
 
-            
+
                         <div class="col-span-2 row justify-center p-3 ">
                             <button type="submit" class="btn py-2"
                                 style="background-color: #39A900; color: white; "><strong>Actualizar</strong></button>

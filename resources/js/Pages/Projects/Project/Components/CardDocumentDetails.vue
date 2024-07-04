@@ -4,7 +4,7 @@
 
         <a target="_blank" :href="showDocumentRoute">
             <!-- BODY -->
-            <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40">
+            <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40" style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.06);">
                 <!-- Options -->
                 <div v-if="authUser != null && (authUser.role.name == 'admin'
                     || (isAssociatedUser)) && project" class="position-absolute top-1 end-1" @click="onClicks">
@@ -60,7 +60,9 @@
         <div class="modal-dialog" style="width: 350px;">
             <div class="modal-content position-relative p-3" style="max-height: 800px;">
                 <div class="d-flex flex-row justify-center px-3">
-                    <h4 class="my-3" style="color: #39A900;"><strong>Actualizar Documento</strong></h4>
+                    <h4 class="my-3" style="color: #39A900;">
+                        <strong>Actualizar Documento</strong>
+                    </h4>
 
                     <button type="button" class="btn-close position-absolute top-1 end-3" data-bs-dismiss="modal"
                         aria-label="Close"></button>

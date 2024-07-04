@@ -16,13 +16,15 @@
         <div class="pt-3 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
 
             <button v-if="role == 'admin'" class="col" data-bs-toggle="modal" data-bs-target="#modalSaveProject">
-                <div class="folder border-3 rounded-4 py-3 bg-white">
+                <div class="folder border-3 rounded-4 py-3 bg-white" style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.06);">
                     <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
                         fill="#000000">
                         <path
                             d="M453-280h60v-166h167v-60H513v-174h-60v174H280v60h173v166Zm27.27 200q-82.74 0-155.5-31.5Q252-143 197.5-197.5t-86-127.34Q80-397.68 80-480.5t31.5-155.66Q143-709 197.5-763t127.34-85.5Q397.68-880 480.5-880t155.66 31.5Q709-817 763-763t85.5 127Q880-563 880-480.27q0 82.74-31.5 155.5Q817-252 763-197.68q-54 54.31-127 86Q563-80 480.27-80Z" />
                     </svg>
-                    <h6 class="py-1 text-gray-400"><strong>Nuevo Proyecto</strong></h6>
+                    <h6 class="py-1 text-gray-400">
+                        <strong>Nuevo Proyecto</strong>
+                    </h6>
                 </div>
             </button>
 

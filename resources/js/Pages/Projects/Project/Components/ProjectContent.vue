@@ -52,7 +52,9 @@
                         <path
                             d="M453-280h60v-166h167v-60H513v-174h-60v174H280v60h173v166Zm27.27 200q-82.74 0-155.5-31.5Q252-143 197.5-197.5t-86-127.34Q80-397.68 80-480.5t31.5-155.66Q143-709 197.5-763t127.34-85.5Q397.68-880 480.5-880t155.66 31.5Q709-817 763-763t85.5 127Q880-563 880-480.27q0 82.74-31.5 155.5Q817-252 763-197.68q-54 54.31-127 86Q563-80 480.27-80Z" />
                     </svg>
-                    <h6 class="py-1 text-gray-400"><strong>Nuevo</strong></h6>
+                    <h6 class="py-1 text-gray-400">
+                        <strong>Nuevo</strong>
+                    </h6>
                 </div>
             </button>
 
@@ -226,9 +228,9 @@
                         </div>
                         <div class="row justify-center p-3 my-3">
                             <button type="submit" class="text-white btn py-2"
-                                :style="`background-color: ${role == 'investigator' ? '#39A900' : '#FF6624'}`"><strong>Asociar
-                                    /
-                                    Desasociar</strong></button>
+                                :style="`background-color: ${role == 'investigator' ? '#39A900' : '#FF6624'}`">
+                                <strong>Asociar/Desasociar</strong>
+                            </button>
                         </div>
                     </form>
                 </div>
@@ -495,8 +497,6 @@ const closeModalAssociateUsers = () => {
     formAssociateUser.reset()
 }
 
-
-
 //Accordion
 const expanded = ref(false);
 
@@ -508,14 +508,14 @@ const expanded = ref(false);
     flex-direction: column;
     align-items: center;
     max-width: 300px;
-    box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.08);
+    box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.06);
 }
 
 .question {
     border: 2px solid #EFEFEF;
     margin-bottom: 1rem;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.09);
 }
 
 .content {

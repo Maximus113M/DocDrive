@@ -170,7 +170,9 @@ const selectRoute = () => {
     <div class="col position-relative" style="max-width: 300px;">
 
         <Link method="get" :href="selectRoute()" class="text-decoration-none">
-        <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40">
+        <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40"
+            style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.06);">
+            
             <div class="cursor-auto absolute left-0 ml-2" data-toggle="tooltip" data-placement="top"
                 title="¡Datos del proyecto incompleto!"
                 v-if="props.project && props.project.isIncomplete && isAssociatedUser">
