@@ -22227,7 +22227,6 @@ __webpack_require__.r(__webpack_exports__);
       "general-public": "Publico en general"
     };
     var update = function update() {
-      console.log(props.folder.id);
       if (!props.project && props.isSharedResource) {
         form.put(route("shared.folder.update", {
           "folderID": props.folder.id

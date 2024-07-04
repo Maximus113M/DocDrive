@@ -40,7 +40,7 @@ class FolderController extends Controller
         }
         $folder = new Folder();
         $folder->name = request("name");
-        $folder->project_id = request("folder_id") !== null ? null : $projectID;
+        $folder->project_id = $projectID;
         $folder->father_id = request("folder_id") !== null ? request("folder_id") : null;
         $folder->visualization_role_id = request("visualizationRoleSelected");
         $folder->save();

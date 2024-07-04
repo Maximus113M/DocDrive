@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Document;
 use App\Models\Folder;
+use App\Models\Project;
 use App\Models\Validity;
 use App\Models\VisualizationRole;
 use App\Providers\AppServiceProvider;
@@ -10,6 +12,7 @@ use App\Providers\AuthServiceProvider;
 use App\Providers\RoleServiceProvider;
 use App\Rules\SingleYearValidity;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Validator;
 use Inertia\Inertia;
 
@@ -70,7 +73,7 @@ class ValidityController extends Controller
         $validity->update([
             "year" => request("year"),
         ]);
-        
+
         return redirect()->route("validity.index")->with("message", "¡La vigencia se ha actualizado correctamente!");
     }
 
@@ -100,7 +103,7 @@ class ValidityController extends Controller
      */
     public function projects($validityYear)
     {
-        if(!Validity::where('year', $validityYear)->exists()) {
+        if (!Validity::where('year', $validityYear)->exists()) {
             return Inertia::render("PageNotFound");
         }
         $validity = Validity::where('year', $validityYear)->first();
@@ -111,9 +114,11 @@ class ValidityController extends Controller
             foreach ($projects as $project) {
                 $usersID = $project->users->pluck('id')->toArray();
                 $visualizationRole = $project->visualizationRole()->first()->name;
-                if ($visualizationRole == RoleServiceProvider::PUBLIC || $visualizationRole == 
-                RoleServiceProvider::GENERAL_PUBLIC || ($visualizationRole == RoleServiceProvider::PRIVATE
-                && in_array(Auth::user()->id, $usersID))) {
+                if (
+                    $visualizationRole == RoleServiceProvider::PUBLIC || $visualizationRole ==
+                    RoleServiceProvider::GENERAL_PUBLIC || ($visualizationRole == RoleServiceProvider::PRIVATE
+                        && in_array(Auth::user()->id, $usersID))
+                ) {
                     $projectArr = $project->toArray();
                     $projectArr["isIncomplete"] = AppServiceProvider::projectIsIncomplete($project);
                     array_push($data, $projectArr);
@@ -122,7 +127,7 @@ class ValidityController extends Controller
         } else if ($userRole == RoleServiceProvider::GUEST) {
             $data = $projects->filter(function ($project) {
                 $visualizationRole = $project->visualizationRole()->first()->name;
-                return $visualizationRole == RoleServiceProvider::GENERAL_PUBLIC; 
+                return $visualizationRole == RoleServiceProvider::GENERAL_PUBLIC;
             });
         } else {
             $data = $projects;
@@ -135,6 +140,106 @@ class ValidityController extends Controller
             "validityID" => $validity->id,
             "visualizationsRole" => VisualizationRole::all(),
             "currentYear" => $validityYear,
+        ]);
+    }
+
+    /**
+     * Realiza la consulta del filtro de búsqueda
+     */
+    public function search($consulta)
+    {
+        $validities = Validity::where("year", "like", "%{$consulta}%")->get();
+        $sharedResources = Folder::whereNull("father_id")
+            ->whereNull("project_id")
+            ->where("name", "like", "%{$consulta}%")
+            ->get();
+        $projects = null;
+        $documents = null;
+        $folders = null;
+        $userRole = AuthServiceProvider::getRole();
+        if ($userRole == RoleServiceProvider::GUEST) {
+            $projects = Project::whereHas("visualizationRole", function ($query) {
+                $query->where('name', '=', RoleServiceProvider::GENERAL_PUBLIC);
+            })->where("name", "like", "%{$consulta}%")->get();
+            $documents = Document::whereHas("visualizationRole", function ($query) {
+                $query->where('name', '=', RoleServiceProvider::GENERAL_PUBLIC);
+            })->where("name", "like", "%{$consulta}%")->get();
+            $folders = Folder::whereHas("visualizationRole", function ($query) {
+                $query->where('name', RoleServiceProvider::GENERAL_PUBLIC);
+            })->where(function ($query) {
+                $query->whereNotNull('father_id')
+                    ->orWhereNotNull('project_id');
+            })->where("name", "like", "%{$consulta}%")->get();
+        } else if ($userRole == RoleServiceProvider::INVESTIGATOR || $userRole == RoleServiceProvider::COLLABORATOR) {
+            $projects = DB::table('projects as p')
+                ->select('p.*')
+                ->join('project_user as pu', 'p.id', '=', 'pu.project_id')
+                ->join('users as u', 'u.id', '=', 'pu.user_id')
+                ->where(function ($query) use ($consulta) {
+                    $query->where('p.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
+                    ->where('u.id', Auth::user()->id);
+                })
+                ->orWhere(function ($query) {
+                    $query->where('p.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
+                    ->orWhere('p.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
+                })
+                ->where("p.name", "like", "%{$consulta}%")
+                ->distinct()
+                ->get();
+            $documents = DB::table('documents as d')
+                ->select('d.*')
+                ->join('document_folder as df', 'df.document_id', '=', 'd.id')
+                ->join('folders as f', 'f.id', '=', 'df.folder_id')
+                ->join('projects as p', 'p.id', '=', 'f.project_id')
+                ->join('project_user as pu', 'p.id', '=', 'pu.project_id')
+                ->join('users as u', 'u.id', '=', 'pu.user_id')
+                ->where(function ($query) use ($consulta) {
+                    $query->where('p.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
+                    ->where('u.id', Auth::user()->id);
+                })
+                ->orWhere(function ($query) {
+                    $query->where('p.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
+                    ->orWhere('p.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
+                })
+                ->where("d.name", "like", "%{$consulta}%")
+                ->distinct()
+                ->get();
+            $folders =  DB::table('folders as f')
+                ->select('f.*')
+                ->join('projects as p', 'p.id', '=', 'f.project_id')
+                ->join('project_user as pu', 'p.id', '=', 'pu.project_id')
+                ->join('users as u', 'u.id', '=', 'pu.user_id')
+                ->where(function ($query) use ($consulta) {
+                    $query->where('p.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
+                        ->where('u.id', Auth::user()->id);
+                })
+                ->orWhere(function ($query) {
+                    $query->where('p.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
+                        ->orWhere('p.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
+                })
+                ->where('f.name', 'like', "%{$consulta}%")
+                ->distinct()
+                ->get();
+        } else {
+            $projects = Project::where("name", "like", "%{$consulta}%")->get();
+            $documents = Document::where("name", "=", "%{$consulta}%")->get();
+            $folders = Folder::where("name", "like", "%{$consulta}%")
+                ->where(function ($query) {
+                    $query->whereNotNull('father_id')
+                        ->orWhereNotNull('project_id');
+                })->get();
+        }
+        return $folders;
+
+        /**
+         @TODO: CAMBIAR VISTA A RENDERIZAR
+         */
+        return Inertia::render("Search/Index", [
+            "projects" => $projects,
+            "documents" => $documents,
+            "folders" => $folders,
+            "validities" => $validities,
+            "shared-resources" => $sharedResources
         ]);
     }
 }
