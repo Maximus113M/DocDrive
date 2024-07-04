@@ -163,15 +163,18 @@ class ValidityController extends Controller
             $projects = Project::whereHas("visualizationRole", function ($query) {
                 $query->where('name', '=', RoleServiceProvider::GENERAL_PUBLIC);
             })->where("name", "like", "%{$consulta}%")->get();
+
             $documents = Document::whereHas("visualizationRole", function ($query) {
                 $query->where('name', '=', RoleServiceProvider::GENERAL_PUBLIC);
-            })->where("name", "like", "%{$consulta}%")->get();
+            })->where("name", "like", "%{$consulta}%")->with('project')->get();
+
             $folders = Folder::whereHas("visualizationRole", function ($query) {
                 $query->where('name', RoleServiceProvider::GENERAL_PUBLIC);
             })->where(function ($query) {
                 $query->whereNotNull('father_id')
                     ->orWhereNotNull('project_id');
-            })->where("name", "like", "%{$consulta}%")->get();
+            })->where("name", "like", "%{$consulta}%")->with('project')->get();
+
         } else if ($userRole == RoleServiceProvider::INVESTIGATOR || $userRole == RoleServiceProvider::COLLABORATOR) {
             $projects = DB::table('projects as p')
                 ->select('p.*')
@@ -188,6 +191,7 @@ class ValidityController extends Controller
                 ->where("p.name", "like", "%{$consulta}%")
                 ->distinct()
                 ->get();
+
             $documents = DB::table('documents as d')
                 ->select('d.*')
                 ->join('document_folder as df', 'df.document_id', '=', 'd.id')
@@ -206,6 +210,7 @@ class ValidityController extends Controller
                 ->where("d.name", "like", "%{$consulta}%")
                 ->distinct()
                 ->get();
+                
             $folders =  DB::table('folders as f')
                 ->select('f.*')
                 ->join('projects as p', 'p.id', '=', 'f.project_id')
@@ -230,7 +235,7 @@ class ValidityController extends Controller
                 ->where(function ($query) {
                     $query->whereNotNull('father_id')
                         ->orWhereNotNull('project_id');
-                })->get();
+                })->with('project')->get();
         }
         //return $folders;
 

@@ -1,6 +1,6 @@
 <script setup>
 import AuthLayout from '@/Layouts/Authenticated.vue';
-import ContentIndex from '@/Pages/Search/Components/ContentIndex.vue';
+import ContentIndex from '@/Pages/Search/components/ContentIndex.vue';
 
 
 const props = defineProps({
@@ -20,9 +20,9 @@ const props = defineProps({
 <template>
 
     <AuthLayout :role="props.role">
-        <ContentIndex :projects="props.projects" :documents="props.documents" :folders="props.folders"
-            :validities="props.validities" :sharedResources="props.sharedResources"
-            :isAuthenticated="props.isAuthenticated" :role="props.role" :visualizations-role="visualizationsRole"  #content />
+            <ContentIndex :projects="props.projects" :documents="props.documents" :folders="props.folders"
+                :validities="props.validities" :sharedResources="props.sharedResources"
+                :isAuthenticated="props.isAuthenticated" :role="props.role" :visualizations-role="visualizationsRole"  #content />
     </AuthLayout>
 
 </template>

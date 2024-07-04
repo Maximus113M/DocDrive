@@ -60,7 +60,7 @@ import CreateDocumentCategory from '@/Pages/DocumentCategories/Components/Create
 import Vue3EasyDataTable from 'vue3-easy-data-table';
 import 'vue3-easy-data-table/dist/style.css';
 import { useForm } from '@inertiajs/inertia-vue3';
-import { onMounted, ref } from 'vue';
+import { onBeforeMount, onMounted, ref } from 'vue';
 import { CustomAlertsService } from '@/services/customAlerts';
 
 const props = defineProps({
@@ -83,8 +83,9 @@ window.onresize = function () {
     ];
 };
 
-onMounted(() => {
+onBeforeMount(()=>{
     columnWidth.value = (window.innerWidth - 300) / 3;
+    debugger
     if (window.innerWidth > 850) {
         actionsWidth.value = columnWidth.value - 100;
     } else {
@@ -92,8 +93,8 @@ onMounted(() => {
     }
 })
 
-const columnWidth = ref(410);
-const actionsWidth = ref(300);
+const columnWidth = ref((window.innerWidth - 300) / 3);
+const actionsWidth = ref(window.innerWidth > 850? columnWidth.value -100 : columnWidth.value);
 
 const tableTheme = '#39A900';
 const searchValue = ref('')

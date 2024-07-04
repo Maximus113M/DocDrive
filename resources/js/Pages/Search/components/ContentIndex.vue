@@ -26,40 +26,49 @@
             <h2>No se encontraron coincidencias</h2>
         </div>
 
-        <div class="pt-4 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
-
-            <div v-if="props.validities.length > 0">
+        <div>
+            <div v-if="props.validities.length > 0" class="my-3">
                 <div class="text-xl font-bold mb-2">Vigencias</div>
-                <div v-for="v in props.validities" :key="v.id">
-                    <ValidityCard :id="v.id" :year="v.year" />
+                <div class="pt-4 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
+                    <div v-for="v in props.validities" :key="v.id">
+                        <ValidityCard :id="v.id" :year="v.year" />
+                    </div>
                 </div>
             </div>
-            <div v-if="props.sharedResources.length > 0">
+            <div v-if="props.sharedResources.length > 0" class="my-3">
                 <div class="text-xl font-bold mb-2">Recursos compartidos</div>
-                <div v-for="sf in props.sharedResources" :key="sf.id">
-                    <SharedFolderCard :id="sf.id" :name="sf.name" />
+                <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
+                    <div v-for="sf in props.sharedResources" :key="sf.id">
+                        <SharedFolderCard :id="sf.id" :name="sf.name" />
+                    </div>
                 </div>
             </div>
-            <div v-if="props.projects.length > 0">
+            <div v-if="props.projects.length > 0" class="my-3">
                 <div class="text-xl font-bold mb-2">Proyectos</div>
-                <div v-for="project in props.projects" :key="project.id">
-                    <CardProject :visualizationsRole="props.visualizationsRole" :project="project"
-                        :current-year="project.startDate.split('-')[0]" />
+                <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
+                    <div v-for="project in props.projects" :key="project.id">
+                        <CardProject :visualizationsRole="props.visualizationsRole" :project="project"
+                            :current-year="project.startDate.split('-')[0]" />
+                    </div>
                 </div>
             </div>
-            <div v-if="props.folders.length > 0">
+            <div v-if="props.folders.length > 0" class="my-3">
                 <div class="text-xl font-bold mb-2">Carpetas</div>
-                <div v-for="folder in props.folders" :key="folder.id">
-                    <CardProject :visualizationsRole="props.visualizationsRole" :project="folder"
-                        :current-year="2024" />
+                <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
+                    <div v-for="folder in props.folders" :key="folder.id">
+                        <CardProject :visualizationsRole="props.visualizationsRole" :project="folder.project"
+                            :folder="folder" :current-year="folder.project.startDate.split('-')[0]" />
+                    </div>
                 </div>
             </div>
-            <div v-if="props.documents.length > 0">
+            <div v-if="props.documents.length > 0" class="my-3">
                 <div class="text-xl font-bold mb-2">Documentos</div>
-                <div v-for="document in props.documents" :key="document.id">
-                    <CardDocumentDetails :visualizations-role="props.visualizationsRole"
-                        :currentYear="Number(document.project.startDate.split('-')[0])" :document="document"
-                        :project="document.project" />
+                <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
+                    <div v-for="document in props.documents" :key="document.id">
+                        <CardDocumentDetails :visualizations-role="props.visualizationsRole"
+                            :currentYear="Number(document.project.startDate.split('-')[0])" :document="document"
+                            :project="document.project" />
+                    </div>
                 </div>
             </div>
 

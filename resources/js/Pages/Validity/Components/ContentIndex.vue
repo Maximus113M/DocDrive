@@ -29,11 +29,11 @@ const form = useForm({
 onMounted(() => {
     validityList.value = props.validities;
 });
-// onUpdated(() => {
-//     if (searchValue.value.length === 0) {
-//         validityList.value = props.validities.sort((a, b) => a.year - b.year);
-//     }
-// });
+onUpdated(() => {
+  //  if (searchValue.value.length === 0) {
+        validityList.value = props.validities.sort((a, b) => a.year - b.year);
+    //}
+});
 
 // watch(searchValue, (newValue, oldValue) => {
 //     if (newValue.length > 0) {
@@ -131,9 +131,9 @@ const changeDisplayCheckBox = (inputs, display) => {
                 </div>
             </button>
 
-            <div class="mt-auto mb-auto" v-if="validityList.length < 1">
+            <!-- <div class="mt-auto mb-auto" v-if="validityList.length < 1">
                 <h1>No hay vigencias</h1>
-            </div>
+            </div> -->
 
             <div v-for="v in validityList" :key="v.id">
                 <Card :id="v.id" :year="v.year" />

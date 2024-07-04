@@ -18,7 +18,7 @@
 
         <div v-if="!folder" class="px-5">
             <article class="pt-3 pb-1 px-3 question cursor-pointer"  @click="expanded = !expanded">
-                <header class="flex justify-between items-center">
+                <header class="flex justify-between items-center pb-2">
                     <h4 class="mb-0">
                         Descripción
                     </h4>
@@ -33,7 +33,7 @@
                         </svg>
                     </div>
                 </header>
-                <div :style="`max-height: ${expanded ? '200px' : '0'}`" class="content">
+                <div :style="`max-height: ${expanded ? '200px' : '0'}`" class="content overflow-y-scroll">
                     <p :style="`opacity: ${expanded ? '1' : '0'}`" class="mt-3 info">
                         {{ props.project.description.length > 0 ? props.project.description
                             : 'El proyecto aún no tiene descripción' }}
