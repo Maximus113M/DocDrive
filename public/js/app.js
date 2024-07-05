@@ -23703,7 +23703,8 @@ var pageElements = 4;
       getCurrentPageList(1);
     });
     var getDocumentPath = function getDocumentPath(document) {
-      return document.folder.length > 0 ? document.folder[0]["documentPath"] + "/" + document.folder[0]["name"] : "Vigencias/".concat(document.project.validity.year, "/").concat(document.project.name);
+      console.log(document);
+      return document.folder[0] ? "Vigencias/".concat(document.folder[0].project.validity.year, "/").concat(document.folder[0].project.name) + document.folder[0]["documentPath"] + document.folder[0]["name"] : "Vigencias/".concat(document.project.validity.year, "/").concat(document.project.name);
     };
     var getCurrentPageList = function getCurrentPageList(index) {
       if (index != paginatorIndex.value) {
@@ -27937,7 +27938,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       })];
     }),
     _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["href"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(!$props.folder ? "Vigencias/".concat($setup.props.currentYear, "/").concat($setup.props.project.name) : "".concat($props.folder.documentPath, "/").concat($props.folder.name)), 1 /* TEXT */)])]), !$props.folder ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("article", {
+  }, 8 /* PROPS */, ["href"]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)(!$props.folder ? "Vigencias/".concat($setup.props.currentYear, "/").concat($setup.props.project.name) : "Vigencias/".concat($setup.props.currentYear, "/").concat($setup.props.project.name).concat($props.folder.documentPath).concat($props.folder.name)), 1 /* TEXT */)])]), !$props.folder ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_5, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("article", {
     "class": "pt-3 pb-1 px-3 question cursor-pointer",
     onClick: _cache[0] || (_cache[0] = function ($event) {
       return $setup.expanded = !$setup.expanded;

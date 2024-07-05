@@ -11,7 +11,7 @@
 
                 <div class="text-2xl font-bold text-color-gray">
                     {{ !folder ? `Vigencias/${props.currentYear}/${props.project.name}`
-                        : `${folder.documentPath}/${folder.name}` }}
+                        : `Vigencias/${props.currentYear}/${props.project.name}${folder.documentPath}${folder.name}` }}
                 </div>
             </div>
         </div>

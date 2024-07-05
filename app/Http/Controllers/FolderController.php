@@ -38,11 +38,14 @@ class FolderController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-        $project = Project::find($projectID);
-        $path = "Vigencias/{$validityYear}/{$project->name}";
+        $path = "/";
         if (request("folder_id") !==null) {
             $fatherFolder = Folder::find(request("folder_id"));
-            $path = $fatherFolder->documentPath.'/'.$fatherFolder->name;
+            if ($fatherFolder->documentPath == "/") {
+                $path = $fatherFolder->documentPath.$fatherFolder->id;
+            } else {
+                $path = $fatherFolder->documentPath."/".$fatherFolder->id;
+            }
         }
         $folder = new Folder();
         $folder->name = request("name");
@@ -91,7 +94,7 @@ class FolderController extends Controller
             $project->setRelation('documents', $folder->documents);
             $project->setRelation('folders', $childrenFolders);
         }
-
+        $folder->documentPath = $this->parsePath($folder);
         return Inertia::render("Projects/Project/Index", [
             // "folders" => $project->folders,
             // "documents" => $project->documents,
@@ -102,6 +105,21 @@ class FolderController extends Controller
             "investigators" => InvestigatorController::getInvestigators(),
             "collaborators" => CollaboratorController::getCollaborators()
         ]);
+    }
+
+    /**
+     * Parsear el path del folder
+     */
+    public function parsePath($folder)
+    {
+        $path = "/";
+        foreach (explode("/", $folder->documentPath) as $folderID) {
+            if ($folderID !== "") {
+                $folder = Folder::find($folderID);
+                $path.= $folder->name."/";
+            }
+        }
+        return $path;
     }
 
     /**
@@ -138,8 +156,24 @@ class FolderController extends Controller
             abort(403, 'No tienes los permisos para estar aqui');
             return;
         }
+        $documents = Document::with(["folder", "project.validity", "project", "folder.project", "folder.project.validity"])
+            ->get();
+        //return $documents;
+        
+        foreach ($documents as $document) {
+            $folders = $document->folder->filter(function ($folder){
+                return $folder->documentPath !== null;
+            });
+            if (count($folders) > 0) {
+                $path = $this->parsePath($document->folder[0]);
+                $document->folder[0]->documentPath = $path;
+            } else {
+                $document["folder"][0] = null;
+            }
+
+        }
         return Inertia::render("SharedFolder/Index", [
-            "documents" => Document::with(["folder", "project.validity", "project"])->get(),
+            "documents" => $documents,
             "folder" => $folder,
             "childrenFolders" => Folder::where("father_id", "=", $folderID)->get()
         ]);
@@ -184,16 +218,6 @@ class FolderController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
         $folder = Folder::find($folderID);
-        $childrenFolders = Folder::where("father_id", $folder->id)->get();
-        if ($childrenFolders !== null) {
-            foreach ($childrenFolders as $cf) {
-                $path = $cf->documentPath;
-                $explode = explode("/", $path);
-                $explode[count($explode)-1] = request("name");
-                $cf->documentPath = implode("/", $explode);
-                $cf->update();
-            }
-        }
         $folder->name = request("name");
         if (request("visualizationRoleSelected") !== null) {
             $folder->visualization_role_id = request("visualizationRoleSelected");

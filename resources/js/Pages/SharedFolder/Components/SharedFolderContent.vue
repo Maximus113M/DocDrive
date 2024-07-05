@@ -162,8 +162,9 @@ onBeforeMount(() => {
 });
 
 const getDocumentPath = (document) => {
-    return document.folder.length > 0
-        ? document.folder[0]["documentPath"]+"/"+document.folder[0]["name"]
+    console.log(document);
+    return document.folder[0]
+        ? `Vigencias/${document.folder[0].project.validity.year}/${document.folder[0].project.name}`+document.folder[0]["documentPath"]+document.folder[0]["name"]
         : `Vigencias/${document.project.validity.year}/${document.project.name}`
 }
 
