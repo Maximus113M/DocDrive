@@ -11,7 +11,7 @@
 
                 <div class="text-2xl font-bold text-color-gray">
                     {{ !folder ? `Vigencias/${props.currentYear}/${props.project.name}`
-                        : `Vigencias/${props.currentYear}/${props.project.name}/${folder.name}` }}
+                        : `${folder.documentPath}/${folder.name}` }}
                 </div>
             </div>
         </div>
@@ -135,6 +135,8 @@
                             <label class="font-bold">Nombre</label>
                             <br>
                             <input v-model="formUploadFile.name" class="form-control" type="text" placeholder="Nombre">
+                            <div v-if="formUploadFile.errors.name">{{
+                                formUploadFile.errors.name }}</div>
                         </div>
                         <div class="mb-3 inputs-file">
                             <label for="formFile" class="font-bold form-label">Seleccionar archivo</label>

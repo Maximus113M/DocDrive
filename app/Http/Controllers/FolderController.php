@@ -8,6 +8,7 @@ use App\Models\Project;
 use App\Models\VisualizationRole;
 use App\Providers\AuthServiceProvider;
 use App\Providers\RoleServiceProvider;
+use App\Rules\ValidityEspecialCharFolder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Validator;
@@ -30,19 +31,25 @@ class FolderController extends Controller
     public function store($validityYear, $projectID)
     {
         $validator = Validator::make(request()->all(), [
-            'name' => ['required', 'string'],
+            'name' => ['required', 'string', new ValidityEspecialCharFolder()],
             'visualizationRoleSelected' => 'required',
-            'folder' => 'number'
         ]);
-
+        
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
+        }
+        $project = Project::find($projectID);
+        $path = "Vigencias/{$validityYear}/{$project->name}";
+        if (request("folder_id") !==null) {
+            $fatherFolder = Folder::find(request("folder_id"));
+            $path = $fatherFolder->documentPath.'/'.$fatherFolder->name;
         }
         $folder = new Folder();
         $folder->name = request("name");
         $folder->project_id = $projectID;
         $folder->father_id = request("folder_id") !== null ? request("folder_id") : null;
         $folder->visualization_role_id = request("visualizationRoleSelected");
+        $folder->documentPath = $path;
         $folder->save();
 
         return redirect()->back()->with("message", "Carpeta creada correctamente");
@@ -132,7 +139,7 @@ class FolderController extends Controller
             return;
         }
         return Inertia::render("SharedFolder/Index", [
-            "documents" => Document::all(),
+            "documents" => Document::with(["folder", "project.validity", "project"])->get(),
             "folder" => $folder,
             "childrenFolders" => Folder::where("father_id", "=", $folderID)->get()
         ]);
@@ -169,7 +176,7 @@ class FolderController extends Controller
     private function update($folderID)
     {
         $validator = Validator::make(request()->all(), [
-            'name' => ['required', 'string'],
+            'name' => ['required', 'string', new ValidityEspecialCharFolder()],
             'visualizationRoleSelected' => 'numeric',
         ]);
 
@@ -177,6 +184,16 @@ class FolderController extends Controller
             return redirect()->back()->withErrors($validator)->withInput();
         }
         $folder = Folder::find($folderID);
+        $childrenFolders = Folder::where("father_id", $folder->id)->get();
+        if ($childrenFolders !== null) {
+            foreach ($childrenFolders as $cf) {
+                $path = $cf->documentPath;
+                $explode = explode("/", $path);
+                $explode[count($explode)-1] = request("name");
+                $cf->documentPath = implode("/", $explode);
+                $cf->update();
+            }
+        }
         $folder->name = request("name");
         if (request("visualizationRoleSelected") !== null) {
             $folder->visualization_role_id = request("visualizationRoleSelected");

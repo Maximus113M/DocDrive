@@ -180,7 +180,7 @@ class ValidityController extends Controller
                 ->select('p.*')
                 ->join('project_user as pu', 'p.id', '=', 'pu.project_id')
                 ->join('users as u', 'u.id', '=', 'pu.user_id')
-                ->where(function ($query) use ($consulta) {
+                ->where(function ($query) {
                     $query->where('p.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
                     ->where('u.id', Auth::user()->id);
                 })
@@ -200,12 +200,12 @@ class ValidityController extends Controller
                 ->join('project_user as pu', 'p.id', '=', 'pu.project_id')
                 ->join('users as u', 'u.id', '=', 'pu.user_id')
                 ->where(function ($query) use ($consulta) {
-                    $query->where('p.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
+                    $query->where('d.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
                     ->where('u.id', Auth::user()->id);
                 })
                 ->orWhere(function ($query) {
-                    $query->where('p.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
-                    ->orWhere('p.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
+                    $query->where('d.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
+                    ->orWhere('d.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
                 })
                 ->where("d.name", "like", "%{$consulta}%")
                 ->distinct()
@@ -217,12 +217,12 @@ class ValidityController extends Controller
                 ->join('project_user as pu', 'p.id', '=', 'pu.project_id')
                 ->join('users as u', 'u.id', '=', 'pu.user_id')
                 ->where(function ($query) use ($consulta) {
-                    $query->where('p.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
+                    $query->where('f.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
                         ->where('u.id', Auth::user()->id);
                 })
                 ->orWhere(function ($query) {
-                    $query->where('p.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
-                        ->orWhere('p.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
+                    $query->where('f.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
+                        ->orWhere('f.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
                 })
                 ->where('f.name', 'like', "%{$consulta}%")
                 ->distinct()

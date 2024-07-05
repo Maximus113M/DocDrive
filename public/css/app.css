@@ -1258,10 +1258,6 @@ select{
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
-.my-10{
-  margin-top: 2.5rem;
-  margin-bottom: 2.5rem;
-}
 .-ml-px{
   margin-left: -1px;
 }
@@ -1405,6 +1401,12 @@ select{
 }
 .h-screen{
   height: 100vh;
+}
+.h-80{
+  height: 20rem;
+}
+.h-72{
+  height: 18rem;
 }
 .max-h-12{
   max-height: 3rem;
@@ -1565,9 +1567,6 @@ select{
 }
 .overflow-hidden{
   overflow: hidden;
-}
-.overflow-scroll{
-  overflow: scroll;
 }
 .overflow-y-auto{
   overflow-y: auto;
@@ -1872,6 +1871,9 @@ select{
 }
 .uppercase{
   text-transform: uppercase;
+}
+.italic{
+  font-style: italic;
 }
 .leading-4{
   line-height: 1rem;

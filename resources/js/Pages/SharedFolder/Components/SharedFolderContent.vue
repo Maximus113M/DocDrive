@@ -63,7 +63,7 @@
                                     <input @keyup="search" type="text" v-model="searchValue" style="all: unset" placeholder="Buscar">
                                 </div>
                             </div>
-                            <div class="h-64">
+                            <div class="h-72">
                                 <div v-for="(doc, index) in paginatedList" :key="doc?.id"
                                     :style="index % 2 != 0 ? 'background-color: #FFFFFF' : 'background-color: #F3F3F3'"
                                     class="px-2 py-1">
@@ -72,6 +72,7 @@
                                             v-model="formAssociateDocument.documentsID" :value="doc.id">
                                         <label :for="'checkbox-' + doc.id">
                                             {{ doc.name }}.{{ doc.format }}
+                                            <p class="italic text-xs">{{ getDocumentPath(doc) }}</p>
                                         </label>
                                     </div>
                                 </div>
@@ -150,7 +151,7 @@ const currentColor = ref('color: #FFFFFF; background-color: #39A900;')
 const paginatedList = ref([])
 const totalPages = ref(0);
 const paginatorIndex = ref(1);
-const pageElements = 8;
+const pageElements = 4;
 const documents = ref(props.documents)
 
 
@@ -159,6 +160,12 @@ onBeforeMount(() => {
     totalPages.value = Math.ceil(documents.value.length / pageElements);
     getCurrentPageList(1);
 });
+
+const getDocumentPath = (document) => {
+    return document.folder.length > 0
+        ? document.folder[0]["documentPath"]+"/"+document.folder[0]["name"]
+        : `Vigencias/${document.project.validity.year}/${document.project.name}`
+}
 
 const getCurrentPageList = (index) => {
     if (index != paginatorIndex.value) {

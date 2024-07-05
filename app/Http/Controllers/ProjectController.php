@@ -172,9 +172,13 @@ class ProjectController extends Controller
             $project->setRelation('documents', $filteredDocuments);
             $project->setRelation('folders', $filteredFolders);
         } else {
-            $project->documents;
-            $project->folders;
+            $project->setRelation('documents', $project->documents);
+            $project->setRelation('folders', $project->folders);
         }
+        $filteredFolders = $project->folders->filter(function ($folder) {
+            return $folder["father_id"] === null;
+        });
+        $project->setRelation('folders', $filteredFolders);
         return Inertia::render("Projects/Project/Index", [
             // "folders" => $project->folders,
             // "documents" => $project->documents,
