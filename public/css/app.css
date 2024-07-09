@@ -1258,6 +1258,10 @@ select{
   margin-top: 1rem;
   margin-bottom: 1rem;
 }
+.my-auto{
+  margin-top: auto;
+  margin-bottom: auto;
+}
 .-ml-px{
   margin-left: -1px;
 }
@@ -1350,6 +1354,18 @@ select{
 }
 .mt-auto{
   margin-top: auto;
+}
+.mr-36{
+  margin-right: 9rem;
+}
+.ml-36{
+  margin-left: 9rem;
+}
+.ml-28{
+  margin-left: 7rem;
+}
+.ml-16{
+  margin-left: 4rem;
 }
 .block{
   display: block;
@@ -1455,6 +1471,12 @@ select{
 }
 .w-full{
   width: 100%;
+}
+.w-80{
+  width: 20rem;
+}
+.w-24{
+  width: 6rem;
 }
 .max-w-44{
   max-width: 11rem;

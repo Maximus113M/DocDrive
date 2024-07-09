@@ -60,20 +60,24 @@
                             <div class="row justify-center mb-3">
                                 <div class="col-11 flex pl-1 pr-3 py-2 rounded-2xl border-1 border-gray-300">
                                     <Icon name="search" />
-                                    <input @keyup="search" type="text" v-model="searchValue" style="all: unset" placeholder="Buscar">
+                                    <input @keyup="search" type="text" v-model="searchValue" style="all: unset"
+                                        placeholder="Buscar">
                                 </div>
                             </div>
-                            <div class="h-72">
+                            <div class="h-64">
                                 <div v-for="(doc, index) in paginatedList" :key="doc?.id"
                                     :style="index % 2 != 0 ? 'background-color: #FFFFFF' : 'background-color: #F3F3F3'"
                                     class="px-2 py-1">
-                                    <div v-if="doc">
-                                        <input class="mr-2" type="checkbox" :id="'checkbox-' + doc.id"
+                                    <div v-if="doc" class="flex">
+                                        <input class="my-auto mr-2" type="checkbox" :id="'checkbox-' + doc.id"
                                             v-model="formAssociateDocument.documentsID" :value="doc.id">
                                         <label :for="'checkbox-' + doc.id">
                                             {{ doc.name }}.{{ doc.format }}
-                                            <p class="italic text-xs">{{ getDocumentPath(doc) }}</p>
                                         </label>
+                                        <button type="button" class="ml-16" v-on:click="showPropsDocumentModal(doc)">
+                                            <Icon name="eye" />
+                                        </button>
+
                                     </div>
                                 </div>
                             </div>
@@ -82,8 +86,7 @@
                                 <ul class="pagination cursor-pointer mt-1">
                                     <li class="page-item">
                                         <div class="page-link" aria-label="Previous" @click="decreasePaginatorIndex()">
-                                            <span aria-hidden="true"
-                                                :style="`color: #39A900;`">&laquo;</span>
+                                            <span aria-hidden="true" :style="`color: #39A900;`">&laquo;</span>
                                         </div>
                                     </li>
                                     <li v-if="paginatedList.length > 0" class="page-item">
@@ -125,6 +128,38 @@
     </div>
 
 
+    <!-- MODAL MOSTRAR PROPIEDADES DEL DOCUMENTO -->
+
+
+    <div class="modal fade" id="modalPropsDocument" tabindex="-1" aria-hidden="true">
+        <div class="modal-dialog w-full" style="height: 300px;">
+            <div class="m-auto modal-content position-relative p-3" style="max-height: 300px;">
+                <div class="d-flex flex-row justify-center px-3">
+                    <h5 class="my-3" style="color: #39A900">
+                        <strong class="text-left">
+                            Propiedades del documento
+                        </strong>
+                    </h5>
+                    <button type="button" class="btn-close position-absolute top-1 end-3" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div v-if="documentRef !== null" class="modal-body px-3">
+                    <div class="flex">
+                        <Icon class="w-24":name="documentRef.format" />
+                        <div class="ml-2">
+                            <strong >Nombre:</strong> {{ documentRef.name }}
+                            <br>
+                            <strong>Formato:</strong> {{ documentRef.format }}
+                            <br>
+                            <strong>Ruta:</strong> {{ getDocumentPath(documentRef) }}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+
 </template>
 
 <script setup>
@@ -151,7 +186,7 @@ const currentColor = ref('color: #FFFFFF; background-color: #39A900;')
 const paginatedList = ref([])
 const totalPages = ref(0);
 const paginatorIndex = ref(1);
-const pageElements = 4;
+const pageElements = 8;
 const documents = ref(props.documents)
 
 
@@ -161,11 +196,19 @@ onBeforeMount(() => {
     getCurrentPageList(1);
 });
 
+const documentRef = ref(null)
+
 const getDocumentPath = (document) => {
-    console.log(document);
     return document.folder[0]
-        ? `Vigencias/${document.folder[0].project.validity.year}/${document.folder[0].project.name}`+document.folder[0]["documentPath"]+document.folder[0]["name"]
+        ? `Vigencias/${document.folder[0].project.validity.year}/${document.folder[0].project.name}` + document.folder[0]["documentPath"] + document.folder[0]["name"]
         : `Vigencias/${document.project.validity.year}/${document.project.name}`
+}
+
+const showPropsDocumentModal = (doc) => {
+    documentRef.value = doc;
+    const modal = document.getElementById("modalPropsDocument")
+    const modalBootstrap = bootstrap.Modal.getOrCreateInstance(modal)
+    modalBootstrap.show()
 }
 
 const getCurrentPageList = (index) => {
