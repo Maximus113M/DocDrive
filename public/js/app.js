@@ -28321,9 +28321,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       key: document.id
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["CardDocumentDetails"], {
       "visualizations-role": $setup.props.visualizationsRole,
-      currentYear: Number(document.project.startDate.split('-')[0]),
+      currentYear: document.project ? Number(document.project.startDate.split('-')[0]) : Number(document.folder[0].project.startDate.split('-')[0]),
       document: document,
-      project: document.project
+      project: document.project ? document.project : document.folder[0].project
     }, null, 8 /* PROPS */, ["visualizations-role", "currentYear", "document", "project"])]);
   }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]);
 }

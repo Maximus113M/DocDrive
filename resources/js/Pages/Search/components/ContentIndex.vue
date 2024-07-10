@@ -66,8 +66,9 @@
                 <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
                     <div v-for="document in props.documents" :key="document.id">
                         <CardDocumentDetails :visualizations-role="props.visualizationsRole"
-                            :currentYear="Number(document.project.startDate.split('-')[0])" :document="document"
-                            :project="document.project" />
+                            :currentYear="document.project ? Number(document.project.startDate.split('-')[0]) 
+                            : Number(document.folder[0].project.startDate.split('-')[0]) " :document="document"
+                            :project="document.project ? document.project : document.folder[0].project" />
                     </div>
                 </div>
             </div>
@@ -97,7 +98,6 @@ const props = defineProps({
     role: String,
     visualizationsRole: { type: Array, required: true },
 });
-
 
 const checkedValidity = ref(null)
 const checkedSharedFolder = ref(null)

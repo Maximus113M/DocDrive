@@ -166,7 +166,7 @@ class ValidityController extends Controller
 
             $documents = Document::whereHas("visualizationRole", function ($query) {
                 $query->where('name', '=', RoleServiceProvider::GENERAL_PUBLIC);
-            })->where("name", "like", "%{$consulta}%")->with('project')->get();
+            })->where("name", "like", "%{$consulta}%")->with(['project', 'folder.project'])->get();
 
             $folders = Folder::whereHas("visualizationRole", function ($query) {
                 $query->where('name', RoleServiceProvider::GENERAL_PUBLIC);
@@ -174,7 +174,6 @@ class ValidityController extends Controller
                 $query->whereNotNull('father_id')
                     ->orWhereNotNull('project_id');
             })->where("name", "like", "%{$consulta}%")->with('project')->get();
-
         } else if ($userRole == RoleServiceProvider::INVESTIGATOR || $userRole == RoleServiceProvider::COLLABORATOR) {
             $projects = DB::table('projects as p')
                 ->select('p.*')
@@ -182,69 +181,86 @@ class ValidityController extends Controller
                 ->join('users as u', 'u.id', '=', 'pu.user_id')
                 ->where(function ($query) {
                     $query->where('p.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
-                    ->where('u.id', Auth::user()->id);
+                        ->where('u.id', Auth::user()->id);
                 })
                 ->orWhere(function ($query) {
                     $query->where('p.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
-                    ->orWhere('p.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
+                        ->orWhere('p.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
                 })
                 ->where("p.name", "like", "%{$consulta}%")
                 ->distinct()
                 ->get();
 
-            $documents = DB::table('documents as d')
-                ->select('d.*')
-                ->join('document_folder as df', 'df.document_id', '=', 'd.id')
-                ->join('folders as f', 'f.id', '=', 'df.folder_id')
-                ->join('projects as p', 'p.id', '=', 'f.project_id')
-                ->join('project_user as pu', 'p.id', '=', 'pu.project_id')
-                ->join('users as u', 'u.id', '=', 'pu.user_id')
-                ->where(function ($query) use ($consulta) {
-                    $query->where('d.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
-                    ->where('u.id', Auth::user()->id);
+            $documents1 = Document::select('documents.*')
+                ->join('document_folder', 'document_folder.document_id', '=', 'documents.id')
+                ->join('folders', 'folders.id', '=', 'document_folder.folder_id')
+                ->join('projects', 'projects.id', '=', 'folders.project_id')
+                ->join('project_user', 'projects.id', '=', 'project_user.project_id')
+                ->join('users', 'users.id', '=', 'project_user.user_id')
+                ->where("documents.name", "like", "%{$consulta}%")
+                ->where(function ($query) {
+                    $query->where('documents.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
+                        ->where('users.id', Auth::user()->id)
+                        ->orWhere(function ($query) {
+                            $query->where('documents.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
+                            ->orWhere('documents.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
+                        });
                 })
-                ->orWhere(function ($query) {
-                    $query->where('d.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
-                    ->orWhere('d.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
-                })
-                ->where("d.name", "like", "%{$consulta}%")
                 ->distinct()
+                ->with(['folder', 'folder.project'])
                 ->get();
-                
-            $folders =  DB::table('folders as f')
-                ->select('f.*')
-                ->join('projects as p', 'p.id', '=', 'f.project_id')
-                ->join('project_user as pu', 'p.id', '=', 'pu.project_id')
-                ->join('users as u', 'u.id', '=', 'pu.user_id')
-                ->where(function ($query) use ($consulta) {
-                    $query->where('f.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
-                        ->where('u.id', Auth::user()->id);
+
+            $documents2 = Document::select('documents.*')
+                ->join('projects', 'projects.id', '=', 'documents.project_id')
+                ->join('project_user', 'projects.id', '=', 'project_user.project_id')
+                ->join('users', 'users.id', '=', 'project_user.user_id')
+                ->where("documents.name", "like", "%{$consulta}%")
+                ->where(function ($query) {
+                    $query->where('documents.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
+                        ->where('users.id', Auth::user()->id)
+                        ->orWhere(function ($query) {
+                            $query->where('documents.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
+                            ->orWhere('documents.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
+                        });
                 })
-                ->orWhere(function ($query) {
-                    $query->where('f.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
-                        ->orWhere('f.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
-                })
-                ->where('f.name', 'like', "%{$consulta}%")
                 ->distinct()
+                ->with(['project'])
+                ->get();
+
+            $documents = $documents1->toBase()->merge($documents2);
+
+            $folders = Folder::select('folders.*')
+                ->join('projects as p', 'p.id', '=', 'folders.project_id')
+                ->join('project_user', 'p.id', '=', 'project_user.project_id')
+                ->join('users', 'users.id', '=', 'project_user.user_id')
+                ->where("folders.name", "like", "%{$consulta}%")
+                ->where(function ($query) {
+                    $query->where('folders.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
+                        ->where('users.id', Auth::user()->id)
+                        ->orWhere(function ($query) {
+                            $query->where('folders.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
+                            ->orWhere('folders.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
+                        });
+                })
+                ->distinct()
+                ->with('project')
                 ->get();
         } else {
 
             $projects = Project::where("name", "like", "%{$consulta}%")->get();
-            $documents = Document::where("name", "like", "%{$consulta}%")->with('project')->get();
+            $documents = Document::where("name", "like", "%{$consulta}%")->with(['project', 'folder.project'])->get();
             $folders = Folder::where("name", "like", "%{$consulta}%")
                 ->where(function ($query) {
                     $query->whereNotNull('father_id')
                         ->orWhereNotNull('project_id');
                 })->with('project')->get();
         }
-        //return $folders;
 
         /**
          @TODO: CAMBIAR VISTA A RENDERIZAR
          */
         error_log("-------------------------------------");
         error_log("Project $projects");
-        error_log("Documents $documents");
         error_log("Folders $folders");
         error_log("Validities $validities");
         error_log("SharedResources $sharedResources");
