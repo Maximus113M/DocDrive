@@ -2,7 +2,7 @@
     <!-- DOCUMENT DESIGN -->
     <div class="col position-relative" style="max-width: 300px;">
 
-        <a target="_blank" :href="showDocumentRoute">
+        <a target="_blank" :href="documentType === 'link' ? document.documentPath : showDocumentRoute">
             <!-- BODY -->
             <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40"
                 style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.06);">
@@ -140,6 +140,7 @@ const showDocumentRoute = props.project ? route('file.index', {
 onMounted(() => {
     isAssociatedUser.value = verifiyAssociatedUser()
 })
+
 
 const onClicks = (event) => {
     event.preventDefault();

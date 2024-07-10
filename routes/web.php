@@ -44,6 +44,10 @@ Route::post('/{validityYear}/projects/{projectID}/upload', [DocumentController::
 Route::post('/{validityYear}/projects/{projectID}/folder', [FolderController::class, 'store'])
     ->name('folder.upload')->middleware(["protect.project", "auth"]);
 
+// RUTA PARA CREAR LINKS
+Route::post('/{validityYear}/projects/{projectID}/link', [DocumentController::class, 'storeLink'])
+    ->name('link.add')->middleware(["protect.project", "auth"]);
+
 // RUTA PARA MOSTRAR LOS DOCUMENTOS O CARPETAS DE UNA CARPETA
 Route::get('/{validityYear}/projects/{projectID}/folders/{folderID}', [FolderController::class, 'show'])
     ->name('folder.index')->middleware("protect.documents");

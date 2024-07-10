@@ -113,6 +113,13 @@
                                     Archivo
                                 </label>
                             </div>
+                            <div class="form-check mr-4">
+                                <input :onclick="changeInputCheck" ref="checkedUploadLink" class="form-check-input"
+                                    type="radio" name="file" id="link" value="link">
+                                <label class="form-check-label" for="link">
+                                    Link
+                                </label>
+                            </div>
                             <div class="form-check">
                                 <input :onclick="changeInputCheck" ref="checkedCreateFolder" class="form-check-input"
                                     type="radio" name="file" value="folder" id="folder">
@@ -144,6 +151,13 @@
                                 type="file" id="formFile">
                             <div v-if="formUploadFile.errors.document">{{
                                 formUploadFile.errors.document }}</div>
+                        </div>
+                        <div class="mb-3 inputs-link hidden">
+                            <label for="link" class="font-bold form-label">Link</label>
+                            <input v-model="formUploadFile.link" class="form-control"
+                                type="url" id="link" placeholder="ingrese el link">
+                            <div v-if="formUploadFile.errors.link">{{
+                                formUploadFile.errors.link }}</div>
                         </div>
                         <div class="row justify-center p-3 my-3">
                             <button type="submit" class="btn py-2"
@@ -285,10 +299,13 @@ const formUploadFile = useForm({
     name: null,
     visualizationRoleSelected: null,
     folder_id: props.folder != null ? props.folder.id : null,
+    link: null
 })
 
 const checkedUploadFile = ref(null)
 const checkedCreateFolder = ref(null)
+const checkedUploadLink = ref(null)
+
 
 const isAssociatedUser = ref(null);
 
@@ -364,12 +381,19 @@ const validateVisualizationRole = () => {
 const changeInputCheck = (e) => {
     const inputsFile = document.getElementsByClassName("inputs-file")
     const inputsFolder = document.getElementsByClassName("inputs-folder")
+    const inputsLink = document.getElementsByClassName("inputs-link")
     if (e.target.value == "file") {
         changeDisplayCheckBox(inputsFile, "block")
         changeDisplayCheckBox(inputsFolder, "none")
+        changeDisplayCheckBox(inputsLink, "none")
+    } else if (e.target.value == "link") {
+        changeDisplayCheckBox(inputsLink, "block")
+        changeDisplayCheckBox(inputsFolder, "none")
+        changeDisplayCheckBox(inputsFile, "none")
     } else {
         changeDisplayCheckBox(inputsFolder, "block")
         changeDisplayCheckBox(inputsFile, "none")
+        changeDisplayCheckBox(inputsLink, "none")
     }
 }
 
@@ -426,7 +450,16 @@ const verifiyAssociatedUser = () => {
 
 const upload = () => {
 
-    formUploadFile.post(route(checkedCreateFolder.value.checked ? "folder.upload" : "document.upload", {
+    let ruta = null;
+    if (checkedUploadFile.value.checked) {
+        ruta = "document.upload"
+    } else if (checkedUploadLink.value.checked) {
+        ruta = "link.add"
+    } else {
+        ruta = "folder.upload"
+    }
+
+    formUploadFile.post(route(ruta, {
         "projectID": props.project.id,
         "validityYear": props.currentYear
     }), {

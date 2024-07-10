@@ -54,6 +54,42 @@ class DocumentController extends Controller
         return redirect()->back()->with("message", "Documento creado correctamente");
     }
 
+    /**
+     * Crear un link
+     */
+    public function storeLink($validityYear, $projectID)
+    {
+        if (!AuthServiceProvider::checkAuthenticated()) {
+            abort(403, "No tienes permisos para estar aqui");
+        }
+        $validator = Validator::make(request()->all(), [
+            'link' => 'required|url',
+            'visualizationRoleSelected' => 'required',
+            'name' => ['required','string', 'unique:documents']
+        ]);
+
+
+        if ($validator->fails()) {
+            return redirect()->back()->withErrors($validator)->withInput();
+        }
+
+        $document = new Document();
+        $document->name = request("name");
+        $document->documentPath = request("link");
+        $document->format = "link";
+        if (request("folder_id") == null) {
+            $document->project_id = $projectID;
+        }
+        $document->visualization_role_id = request("visualizationRoleSelected");
+        $document->save();
+        if (request("folder_id") !== null) {
+            $document->folder()->attach(request("folder_id"));
+        }
+
+
+        return redirect()->back()->with("message", "Link creado correctamente");
+    }
+
     /** 
      * Subir el archivo al storage 
      */
@@ -99,7 +135,7 @@ class DocumentController extends Controller
 
         return response()->file($rutaCompleta, [
             'Content-Type' => $type,
-            'Content-Disposition' => 'inline',
+            'Content-Disposition' => 'inline; filename="' . $document->name . '"', 
         ]);
     }
 
