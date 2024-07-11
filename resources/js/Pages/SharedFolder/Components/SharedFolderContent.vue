@@ -152,6 +152,8 @@
                             <strong>Formato:</strong> {{ documentRef.format }}
                             <br>
                             <strong>Ruta:</strong> {{ getDocumentPath(documentRef) }}
+                            <br>
+                            <strong>Fecha de subida:</strong> {{ documentRef.created_at.split('T')[0] }}
                         </div>
                     </div>
 

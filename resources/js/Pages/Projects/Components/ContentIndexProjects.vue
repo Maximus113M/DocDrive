@@ -184,10 +184,20 @@ import { ref, onBeforeMount, onUpdated } from 'vue';
 import Icon from '@/Shared/Icon.vue';
 import { AppFunctions } from '@/core/appFunctions';
 
+const props = defineProps({
+    projects: Object,
+    investigators: { type: Array, required: true },
+    role: String,
+    validityID: Number,
+    visualizationsRole: Object,
+    currentYear: String,
+})
+const now = new Date()
+const month = (now.getMonth() + 1) > 9 ? now.getMonth() + 1 : "0".concat(now.getMonth() + 1)
 const form = useForm({
     name: null,
-    startDate: null,
-    endDate: null,
+    startDate: props.currentYear.concat(`-${month}-${now.getDate()}`),
+    endDate: props.currentYear.concat(`-${month}-${now.getDate()}`),
     description: null,
     investigatorsID: [],
     validityID: null,
@@ -203,14 +213,7 @@ const nameRoleVisualization = {
 
 const modal = ref(null)
 
-const props = defineProps({
-    projects: Object,
-    investigators: { type: Array, required: true },
-    role: String,
-    validityID: Number,
-    visualizationsRole: Object,
-    currentYear: String,
-})
+
 const paginatedList = ref([])
 const totalPages = ref(0);
 const paginatorIndex = ref(1);
