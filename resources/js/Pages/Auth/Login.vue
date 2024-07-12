@@ -1,5 +1,5 @@
 <template>
-    <div class="w-3/12 pt-32 m-auto">
+    <div class="lg:w-4/12 md:w-5/12 sm:w-6/12 w-9/12 pt-32 m-auto">
 
         <Head title="Log in" />
 
@@ -8,7 +8,7 @@
             {{ status }}
         </div>
         <div class="card p-5 col-12">
-            <h3 class="font-bold pb-10">Inicio de sesión</h3>
+            <h3 class="font-bold text-center pb-10">Inicio de sesión</h3>
 
             <BreezeValidationErrors class="mb-4" />
 
@@ -25,16 +25,10 @@
                         required autocomplete="current-password" />
                 </div>
 
-                <div class="block mt-4">
-                    <label class="flex items-center">
-                        <BreezeCheckbox name="remember" v-model:checked="form.remember" />
-                        <span class="ml-2 text-sm text-gray-600">Recuerdame</span>
-                    </label>
-                </div>
 
                 <div class="flex items-center justify-end mt-4">
                     <Link v-if="canResetPassword" :href="route('password.request')"
-                        class="underline text-sm text-gray-600 hover:text-gray-900">
+                        class="no-underline text-sm text-gray-600 hover:text-gray-900">
                     Olvidaste la contraseña?
                     </Link>
 
@@ -48,12 +42,8 @@
 </template>
 
 <script setup>
-import FoldersDropdown from '@/Shared/FoldersDropdown.vue';
-import BreezeDropdownLink from '@/Components/DropdownLink.vue';
 
 import BreezeButton from '@/Components/Button.vue';
-import BreezeCheckbox from '@/Components/Checkbox.vue';
-import BreezeGuestLayout from '@/Layouts/Guest.vue';
 import BreezeInput from '@/Components/Input.vue';
 import BreezeLabel from '@/Components/Label.vue';
 import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
