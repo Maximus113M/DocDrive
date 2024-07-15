@@ -22,7 +22,7 @@
         </div>
 
         <div class="w-full h-full flex justify-center items-center" v-if="props.validities.length < 1 && props.sharedResources.length < 1 &&
-            props.projects.length < 1 && props.folders.length < 1 && props.documents.length < 1">
+            props.projects.length < 1 && props.folders.length < 1 && props.documents.length < 1 && props.documentsCategory  < 1">
             <h2>No se encontraron coincidencias</h2>
         </div>
 
@@ -73,6 +73,18 @@
                 </div>
             </div>
 
+            <div v-if="props.documentsCategory.length > 0" class="my-3">
+                <div class="text-xl font-bold mb-2">Categorias</div>
+                <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
+                    <div v-for="document in props.documentsCategory" :key="document.id">
+                        <CardDocumentDetails :visualizations-role="props.visualizationsRole"
+                            :currentYear="document.project ? Number(document.project.startDate.split('-')[0]) 
+                            : Number(document.folder[0].project.startDate.split('-')[0]) " :document="document"
+                            :project="document.project ? document.project : document.folder[0].project" />
+                    </div>
+                </div>
+            </div>
+
         </div>
     </div>
 
@@ -97,6 +109,7 @@ const props = defineProps({
     isAuthenticated: Boolean,
     role: String,
     visualizationsRole: { type: Array, required: true },
+    documentsCategory: { type: Array, required: true },
 });
 
 const checkedValidity = ref(null)

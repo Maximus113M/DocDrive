@@ -12,6 +12,7 @@ const props = defineProps({
     isAuthenticated: { type: Boolean, required: true },
     role: { type: String, required: true },
     visualizationsRole: { type: Array, required: true },
+    documentsCategory: { type: Array, required: true },
 })
 
 
@@ -20,7 +21,7 @@ const props = defineProps({
 <template>
 
     <AuthLayout :role="props.role">
-            <ContentIndex :projects="props.projects" :documents="props.documents" :folders="props.folders"
+            <ContentIndex :documentsCategory="documentsCategory" :projects="props.projects" :documents="props.documents" :folders="props.folders"
                 :validities="props.validities" :sharedResources="props.sharedResources"
                 :isAuthenticated="props.isAuthenticated" :role="props.role" :visualizations-role="visualizationsRole"  #content />
     </AuthLayout>

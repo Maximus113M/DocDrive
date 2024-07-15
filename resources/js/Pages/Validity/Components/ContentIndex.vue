@@ -11,8 +11,8 @@ const props = defineProps({
     isAuthenticated: Boolean,
     role: String,
     sharedFolders: { type: Array, required: true },
+    categories : Array,
 });
-
 
 const checkedValidity = ref(null)
 const checkedSharedFolder = ref(null)
@@ -30,8 +30,8 @@ onMounted(() => {
     validityList.value = props.validities;
 });
 onUpdated(() => {
-  //  if (searchValue.value.length === 0) {
-        validityList.value = props.validities.sort((a, b) => a.year - b.year);
+    //  if (searchValue.value.length === 0) {
+    validityList.value = props.validities.sort((a, b) => a.year - b.year);
     //}
 });
 
@@ -106,10 +106,13 @@ const changeDisplayCheckBox = (inputs, display) => {
         <div class="absolute top-3 right-12">
             <div class="flex pl-1 pr-3 py-2 rounded-2xl border-1 border-gray-300">
                 <Icon name="search" />
-                <input type="text" v-model="searchValue" style="all: unset" placeholder="Buscar">
+                <input type="text" list="categories" v-model="searchValue" style="all: unset" placeholder="Buscar">
+                <datalist id="categories">
+                    <option v-for="item in categories" :key="item.name" :value="item.name" />
+                </datalist>
                 <button>
                     <Link :href="searchValue.length > 0 ? route('search.index', { 'consulta': searchValue }) : ''">
-                        <Icon name="send" />
+                    <Icon name="send" />
                     </Link>
                 </button>
             </div>
@@ -119,7 +122,8 @@ const changeDisplayCheckBox = (inputs, display) => {
 
             <button v-if="props.role == 'admin' && props.isAuthenticated" class="col" data-bs-toggle="modal"
                 data-bs-target="#modalSaveValidity">
-                <div class="folder border-3 rounded-4 py-3 bg-white" style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.07);">
+                <div class="folder border-3 rounded-4 py-3 bg-white"
+                    style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.07);">
                     <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
                         fill="#000000">
                         <path

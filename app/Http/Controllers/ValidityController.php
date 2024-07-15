@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Document;
+use App\Models\DocumentCategory;
 use App\Models\Folder;
 use App\Models\Project;
 use App\Models\Validity;
@@ -34,6 +35,7 @@ class ValidityController extends Controller
             ])->get(),
             "role" => AuthServiceProvider::getRole(),
             "isAuthenticated" => AuthServiceProvider::checkAuthenticated(),
+            "categories" => DocumentCategory::all()
         ]);
     }
 
@@ -158,6 +160,7 @@ class ValidityController extends Controller
         $documents = null;
         $folders = null;
         $userRole = AuthServiceProvider::getRole();
+        $documentsForCategory = null;
 
         if ($userRole == RoleServiceProvider::GUEST) {
             $projects = Project::whereHas("visualizationRole", function ($query) {
@@ -174,6 +177,12 @@ class ValidityController extends Controller
                 $query->whereNotNull('father_id')
                     ->orWhereNotNull('project_id');
             })->where("name", "like", "%{$consulta}%")->with('project')->get();
+
+            $documentsForCategory = Document::whereHas("visualizationRole", function ($query) {
+                $query->where('name', RoleServiceProvider::GENERAL_PUBLIC);
+            })->whereHas('categories', function ($query) use ($consulta) {
+                $query->where('name', "like", "%{$consulta}%");
+            })->with(['project', 'folder.project'])->get();
         } else if ($userRole == RoleServiceProvider::INVESTIGATOR || $userRole == RoleServiceProvider::COLLABORATOR) {
             $projects = DB::table('projects as p')
                 ->select('p.*')
@@ -203,7 +212,7 @@ class ValidityController extends Controller
                         ->where('users.id', Auth::user()->id)
                         ->orWhere(function ($query) {
                             $query->where('documents.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
-                            ->orWhere('documents.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
+                                ->orWhere('documents.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
                         });
                 })
                 ->distinct()
@@ -220,7 +229,7 @@ class ValidityController extends Controller
                         ->where('users.id', Auth::user()->id)
                         ->orWhere(function ($query) {
                             $query->where('documents.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
-                            ->orWhere('documents.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
+                                ->orWhere('documents.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
                         });
                 })
                 ->distinct()
@@ -228,6 +237,49 @@ class ValidityController extends Controller
                 ->get();
 
             $documents = $documents1->toBase()->merge($documents2);
+
+
+            $documentsForCategory1 = Document::select('documents.*')
+                ->join('document_folder', 'document_folder.document_id', '=', 'documents.id')
+                ->join('folders', 'folders.id', '=', 'document_folder.folder_id')
+                ->join('projects', 'projects.id', '=', 'folders.project_id')
+                ->join('project_user', 'projects.id', '=', 'project_user.project_id')
+                ->join('users', 'users.id', '=', 'project_user.user_id')
+                ->join('document_categories_documents', 'document_categories_documents.document_id', '=', 'documents.id')
+                ->join('document_categories', 'document_categories.id', '=', 'document_categories_documents.category_id')
+                ->where("document_categories.name", "like", "%{$consulta}%")
+                ->where(function ($query) {
+                    $query->where('documents.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
+                        ->where('users.id', Auth::user()->id)
+                        ->orWhere(function ($query) {
+                            $query->where('documents.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
+                                ->orWhere('documents.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
+                        });
+                })
+                ->distinct()
+                ->with(['folder', 'folder.project'])
+                ->get();
+
+            $documentsForCategory2 = Document::select('documents.*')
+                ->join('projects', 'projects.id', '=', 'documents.project_id')
+                ->join('project_user', 'projects.id', '=', 'project_user.project_id')
+                ->join('users', 'users.id', '=', 'project_user.user_id')
+                ->join('document_categories_documents', 'document_categories_documents.document_id', '=', 'documents.id')
+                ->join('document_categories', 'document_categories.id', '=', 'document_categories_documents.category_id')
+                ->where("document_categories.name", "like", "%{$consulta}%")
+                ->where(function ($query) {
+                    $query->where('documents.visualization_role_id', RoleServiceProvider::PRIVATE_ID)
+                        ->where('users.id', Auth::user()->id)
+                        ->orWhere(function ($query) {
+                            $query->where('documents.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
+                                ->orWhere('documents.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
+                        });
+                })
+                ->distinct()
+                ->with(['project'])
+                ->get();
+
+            $documentsForCategory = $documentsForCategory1->toBase()->merge($documentsForCategory2);
 
             $folders = Folder::select('folders.*')
                 ->join('projects as p', 'p.id', '=', 'folders.project_id')
@@ -239,7 +291,7 @@ class ValidityController extends Controller
                         ->where('users.id', Auth::user()->id)
                         ->orWhere(function ($query) {
                             $query->where('folders.visualization_role_id', RoleServiceProvider::GENERAL_PUBLIC_ID)
-                            ->orWhere('folders.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
+                                ->orWhere('folders.visualization_role_id', RoleServiceProvider::PUBLIC_ID);
                         });
                 })
                 ->distinct()
@@ -254,6 +306,9 @@ class ValidityController extends Controller
                     $query->whereNotNull('father_id')
                         ->orWhereNotNull('project_id');
                 })->with('project')->get();
+            $documentsForCategory = Document::whereHas('categories', function ($query) use ($consulta) {
+                $query->where('name', "like", "%{$consulta}%");
+            })->with(['project', 'folder.project'])->get();
         }
 
         /**
@@ -264,7 +319,6 @@ class ValidityController extends Controller
         error_log("Folders $folders");
         error_log("Validities $validities");
         error_log("SharedResources $sharedResources");
-
         return Inertia::render("Search/Index", [
             "projects" => $projects,
             "documents" => $documents,
@@ -274,6 +328,7 @@ class ValidityController extends Controller
             "isAuthenticated" => AuthServiceProvider::checkAuthenticated(),
             "role" => AuthServiceProvider::getRole(),
             "visualizationsRole" => VisualizationRole::all(),
+            "documentsCategory" => $documentsForCategory
         ]);
     }
 }
