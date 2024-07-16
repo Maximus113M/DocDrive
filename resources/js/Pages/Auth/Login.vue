@@ -47,7 +47,9 @@ import BreezeButton from '@/Components/Button.vue';
 import BreezeInput from '@/Components/Input.vue';
 import BreezeLabel from '@/Components/Label.vue';
 import BreezeValidationErrors from '@/Components/ValidationErrors.vue';
-import { Head, Link, useForm } from '@inertiajs/inertia-vue3';
+import { CustomAlertsService } from '@/services/customAlerts';
+import { Head, Link, useForm, usePage } from '@inertiajs/inertia-vue3';
+import { onBeforeMount, onMounted } from 'vue';
 
 defineProps({
     canResetPassword: Boolean,
@@ -65,6 +67,28 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
+
+const showSuccessMessage = () => {
+    const flashMessage = usePage().props.value.flash.message
+    const errorMessage = usePage().props.value.flash.errorMessage
+
+    if (flashMessage) {
+        CustomAlertsService.successConfirmAlert({
+            title: flashMessage,
+        })
+    } else if (errorMessage) {
+        CustomAlertsService.generalAlert({
+            title: 'Error',
+            text: errorMessage,
+            icon: "error",
+            isToast: true,
+        })
+    } 
+}
+
+onBeforeMount(() => {
+    showSuccessMessage()
+})
 
 </script>
 
@@ -84,7 +108,7 @@ const submit = () => {
     margin: auto; 
     background-image: linear-gradient(to bottom,
     rgba(255, 255, 255, 0.1),
-    rgba(255, 255, 255, 0.1)) ,url(../../../../public/images/CIDM.jpg);
+    rgba(255, 255, 255, 0.1)) ,url(../../../../public/images/cidm.jpg);
     background-repeat: no-repeat;
     background-position: center top;
     background-size: 70%;

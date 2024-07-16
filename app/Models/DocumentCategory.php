@@ -15,6 +15,6 @@ class DocumentCategory extends Model
 
     public function documents()
     {
-        return $this->belongsToMany(Document::class, "document_categories_documents");
+        return $this->belongsToMany(Document::class, "document_categories_documents", "category_id", "document_id");
     }
 }

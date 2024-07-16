@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
 use Illuminate\Auth\Events\PasswordReset;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Support\Str;
@@ -22,8 +24,13 @@ class NewPasswordController extends Controller
      */
     public function create(Request $request)
     {
+        $token = $request->route('token');
+        $existsToken = DB::table("password_resets")->where("token", "=", $token)->exists();
+        if (!$existsToken) {
+            return redirect()->route('login')->with('errorMessage', 'El enlace de restablecimiento de contraseña es inválido.');
+        }
+
         return Inertia::render('Auth/ResetPassword', [
-            'email' => $request->email,
             'token' => $request->route('token'),
         ]);
     }
@@ -44,30 +51,20 @@ class NewPasswordController extends Controller
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
-        // Here we will attempt to reset the user's password. If it is successful we
-        // will update the password on an actual user model and persist it to the
-        // database. Otherwise we will parse the error and return the response.
-        $status = Password::reset(
-            $request->only('email', 'password', 'password_confirmation', 'token'),
-            function ($user) use ($request) {
-                $user->forceFill([
-                    'password' => Hash::make($request->password),
-                    'remember_token' => Str::random(60),
-                ])->save();
-
-                event(new PasswordReset($user));
-            }
-        );
-
-        // If the password was successfully reset, we will redirect the user back to
-        // the application's home authenticated view. If there is an error we can
-        // redirect them back to where they came from with their error message.
-        if ($status == Password::PASSWORD_RESET) {
-            return redirect()->route('login')->with('status', __($status));
+        $email = $request->get("email");
+        $emailFromToken = DB::table("password_resets")->where("token", $request->get("token"))
+            ->select("email");
+        
+        if ($emailFromToken->first()->email!= $email) {
+            return redirect()->back()->with('errorMessage', 'El email indicado es incorrecto.');
         }
 
-        throw ValidationException::withMessages([
-            'email' => [trans($status)],
-        ]);
+        $user = User::where("email", "=", $email)->first();
+        $user->password = Hash::make($request->get("password"));
+        $user->update();
+
+        DB::table("password_resets")->where("token", $request->get("token"))->delete();
+    
+        return redirect()->route('login')->with('message', 'Contraseña restablecida con éxito. Ahora puedes iniciar sesión.');
     }
 }

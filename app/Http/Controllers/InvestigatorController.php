@@ -90,7 +90,7 @@ class InvestigatorController extends Controller
 
         $user->assignRole(RoleServiceProvider::INVESTIGATOR);
 
-        //Mail::to($user)->send(new VerifyEmail($password, $user));
+        Mail::to($user)->send(new VerifyEmail($password, $user));
 
         return Redirect::route("investigator.index")->with("message", "¡El investigador se ha creado correctamente!");
     }
