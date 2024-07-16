@@ -1,5 +1,5 @@
 <template>
-    <div class="lg:w-4/12 md:w-5/12 sm:w-6/12 w-9/12 pt-32 m-auto">
+    <div class="flex justify-center h-screen w-full">
 
         <Head title="Log in" />
 
@@ -7,7 +7,7 @@
         <div v-if="status" class="mb-4 font-medium text-sm text-green-600">
             {{ status }}
         </div>
-        <div class="card p-5 col-12">
+        <div class="card w-96 pt-32 m-auto p-5" style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.08);">
             <h3 class="font-bold text-center pb-10">Inicio de sesión</h3>
 
             <BreezeValidationErrors class="mb-4" />
@@ -65,9 +65,7 @@ const submit = () => {
         onFinish: () => form.reset('password'),
     });
 };
-const onClicks= (event)=>{
-    event.preventDefault();
-}
+
 </script>
 
 <style scoped>
@@ -80,5 +78,15 @@ const onClicks= (event)=>{
 .validity-font {
     color: #9E9E9E;
     font-size: 15px;
+}
+
+.background-cidm{
+    margin: auto; 
+    background-image: linear-gradient(to bottom,
+    rgba(255, 255, 255, 0.1),
+    rgba(255, 255, 255, 0.1)) ,url(../../../../public/images/CIDM.jpg);
+    background-repeat: no-repeat;
+    background-position: center top;
+    background-size: 70%;
 }
 </style>

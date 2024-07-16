@@ -113,7 +113,7 @@
       d="M261-120q-24 0-42-18t-18-42v-570h-41v-60h188v-30h264v30h188v60h-41v570q0 24-18 42t-42 18H261Zm106-146h60v-399h-60v399Zm166 0h60v-399h-60v399Z" />
   </svg>
 
-
+  <!-- ACTIONS -->
   <!-- ADD -->
   <svg v-else-if="name === 'add'" xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px"
     fill="#FFFFFF">
@@ -130,10 +130,20 @@
     width="24px" fill="#000000">
     <path d="m313-440 224 224-57 56-320-320 320-320 57 56-224 224h487v80H313Z" />
   </svg>
-  <!-- BACK -->
+  <!-- SEND -->
   <svg v-else-if="name === 'send'" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
     width="24px" fill="#5f6368">
     <path d="M120-160v-240l320-80-320-80v-240l760 320-760 320Z" />
+  </svg>
+  <!-- ARROW DOWN -->
+  <svg v-else-if="name === 'arrow-down'" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+    width="24px" fill="#5f6368">
+    <path d="M480-360 280-560h400L480-360Z" />
+  </svg>
+  <!-- ARROW UP -->
+  <svg v-else-if="name === 'arrow-up'" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
+    width="24px" fill="#5f6368">
+    <path d="m280-400 200-200 200 200H280Z" />
   </svg>
 
 

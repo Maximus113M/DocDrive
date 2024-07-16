@@ -5,7 +5,7 @@
             <div class="ml-5 flex justify-start items-center">
                 <!--<Link class="mr-3" method="get" :href="!folder ? route('validity.projects', { 'validityYear': props.currentYear })
                     : route('project.index', { 'validityYear': currentYear, 'projectID': props.project.id })">-->
-                    <Link class="mr-3" method="get" :href="backRoute()">
+                <Link class="mr-3" method="get" :href="backRoute()">
                 <Icon name="back" />
                 </Link>
 
@@ -17,26 +17,39 @@
         </div>
 
         <div v-if="!folder" class="px-5">
-            <article class="pt-3 pb-1 px-3 question cursor-pointer"  @click="expanded = !expanded">
+            <article class="pt-3 pb-1 px-3 question cursor-pointer mb-2"
+                @click="expandedDescription = !expandedDescription">
                 <header class="flex justify-between items-center pb-2">
-                    <h4 class="mb-0">
+                    <div class="font-semibold text-xl ">
                         Descripción
-                    </h4>
-                    <div>
-                        <svg v-show="expanded" xmlns="http://www.w3.org/2000/svg" height="24px" viewBox="0 -960 960 960"
-                            width="24px" fill="#5f6368">
-                            <path d="m280-400 200-200 200 200H280Z" />
-                        </svg>
-                        <svg v-show="!expanded" xmlns="http://www.w3.org/2000/svg" height="24px"
-                            viewBox="0 -960 960 960" width="24px" fill="#5f6368">
-                            <path d="M480-360 280-560h400L480-360Z" />
-                        </svg>
                     </div>
+
+                    <Icon v-show="!expandedDescription" name="arrow-down" />
+                    <Icon v-show="expandedDescription" name="arrow-up" />
                 </header>
-                <div :style="`max-height: ${expanded ? '200px' : '0'}`" class="content overflow-y-scroll">
-                    <p :style="`opacity: ${expanded ? '1' : '0'}`" class="mt-3 info">
+
+                <div :style="`max-height: ${expandedDescription ? '200px' : '0'}`" class="content overflow-y-scroll">
+                    <p :style="`opacity: ${expandedDescription ? '1' : '0'}`" class="mt-3 info">
                         {{ props.project.description.length > 0 ? props.project.description
                             : 'El proyecto aún no tiene descripción' }}
+                    </p>
+                </div>
+            </article>
+
+            <article class="pt-3 pb-1 px-3 question cursor-pointer mb-3" @click="expandedTargets = !expandedTargets">
+                <header class="flex justify-between items-center pb-2">
+                    <div class="font-semibold text-xl ">
+                        Objetivos
+                    </div>
+
+                    <Icon v-show="!expandedTargets" name="arrow-down" />
+                    <Icon v-show="expandedTargets" name="arrow-up" />
+                </header>
+
+                <div :style="`max-height: ${expandedTargets ? '200px' : '0'}`" class="content overflow-y-scroll">
+                    <p :style="`opacity: ${expandedTargets ? '1' : '0'}`" class="mt-3 info">
+                        {{ props.project.target?.length > 0 ? props.project.description
+                            : 'El proyecto aún no tiene objetivos' }}
                     </p>
                 </div>
             </article>
@@ -87,8 +100,8 @@
                     :visualizations-role="props.visualizationsRole" />
             </div>
             <div v-for="document in props.project.documents">
-                <CardDocumentDetails :visualizations-role="props.visualizationsRole" :currentYear="currentYear" :document="document"
-                    :project="project" />
+                <CardDocumentDetails :visualizations-role="props.visualizationsRole" :currentYear="currentYear"
+                    :document="document" :project="project" />
             </div>
         </div>
     </div>
@@ -96,7 +109,7 @@
     <!-- MODAL NEW FILE-FOLDER -->
     <div class="modal fade" id="modalNewDocument" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" style="width: 350px; height: 600px;">
-            <div class="modal-content position-relative p-3" style="max-height: 450px;">
+            <div class="modal-content position-relative p-3" style="max-height: 600px;">
                 <div class="d-flex flex-row justify-center px-3">
                     <h4 class="my-3" style="color: #39A900;"><strong>Nuevo</strong></h4>
 
@@ -142,22 +155,25 @@
                             <label class="font-bold">Nombre</label>
                             <br>
                             <input v-model="formUploadFile.name" class="form-control" type="text" placeholder="Nombre">
-                            <div v-if="formUploadFile.errors.name">{{
-                                formUploadFile.errors.name }}</div>
+                            <div v-if="formUploadFile.errors.name" class="text-red-500">
+                                {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
+                            </div>
                         </div>
                         <div class="mb-3 inputs-file">
                             <label for="formFile" class="font-bold form-label">Seleccionar archivo</label>
                             <input @input="formUploadFile.document = $event.target.files[0]" class="form-control"
                                 type="file" id="formFile">
-                            <div v-if="formUploadFile.errors.document">{{
-                                formUploadFile.errors.document }}</div>
+                            <div v-if="formUploadFile.errors.document" class="text-red-500">
+                                {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.File) }}
+                            </div>
                         </div>
                         <div class="mb-3 inputs-link hidden">
                             <label for="link" class="font-bold form-label">Link</label>
-                            <input v-model="formUploadFile.link" class="form-control"
-                                type="url" id="link" placeholder="ingrese el link">
-                            <div v-if="formUploadFile.errors.link">{{
-                                formUploadFile.errors.link }}</div>
+                            <input v-model="formUploadFile.link" class="form-control" type="url" id="link"
+                                placeholder="ingrese el link">
+                            <div v-if="formUploadFile.errors.link" class="text-red-500">
+                                {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
+                            </div>
                         </div>
                         <div class="row justify-center p-3 my-3">
                             <button type="submit" class="btn py-2"
@@ -173,8 +189,8 @@
 
     <!-- MODAL associate USERS -->
     <div class="modal fade" id="modalAssociateUser" tabindex="-1" aria-hidden="true">
-        <div class="modal-dialog" style="width: 420px; height: 580px;">
-            <div class="modal-content position-relative p-3" style="max-height: 580px;">
+        <div class="modal-dialog" style="width: 420px; height: 660px;">
+            <div class="modal-content position-relative p-3" style="max-height: 660px;">
                 <div class="d-flex flex-row justify-center px-3">
                     <h4 class="my-3" :style="`color: ${role == 'investigator' ? '#39A900' : '#FF6624'}`">
                         <strong>
@@ -187,10 +203,13 @@
                 <div class="modal-body px-3">
                     <form @submit.prevent="associateUser">
                         <div class="px-4 py-2 mb-3 border-2 rounded-lg">
-                            <div class="">
-                                <label class="font-bold pb-2">
-                                    {{ role == Constants.COLLABORATOR ? 'Colaboradores' : 'Investigadores' }}
-                                </label>
+                            
+                            <div class="row justify-center mb-3 mt-1">
+                                <div class="col-11 flex pl-1 pr-3 py-2 rounded-2xl border-1 border-gray-300">
+                                    <Icon name="search" />
+                                    <input @keyup="search" type="text" v-model="searchValue" style="all: unset"
+                                        placeholder="Buscar">
+                                </div>
                             </div>
                             <div class="h-64">
                                 <div v-for="(user, index) in paginatedList" :key="user?.id"
@@ -206,7 +225,7 @@
                                 </div>
                             </div>
                             <div
-                                style="display: flex; flex-direction: row; justify-content: center; user-select: none;">
+                                style="display: flex; flex-direction: row; justify-content: center; user-select: none;" class="mt-2">
                                 <ul class="pagination cursor-pointer mt-1">
                                     <li class="page-item">
                                         <div class="page-link" aria-label="Previous" @click="decreasePaginatorIndex()">
@@ -216,20 +235,20 @@
                                     </li>
                                     <li v-if="paginatedList.length > 0" class="page-item">
                                         <div class="page-link" @click="getCurrentPageList(1)"
-                                            :style="paginatorIndex === 1 ? currentColor : 'color: #39A900; background-color: #FFFFFF;'">
+                                            :style="paginatorIndex === 1 ? currentColor : defaultColor">
                                             1
                                         </div>
                                     </li>
                                     <li v-if="totalPages > 2" class="page-item" aria-current="page">
                                         <div class="page-link"
-                                            :style="paginatorIndex !== 1 && paginatorIndex !== totalPages ? currentColor : 'color: #39A900; background-color: #FFFFFF;'">
+                                            :style="paginatorIndex !== 1 && paginatorIndex !== totalPages ? currentColor : defaultColor">
                                             {{ paginatorIndex != 1 && paginatorIndex != totalPages ? paginatorIndex :
                                                 '...' }}
                                         </div>
                                     </li>
                                     <li v-if="totalPages > 1" class="page-item" aria-current="page">
                                         <div class="page-link" @click="getCurrentPageList(totalPages)"
-                                            :style="paginatorIndex === totalPages ? currentColor : 'color: #39A900; background-color: #FFFFFF;'">
+                                            :style="paginatorIndex === totalPages ? currentColor : defaultColor">
                                             {{ totalPages }}
                                         </div>
                                     </li>
@@ -319,7 +338,8 @@ const nameRoleVisualization = {
 }
 
 let role = ""
-const currentColor = ref('')
+const currentColor = ref('');
+const defaultColor = ref('');
 //PAGINATION
 const paginatedList = ref([])
 const totalPages = ref(0);
@@ -363,6 +383,34 @@ const decreasePaginatorIndex = () => {
 }
 //END PAGINATION
 
+//FILTER
+const search = (e) => {
+    const inputSearch = e.target.value
+    let filtered = [];
+    if (role === 'investigator') {
+        filtered = props.investigators.filter((user) =>
+            user.name.toLowerCase().includes(inputSearch.toLowerCase()));
+    } else {
+        filtered = props.collaborators.filter((user) =>
+            user.name.toLowerCase().includes(inputSearch.toLowerCase()));
+    }
+
+    if (filtered.length <= pageElements) {
+        totalPages.value = 1
+    } else {
+        totalPages.value = Math.ceil(filtered.length / pageElements);
+    }
+    let indexBase = (paginatorIndex.value * pageElements) - pageElements;
+    let indexEnd = paginatorIndex.value * pageElements;
+
+    if (indexEnd / pageElements > totalPages.value) {
+        indexBase = 0
+        indexEnd = pageElements
+    }
+    users.value = filtered
+    filtered = filtered.slice(indexBase, indexEnd)
+    paginatedList.value = filtered;
+}
 
 const validateVisualizationRole = () => {
     let visualization_role_id = props.folder != null ? props.folder.visualization_role_id : props.project.visualization_role_id
@@ -409,7 +457,8 @@ const changeTypeUserToInvestigator = () => {
         }
     })
     role = Constants.INVESTIGATOR
-    currentColor.value = 'color: #FFFFFF; background-color: #39A900;'
+    currentColor.value = 'color: #FFFFFF; background-color: #39A900;';
+    defaultColor.value = 'color: #39A900; background-color: #FFFFFF;';
 }
 
 const changeTypeUserToCollaborator = () => {
@@ -425,6 +474,8 @@ const changeTypeUserToCollaborator = () => {
     })
     role = Constants.COLLABORATOR;
     currentColor.value = 'color: #FFFFFF; background-color: #FF6624;'
+    defaultColor.value = 'color: #FF6624; background-color: #FFFFFF;';
+
 }
 
 const changeDisplayCheckBox = (inputs, display) => {
@@ -533,7 +584,8 @@ const closeModalAssociateUsers = () => {
 }
 
 //Accordion
-const expanded = ref(false);
+const expandedDescription = ref(false);
+const expandedTargets = ref(false);
 
 </script>
 
@@ -547,20 +599,19 @@ const expanded = ref(false);
 }
 
 .question {
-    border: 2px solid #EFEFEF;
-    margin-bottom: 1rem;
+    border: 2px solid #e7e3e3;
     border-radius: 10px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.09);
 }
 
 .content {
     max-height: 0;
-    transition: max-height 0.2s ease-out;
+    transition: max-height 0.3s ease-out;
 }
 
 .info {
     z-index: -1;
     opacity: 0;
-    transition: opacity 0.2s ease-out;
+    transition: opacity 0.3s ease-out;
 }
 </style>
