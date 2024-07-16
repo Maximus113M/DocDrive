@@ -5,7 +5,8 @@ export class AppFunctions{
         Password: 'password',
         startDate: 'startDate',
         endDate: 'endDate',
-        Investigator: 'investigators'
+        Investigator: 'investigators',
+        File: 'file',
       });
 
     static getErrorTranslate= (error)=>{
@@ -22,6 +23,8 @@ export class AppFunctions{
                 return 'Debe coincidir con el año de vigencia y ser mayor a la inicial';
             case 'investigators':
                 return 'Debes seleccionar al menos un investigador';
+            case 'file':
+                return 'Debes seleccionar un archivo';
         }    
     }
 }

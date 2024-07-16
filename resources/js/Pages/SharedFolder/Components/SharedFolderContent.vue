@@ -71,13 +71,14 @@
                                     <div v-if="doc" class="flex">
                                         <input class="my-auto mr-2" type="checkbox" :id="'checkbox-' + doc.id"
                                             v-model="formAssociateDocument.documentsID" :value="doc.id">
-                                        <label :for="'checkbox-' + doc.id">
-                                            {{ doc.name }}.{{ doc.format }}
-                                        </label>
-                                        <button type="button" class="ml-16" v-on:click="showPropsDocumentModal(doc)">
-                                            <Icon name="eye" />
-                                        </button>
-
+                                        <div class="w-full flex justify-between">
+                                            <div :for="'checkbox-' + doc.id">
+                                                {{ doc.name }}.{{ doc.format }}
+                                            </div>
+                                            <button type="button" class="" v-on:click="showPropsDocumentModal(doc)">
+                                                <Icon name="eye" />
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -184,7 +185,7 @@ const formAssociateDocument = useForm({
     documentsID: props.folder.documents.map(doc => doc.id),
 })
 
-const currentColor = ref('color: #FFFFFF; background-color: #39A900;')
+const currentColor = ref('color: #FFFFFF; background-color: #39A900;');
 const paginatedList = ref([])
 const totalPages = ref(0);
 const paginatorIndex = ref(1);
