@@ -1,7 +1,8 @@
 <template>
 
     <AuthLayout :role="role">
-        <ProjectContent :folder="folder" :collaborators="collaborators" :investigators="investigators" :current-year="currentYear" :project="project" :visualizations-role="visualizationsRole"/>
+        <ProjectContent :folder="folder" :collaborators="collaborators" :investigators="investigators" :current-year="currentYear" 
+        :project="project" :visualizations-role="visualizationsRole" :document-categories="documentCategories" />
     </AuthLayout>
 
 </template>
@@ -18,7 +19,8 @@ const {  project } = defineProps({
     visualizationsRole: {type: Array, required: true},
     currentYear: {type: String, required: true},
     investigators: {type: Array, required: true},
-    collaborators: { type: Array, required: true }
+    collaborators: { type: Array, required: true },
+    documentCategories: { type: Array, required: true },
 })
 
 const authUser = usePage().props.value.auth.user ?? null;

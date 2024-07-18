@@ -6,6 +6,7 @@ use App\Models\Project;
 use App\Models\Validity;
 use App\Models\User;
 use App\Models\VisualizationRole;
+use App\Models\DocumentCategory;
 use App\Providers\AuthServiceProvider;
 use App\Providers\RoleServiceProvider;
 use App\Rules\ValidityEndYearProject;
@@ -188,7 +189,8 @@ class ProjectController extends Controller
             "currentYear" => $validityYear,
             "visualizationsRole" => VisualizationRole::all(),
             "investigators" => InvestigatorController::getInvestigators(),
-            "collaborators" => CollaboratorController::getCollaborators()
+            "collaborators" => CollaboratorController::getCollaborators(),
+            "documentCategories" => DocumentCategory::all(),
         ]);
     }
 

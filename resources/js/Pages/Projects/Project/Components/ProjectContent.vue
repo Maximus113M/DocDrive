@@ -109,8 +109,8 @@
                     :visualizations-role="props.visualizationsRole" />
             </div>
             <div v-for="document in props.project.documents">
-                <CardDocumentDetails :visualizations-role="props.visualizationsRole" :currentYear="currentYear"
-                    :document="document" :project="project" />
+                <CardDocumentDetails :visualizations-role="props.visualizationsRole" :currentYear="Number(currentYear)"
+                    :document="document" :project="project" :document-categories="categoryList"/>
             </div>
         </div>
     </div>
@@ -167,6 +167,14 @@
                             <div v-if="formUploadFile.errors.name" class="text-red-500">
                                 {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
                             </div>
+                        </div>
+                        <div class="mb-3 inputs-file">
+                            <div class="font-bold">Categorías</div>
+                            <select v-model="formUploadFile.category" class="form-select">
+                                <option v-for="category in categoryList" :value="category.id"
+                                    :key="category.id">{{
+                                        category.name }}</option>
+                            </select>
                         </div>
                         <div class="mb-3 inputs-file">
                             <label for="formFile" class="font-bold form-label">Seleccionar archivo</label>
@@ -300,7 +308,8 @@ const props = defineProps({
     project: { type: Object, required: true },
     visualizationsRole: { type: Array, required: true },
     investigators: { type: Array, required: true },
-    collaborators: { type: Array, required: true }
+    collaborators: { type: Array, required: true },
+    documentCategories: { type: Array, required: true },
 })
 const backRoute = () => {
     if (props.folder && props.folder.father_id) {
@@ -311,6 +320,8 @@ const backRoute = () => {
         return `/${props.currentYear}/projects`
     }
 }
+
+const categoryList = ref([{ name: 'Ninguna', id: -1 }, ...props.documentCategories]);
 
 const users = ref([])
 
@@ -326,7 +337,8 @@ const formUploadFile = useForm({
     name: null,
     visualizationRoleSelected: null,
     folder_id: props.folder != null ? props.folder.id : null,
-    link: null
+    link: null,
+    category: null,
 })
 
 const checkedUploadFile = ref(null)

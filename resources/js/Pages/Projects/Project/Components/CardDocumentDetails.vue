@@ -88,6 +88,14 @@
                                 {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
                             </div>
                         </div>
+                        <div class="mb-3 inputs-file">
+                            <div class="font-bold">Categorías</div>
+                            <select v-model="documentForm.category" class="form-select">
+                                <option v-for="category in categoryList" :value="category.id"
+                                    :key="category.id">{{
+                                        category.name }}</option>
+                            </select>
+                        </div>
 
                         <div class="col-span-2 row justify-center p-3 ">
                             <button type="submit" class="btn py-2" style="background-color: #39A900; color: white; ">
@@ -116,11 +124,13 @@ const props = defineProps({
     project: { type: Object, },
     folderID: { type: Number },
     visualizationsRole: { type: Array },
+    documentCategories: { type: Array, required: true },
 });
 
 const documentForm = useForm({
     name: props.document.name,
     visualizationRoleSelected: props.document.visualization_role_id,
+    category: null
 })
 const isAssociatedUser = ref(null);
 const authUser = usePage().props.value.auth.user;
@@ -139,6 +149,7 @@ const showDocumentRoute = props.project ? route('file.index', {
 
 onMounted(() => {
     isAssociatedUser.value = verifiyAssociatedUser()
+    console.log(props.project)
 })
 
 

@@ -50,6 +50,17 @@ class DocumentController extends Controller
         if (request("folder_id") !== null) {
             $document->folder()->attach(request("folder_id"));
         }
+        if(request("category")){
+            $category= request("category");
+            error_log("$category");
+            if($category === -1){
+                error_log("Nel $category");
+                //$document->categories()->detach();
+            }else{
+                error_log("Category $category");
+                $document->categories()->attach($category);
+            }
+        }
 
         return redirect()->back()->with("message", "Documento creado correctamente");
     }
@@ -212,7 +223,17 @@ class DocumentController extends Controller
         $document = Document::find($documentID);
         $document->name = request("name");
         $document->visualization_role_id = request("visualizationRoleSelected");
-
+        if(request("category")){
+            $category= request("category");
+            error_log("$category");
+            if($category === -1){
+                error_log("Nel $category");
+                $document->categories()->detach();
+            }else{
+                error_log("Category $category");
+                $document->categories()->attach($category);
+            }
+        }
         $document->update();
 
         return redirect()->back()->with("message", "Documento actualizado correctamente");
