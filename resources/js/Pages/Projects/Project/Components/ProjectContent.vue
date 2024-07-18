@@ -29,7 +29,7 @@
                 </header>
 
                 <div :style="`max-height: ${expandedDescription ? '200px' : '0'}`" class="content overflow-y-scroll">
-                    <p :style="`opacity: ${expandedDescription ? '1' : '0'}`" class="mt-3 info">
+                    <p :style="`opacity: ${expandedDescription ? '1' : '0'}`" class="mt-2 info">
                         {{ props.project.description.length > 0 ? props.project.description
                             : 'El proyecto aún no tiene descripción' }}
                     </p>
@@ -47,9 +47,18 @@
                 </header>
 
                 <div :style="`max-height: ${expandedTargets ? '200px' : '0'}`" class="content overflow-y-scroll">
-                    <p :style="`opacity: ${expandedTargets ? '1' : '0'}`" class="mt-3 info">
-                        {{ props.project.target?.length > 0 ? props.project.description
-                            : 'El proyecto aún no tiene objetivos' }}
+                    <p :style="`opacity: ${expandedTargets ? '1' : '0'}`" class="mt-2 info">
+                    <div v-for="(target, index) of targetList">
+                        <div class="flex">
+                            <strong class="mr-1">{{ `${index + 1}. ` }}</strong>
+                            {{ ` ${target}` }}
+                        </div>
+                    </div>
+
+                    <div v-if="targetList.length <= 0">
+                        El proyecto aún no tiene objetivos
+                    </div>
+
                     </p>
                 </div>
             </article>
@@ -203,12 +212,11 @@
                 <div class="modal-body px-3">
                     <form @submit.prevent="associateUser">
                         <div class="px-4 py-2 mb-3 border-2 rounded-lg">
-                            
+
                             <div class="row justify-center mb-3 mt-1">
                                 <div class="col-11 flex pl-1 pr-3 py-2 rounded-2xl border-1 border-gray-300">
                                     <Icon name="search" />
-                                    <input @keyup="search" type="text" v-model="searchValue" style="all: unset"
-                                        placeholder="Buscar">
+                                    <input @keyup="search" type="text" style="all: unset" placeholder="Buscar">
                                 </div>
                             </div>
                             <div class="h-64">
@@ -224,8 +232,8 @@
                                     </div>
                                 </div>
                             </div>
-                            <div
-                                style="display: flex; flex-direction: row; justify-content: center; user-select: none;" class="mt-2">
+                            <div style="display: flex; flex-direction: row; justify-content: center; user-select: none;"
+                                class="mt-2">
                                 <ul class="pagination cursor-pointer mt-1">
                                     <li class="page-item">
                                         <div class="page-link" aria-label="Previous" @click="decreasePaginatorIndex()">
@@ -282,7 +290,7 @@ import ProjectCard from '@/Pages/Projects/Components/CardProject.vue';
 import CardDocumentDetails from '@/Pages/Projects/Project/Components/CardDocumentDetails.vue';
 import { CustomAlertsService } from '@/services/customAlerts';
 import { Link, useForm, usePage } from '@inertiajs/inertia-vue3'
-import { ref, onMounted, onBeforeMount } from 'vue';
+import { ref, onMounted } from 'vue';
 import Icon from '@/Shared/Icon.vue';
 import { AppFunctions, Constants } from '@/core/appFunctions';
 
@@ -327,7 +335,6 @@ const checkedUploadLink = ref(null)
 
 
 const isAssociatedUser = ref(null);
-
 const authUser = usePage().props.value.auth.user;
 
 
@@ -340,15 +347,22 @@ const nameRoleVisualization = {
 let role = ""
 const currentColor = ref('');
 const defaultColor = ref('');
+
 //PAGINATION
 const paginatedList = ref([])
 const totalPages = ref(0);
 const paginatorIndex = ref(1);
 const pageElements = 8;
 
+const targetList = ref([]);
+
 onMounted(() => {
-    isAssociatedUser.value = verifiyAssociatedUser(),
-        validateVisualizationRole()
+    isAssociatedUser.value = verifiyAssociatedUser();
+    validateVisualizationRole();
+    const targets = JSON.parse(props.project.target);
+    for (let key in targets) {
+        targetList.value.push(targets[key]);
+    }
 });
 
 const getCurrentPageList = (index) => {

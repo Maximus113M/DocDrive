@@ -16,7 +16,8 @@
         <div class="pt-3 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
 
             <button v-if="role == 'admin'" class="col" data-bs-toggle="modal" data-bs-target="#modalSaveProject">
-                <div class="folder border-3 rounded-4 py-3 bg-white" style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.06);">
+                <div class="folder border-3 rounded-4 py-3 bg-white"
+                    style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.06);">
                     <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
                         fill="#000000">
                         <path
@@ -53,37 +54,28 @@
                         <div class="row">
                             <div class="col-12 col-lg-8">
                                 <div class="row">
-                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 mb-3">
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 mb-2">
                                         <label for="name" class="font-bold">Nombre</label>
                                         <input v-model="form.name" type="text" class="form-control" id="name">
                                         <div v-if="form.errors.name" class="text-center text-red-400">
                                             {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}</div>
                                     </div>
 
-                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 mb-3">
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 mb-2">
                                         <label for="startDate" class="font-bold">Fecha Inicio</label>
                                         <input v-model="form.startDate" type="date" class="form-control" id="startDate">
                                         <div v-if="form.errors.startDate" class="text-center text-red-400">{{
                                             AppFunctions.getErrorTranslate(AppFunctions.Errors.startDate) }}</div>
                                     </div>
-                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 mb-3">
+                                    <div class="col-12 col-sm-6 col-md-6 col-lg-6 col-xl-3 mb-2">
                                         <label for="endDate" class="font-bold">Fecha Fin</label>
                                         <input v-model="form.endDate" type="date" class="form-control" id="endDate">
                                         <div v-if="form.errors.endDate" class="text-center text-red-400">
                                             {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.endDate) }}
                                         </div>
                                     </div>
-                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-9 mb-3">
-                                        <label for="description" class="font-bold">Descripción</label>
-                                        <textarea v-model="form.description" type="text-area"
-                                            class="form-control lg:h-48 max-h-48" id="description" />
-                                        <div v-if="form.errors.description" class="text-center text-red-400">
-                                            {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
-                                        </div>
-                                    </div>
-                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-3 mb-3">
-                                        <label class="font-bold">Visualización</label>
-                                        <br>
+                                    <div class="col-12 col-sm-12 col-md-12 col-lg-12 col-xl-6 mb-2">
+                                        <div class="font-bold">Visualización</div>
                                         <select v-model="form.visualizationRoleSelected" class="form-select">
                                             <option v-for="vRole in visualizationsRole" :value="vRole.id"
                                                 :key="vRole.id">{{
@@ -94,30 +86,73 @@
                                             {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
                                         </div>
                                     </div>
+                                    <div class="col-12 mb-2">
+                                        <label for="description" class="font-bold">Descripción</label>
+                                        <textarea v-model="form.description" type="text-area"
+                                            class="form-control lg:h-40 max-h-40" id="description" />
+                                        <div v-if="form.errors.description" class="text-center text-red-400">
+                                            {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
+                                        </div>
+                                    </div>
+                                    <div class="col-12 mb-2">
+                                        <div class="font-bold">Objetivos</div>
+                                        <div class="col-12 flex">
+                                            <input type="text" v-model="target" placeholder="Agregar"
+                                                class='col-11 px-3 py-2 rounded-xl border-1 border-gray-300' />
+                                            <div class="flex justify-center">
+                                                <button type="button" :onclick="addNewTarget" class="col-1">
+                                                    <Icon name="add-circle" />
+                                                </button>
+                                            </div>
+                                        </div>
+                                        <div
+                                            class="col-12 col-xl-11 h-40 max-h-40 overflow-y-auto py-2 rounded-xl border-1 border-gray-300">
+                                            <div v-for="(target, index) in targetList" class="flex pl-2 pr-3">
+                                                <div class="mr-2">
+                                                    <Icon name="cancel" @click="removeTarget(index)" class="cursor-pointer"/>
+                                                </div>
+
+                                                <div class="flex">
+                                                    <strong class="mr-1">{{ `${index + 1}. ` }}</strong>
+                                                    {{ ` ${target}` }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
 
                             <div class="col-12 col-lg-4">
-                                <div class="px-3 py-2 mb-3 border-2 rounded-lg" style="height: 350px;">
+                                <div class="px-3 py-2 mb-2 border-2 rounded-lg" style="height: 550px;">
                                     <div class="text-center">
-                                        <label class="font-bold pb-2">Asociar Investigadores</label>
+                                        <div class="font-bold text-xl pb-2 mt-3">Asociar Investigadores</div>
                                     </div>
-                                    <div class="h-64">
+
+                                    <div class="row justify-center mb-4 mt-1">
+                                        <div class="col-11 flex pl-1 pr-3 py-2 rounded-2xl border-1 border-gray-300">
+                                            <Icon name="search" />
+                                            <input @keyup="search" type="text" style="all: unset"
+                                                placeholder="Buscar" />
+                                        </div>
+                                    </div>
+
+                                    <div class="h-80">
                                         <div v-for="(investigator, index) in paginatedList" :key="investigator?.id"
                                             :style="index % 2 != 0 ? 'background-color: #FFFFFF' : 'background-color: #F3F3F3'"
                                             class="px-2 py-1">
                                             <div v-if="investigator">
                                                 <input class="mr-2" type="checkbox" :id="'checkbox-' + investigator.id"
                                                     v-model="form.investigatorsID" :value="investigator.id">
-                                                <label :for="'checkbox-' + investigator.id">{{ investigator.name
-                                                    }}</label>
+                                                <label :for="'checkbox-' + investigator.id">
+                                                    {{ investigator.name }}
+                                                </label>
                                             </div>
                                         </div>
                                     </div>
 
                                     <div
                                         style="display: flex; flex-direction: row; justify-content: center; user-select: none;">
-                                        <ul class="pagination cursor-pointer mt-1">
+                                        <ul class="pagination cursor-pointer mt-4">
                                             <li class="page-item">
                                                 <div class="page-link" aria-label="Previous"
                                                     @click="decreasePaginatorIndex()">
@@ -133,7 +168,8 @@
                                             <li v-if="totalPages > 2" class="page-item" aria-current="page">
                                                 <div class="page-link"
                                                     :style="paginatorIndex !== 1 && paginatorIndex !== totalPages ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;'">
-                                                    {{ paginatorIndex != 1 && paginatorIndex != totalPages? paginatorIndex : '...' }}
+                                                    {{ paginatorIndex != 1 && paginatorIndex != totalPages ?
+                                                        paginatorIndex : '...' }}
                                                 </div>
                                             </li>
                                             <li v-if="totalPages > 1" class="page-item" aria-current="page">
@@ -201,8 +237,8 @@ const form = useForm({
     description: null,
     investigatorsID: [],
     validityID: null,
-    visualizationRoleSelected: null
-    //target: null,
+    visualizationRoleSelected: null,
+    target: null,
 })
 
 const nameRoleVisualization = {
@@ -211,18 +247,43 @@ const nameRoleVisualization = {
     "general-public": "Publico en general"
 }
 
-const modal = ref(null)
+const modal = ref(null);
 
+const target = ref('');
+const targetList = ref([]);
+const toJsonTargets = ref({})
 
-const paginatedList = ref([])
-const totalPages = ref(0);
-const paginatorIndex = ref(1);
-const pageElements = 8;
+const addNewTarget = () => {
+    if(target.value.trim().length < 1 ) return;
+
+    targetList.value.push(target.value);
+    target.value = '';
+    //Set targets map
+    toJsonTargets.value = {};
+    targetList.value.forEach((target, index) => {
+        toJsonTargets.value[index] = target;
+    });
+}
+
+const removeTarget = (index) => {
+    targetList.value.splice(index, 1);
+    //Set targets map
+    toJsonTargets.value = {};
+    targetList.value.forEach((target, index) => {
+        toJsonTargets.value[index] = target;
+    });
+}
 
 onBeforeMount(() => {
     totalPages.value = Math.ceil(props.investigators.length / pageElements);
     getCurrentPageList(1);
 });
+
+//Pagination
+const paginatedList = ref([])
+const totalPages = ref(0);
+const paginatorIndex = ref(1);
+const pageElements = 10;
 
 const getCurrentPageList = (index) => {
     if (index != paginatorIndex.value) {
@@ -254,8 +315,34 @@ const decreasePaginatorIndex = () => {
         getCurrentPageList(paginatorIndex.value);
     }
 }
+//End Pagination
+
+//FILTER
+const search = (e) => {
+    const inputSearch = e.target.value
+    let filtered = props.investigators.filter((user) =>
+        user.name.toLowerCase().includes(inputSearch.toLowerCase()));
+
+    if (filtered.length <= pageElements) {
+        totalPages.value = 1
+    } else {
+        totalPages.value = Math.ceil(filtered.length / pageElements);
+    }
+    let indexBase = (paginatorIndex.value * pageElements) - pageElements;
+    let indexEnd = paginatorIndex.value * pageElements;
+
+    if (indexEnd / pageElements > totalPages.value) {
+        indexBase = 0
+        indexEnd = pageElements
+    }
+
+    filtered = filtered.slice(indexBase, indexEnd)
+    paginatedList.value = filtered;
+}
 
 const saveProject = () => {
+    form.target= JSON.stringify(toJsonTargets.value);
+    debugger
     form.validityID = props.validityID
     form.post(route('project.store'), {
         onSuccess: () => {
@@ -272,6 +359,11 @@ const showSuccessMessage = () => {
 }
 
 const closeModal = () => {
+    //Reset targets
+    targetList.value.length = 0;
+    target.value = '';
+    toJsonTargets.value = {};
+
     form.reset();
     form.clearErrors();
     const modalBootstrap = bootstrap.Modal.getInstance(modal.value)

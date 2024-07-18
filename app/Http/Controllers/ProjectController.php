@@ -40,6 +40,7 @@ class ProjectController extends Controller
         $project->validity_id = request("validityID");
         $project->visualization_role_id = request("visualizationRoleSelected");
         $project->description = request("description");
+        $project->target = request("target");
         
         if(request("startDate") || request("endDate")){
             $validity= Validity::where('id', request("validityID"))->first();
@@ -77,7 +78,6 @@ class ProjectController extends Controller
     }
 
     /**
-     @TODO: FALTA IMPLEMENTAR EL CAMPO TARGET DE PROJECT
      * 
      * Actualizar un projecto
      */
@@ -111,7 +111,9 @@ class ProjectController extends Controller
         $project->description = request("description");
         $project->startDate = request("startDate");
         $project->endDate = request("endDate");
-        $project->target = request("target");
+        if(request("target")){
+            $project->target = request("target");
+        }
         $project->visualization_role_id = request("visualizationRoleSelected");
         $project->update();
 

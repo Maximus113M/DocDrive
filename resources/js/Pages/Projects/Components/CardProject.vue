@@ -1,170 +1,3 @@
-<script setup>
-import { Link, useForm, usePage } from '@inertiajs/inertia-vue3';
-import FoldersDropdown from '@/Shared/FoldersDropdown.vue';
-import BreezeDropdownLink from '@/Components/DropdownLink.vue';
-import Icon from '@/Shared/Icon.vue';
-import { onMounted, ref } from 'vue';
-import { CustomAlertsService } from '@/services/customAlerts';
-import { AppFunctions } from '@/core/appFunctions';
-
-
-
-const props = defineProps({
-    folder: { type: Object },
-    project: { type: Object },
-    currentYear: { type: String },
-    visualizationsRole: { type: Array },
-    isSharedResource: { type: Boolean }
-});
-
-
-const form = useForm({
-    name: !props.folder ? props.project.name : props.folder.name,
-    description: !props.folder ? props.project.description : props.folder.description,
-    startDate: !props.folder ? props.project.startDate : null,
-    endDate: !props.folder ? props.project.endDate : null,
-    visualizationRoleSelected: !props.folder ? props.project.visualization_role_id : props.folder.visualization_role_id,
-    isSharedResource: !props.isSharedResource ?? null
-    //target: project.target,
-})
-
-
-const isAssociatedUser = ref(null);
-
-const authUser = usePage().props.value.auth.user ?? null;
-
-onMounted(() => {
-    isAssociatedUser.value = verifiyAssociatedUser()
-})
-
-
-const onClicks = (event) => {
-    event.preventDefault();
-}
-const idModal = "modal-update-".concat(props.folder ? props.folder.id : props.project.id)
-
-const verifiyAssociatedUser = () => {
-    if (!props.project) {
-        return false
-    }
-    if (authUser == null || !props.project.users) {
-        return false;
-    }
-    for (let index = 0; index < props.project.users.length; index++) {
-        const user = props.project.users[index];
-        if (user.id == authUser.id) {
-            return true;
-        }
-    }
-    return false;
-}
-
-const nameRoleVisualization = {
-    "private": "Privado",
-    "public": "Público",
-    "general-public": "Publico en general"
-}
-
-const update = () => {
-    if (!props.project && props.isSharedResource) {
-        form.put(route("shared.folder.update", { "folderID": props.folder.id }), {
-            onSuccess: () => showMessage(),
-        })
-    } else if (props.folder && !props.isSharedResource) {
-        form.put(route("folder.update", { "folderID": props.folder.id, "projectID": props.project.id }), {
-            onSuccess: () => showMessage(),
-        })
-    } else {
-        form.put(route("project.update", { "projectID": props.project.id }), {
-            onSuccess: () => showMessage(),
-        })
-    }
-}
-
-
-const showMessage = () => {
-    const flashMessage = usePage().props.value.flash.message
-    const errorMessage = usePage().props.value.flash.errorMessage
-
-    if (flashMessage) {
-        CustomAlertsService.successConfirmAlert({
-            title: flashMessage,
-        })
-    } else if (errorMessage) {
-        CustomAlertsService.generalAlert({
-            title: 'Error',
-            text: errorMessage,
-            icon: "error",
-            isToast: true,
-        })
-    }
-    closeModalUpdate()
-}
-
-const openModalUpdate = () => {
-    form.clearErrors();
-    form.reset();
-    console.log(modal);
-    const modal = document.getElementById(idModal)
-    const modalBootstrap = new bootstrap.Modal(modal)
-    modalBootstrap.show()
-}
-
-
-const closeModalUpdate = () => {
-    const modal = document.getElementById(idModal)
-    const modalBootstrap = bootstrap.Modal.getInstance(modal)
-    modalBootstrap.hide()
-}
-
-const openModalDelete = () => {
-    let text = ""
-    let route = ""
-    if (props.folder && !props.isSharedResource) {
-        text = "la carpeta"
-        route = `/project/${props.project.id}/folder/${props.folder.id}/destroy`
-    } else if (props.folder && props.isSharedResource) {
-        text = "la carpeta"
-        route = `/shared/folder/${props.folder.id}/destroy`
-    } else {
-        text = "el proyecto"
-        route = `/project/${props.project.id}/destroy`
-    }
-    CustomAlertsService.deleteConfirmAlert({
-        title: 'Eliminar ' + text,
-        text: `¿Deseas eliminar ${text} ? Esta acción no se puede revertir`
-    }).then((result) => {
-        if (result.isConfirmed) {
-            form.delete(route, {
-                onSuccess: () => {
-                    showMessage()
-                },
-                onError: () => {
-                    CustomAlertsService.generalAlert({
-                        title: 'Error',
-                        text: `Ha ocurrido un error al ${text}`,
-                        icon: "error",
-                        isToast: true,
-                    })
-                }
-            })
-        }
-    })
-
-}
-
-const selectRoute = () => {
-    if (props.folder && !props.isSharedResource) {
-        return `/${props.currentYear}/projects/${props.project.id}/folders/${props.folder.id}`
-    } else if (props.folder && props.isSharedResource) {
-        return `/shared/${props.folder.id}`
-    } else {
-        return `/${props.currentYear}/projects/${props.project.id}`
-    }
-}
-
-</script>
-
 <template>
     <!-- PROJECT DESIGN -->
     <div class="col position-relative" style="max-width: 300px;">
@@ -172,7 +5,7 @@ const selectRoute = () => {
         <Link method="get" :href="selectRoute()" class="text-decoration-none">
         <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40"
             style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.06);">
-            
+
             <div class="cursor-auto absolute left-0 ml-2" data-toggle="tooltip" data-placement="top"
                 title="¡Datos del proyecto incompleto!"
                 v-if="props.project && props.project.isIncomplete && isAssociatedUser">
@@ -244,7 +77,7 @@ const selectRoute = () => {
     <!-- MODAL EDIT PROJECT -->
     <div class="modal fade" :id="!props.folder ? `modal-update-${props.project.id}` : `modal-update-${props.folder.id}`"
         tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-        <div class="modal-dialog" style="width: 600px;">
+        <div class="modal-dialog" style="min-width: 600px;">
             <div class="modal-content position-relative p-3">
                 <div class="d-flex flex-row justify-center px-3">
                     <h4 class="my-3" style="color: #39A900;"><strong>Actualizar</strong></h4>
@@ -296,6 +129,33 @@ const selectRoute = () => {
                                 {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
                             </div>
                         </div>
+
+                        <div class="col-span-2 mb-2">
+                            <div class="font-bold">Objetivos</div>
+                            <div class="col-12 flex">
+                                <input type="text" v-model="target" placeholder="Agregar"
+                                    class='col-11 px-3 py-2 rounded-xl border-1 border-gray-300' />
+                                <div class="flex justify-center">
+                                    <button type="button" :onclick="addNewTarget" class="col-1">
+                                        <Icon name="add-circle" />
+                                    </button>
+                                </div>
+                            </div>
+                            <div
+                                class="col-12 col-xl-11 h-40 max-h-40 overflow-y-auto py-2 rounded-xl border-1 border-gray-300">
+                                <div v-for="(target, index) in targetList" class="flex pl-2 pr-3">
+                                    <div class="mr-2">
+                                        <Icon name="cancel" @click="removeTarget(index)" class="cursor-pointer" />
+                                    </div>
+
+                                    <div class="flex">
+                                        <strong class="mr-1">{{ `${index + 1}. ` }}</strong>
+                                        {{ ` ${target}` }}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
                         <div class="col-span-2 row justify-center p-3 ">
                             <button type="submit" class="btn py-2"
                                 style="background-color: #39A900; color: white; "><strong>Actualizar</strong></button>
@@ -306,6 +166,218 @@ const selectRoute = () => {
         </div>
     </div>
 </template>
+
+
+<script setup>
+import { Link, useForm, usePage } from '@inertiajs/inertia-vue3';
+import FoldersDropdown from '@/Shared/FoldersDropdown.vue';
+import BreezeDropdownLink from '@/Components/DropdownLink.vue';
+import Icon from '@/Shared/Icon.vue';
+import { onMounted, ref, onBeforeMount } from 'vue';
+import { CustomAlertsService } from '@/services/customAlerts';
+import { AppFunctions } from '@/core/appFunctions';
+
+const props = defineProps({
+    folder: { type: Object },
+    project: { type: Object },
+    currentYear: { type: String },
+    visualizationsRole: { type: Array },
+    isSharedResource: { type: Boolean }
+});
+
+const isAssociatedUser = ref(null);
+const authUser = usePage().props.value.auth.user ?? null;
+
+const target = ref('');
+const targetList = ref([]);
+const toJsonTargets = ref({})
+
+onBeforeMount(() => {
+    //setTargets();
+});
+
+onMounted(() => {
+    isAssociatedUser.value = verifiyAssociatedUser()
+});
+
+const setTargets = () => {
+    if (props.project) {
+        toJsonTargets.value = JSON.parse(props.project.target);
+        targetList.value = [];
+
+        for (let key in toJsonTargets.value) {
+            let target = toJsonTargets.value[key];
+            targetList.value.push(target);
+        }
+
+    }
+    console.log(toJsonTargets.value);
+    console.log(targetList.value);
+
+    debugger
+}
+
+const addNewTarget = () => {
+    if (target.value.trim().length < 1) return;
+
+    targetList.value.push(target.value);
+    target.value = '';
+    //Set targets map
+    toJsonTargets.value = {};
+    targetList.value.forEach((target, index) => {
+        toJsonTargets.value[index] = target;
+    });
+}
+
+const removeTarget = (index) => {
+    targetList.value.splice(index, 1);
+    //Set targets map
+    toJsonTargets.value = {};
+    targetList.value.forEach((target, index) => {
+        toJsonTargets.value[index] = target;
+    });
+}
+
+const form = useForm({
+    name: !props.folder ? props.project.name : props.folder.name,
+    description: !props.folder ? props.project.description : props.folder.description,
+    startDate: !props.folder ? props.project.startDate : null,
+    endDate: !props.folder ? props.project.endDate : null,
+    visualizationRoleSelected: !props.folder ? props.project.visualization_role_id : props.folder.visualization_role_id,
+    isSharedResource: !props.isSharedResource ?? null,
+    target: null,
+});
+
+const onClicks = (event) => {
+    event.preventDefault();
+}
+const idModal = "modal-update-".concat(props.folder ? props.folder.id : props.project.id)
+
+const verifiyAssociatedUser = () => {
+    if (!props.project) {
+        return false
+    }
+    if (authUser == null || !props.project.users) {
+        return false;
+    }
+    for (let index = 0; index < props.project.users.length; index++) {
+        const user = props.project.users[index];
+        if (user.id == authUser.id) {
+            return true;
+        }
+    }
+    return false;
+}
+
+const nameRoleVisualization = {
+    "private": "Privado",
+    "public": "Público",
+    "general-public": "Publico en general"
+}
+
+const update = () => {
+    if (!props.project && props.isSharedResource) {
+        form.put(route("shared.folder.update", { "folderID": props.folder.id }), {
+            onSuccess: () => showMessage(),
+        })
+    } else if (props.folder && !props.isSharedResource) {
+        form.put(route("folder.update", { "folderID": props.folder.id, "projectID": props.project.id }), {
+            onSuccess: () => showMessage(),
+        })
+    } else {
+        form.target = JSON.stringify(toJsonTargets.value);
+        form.put(route("project.update", { "projectID": props.project.id }), {
+            onSuccess: () => showMessage(),
+        })
+    }
+}
+
+
+const showMessage = () => {
+    const flashMessage = usePage().props.value.flash.message
+    const errorMessage = usePage().props.value.flash.errorMessage
+
+    if (flashMessage) {
+        CustomAlertsService.successConfirmAlert({
+            title: flashMessage,
+        })
+    } else if (errorMessage) {
+        CustomAlertsService.generalAlert({
+            title: 'Error',
+            text: errorMessage,
+            icon: "error",
+            isToast: true,
+        })
+    }
+    closeModalUpdate()
+}
+
+const openModalUpdate = () => {
+    //Reset targets
+    setTargets();
+
+    form.clearErrors();
+    form.reset();
+    console.log(modal);
+    const modal = document.getElementById(idModal)
+    const modalBootstrap = new bootstrap.Modal(modal)
+    modalBootstrap.show()
+}
+
+
+const closeModalUpdate = () => {
+    const modal = document.getElementById(idModal)
+    const modalBootstrap = bootstrap.Modal.getInstance(modal)
+    modalBootstrap.hide()
+}
+
+const openModalDelete = () => {
+    let text = ""
+    let route = ""
+    if (props.folder && !props.isSharedResource) {
+        text = "la carpeta"
+        route = `/project/${props.project.id}/folder/${props.folder.id}/destroy`
+    } else if (props.folder && props.isSharedResource) {
+        text = "la carpeta"
+        route = `/shared/folder/${props.folder.id}/destroy`
+    } else {
+        text = "el proyecto"
+        route = `/project/${props.project.id}/destroy`
+    }
+    CustomAlertsService.deleteConfirmAlert({
+        title: 'Eliminar ' + text,
+        text: `¿Deseas eliminar ${text} ? Esta acción no se puede revertir`
+    }).then((result) => {
+        if (result.isConfirmed) {
+            form.delete(route, {
+                onSuccess: () => {
+                    showMessage()
+                },
+                onError: () => {
+                    CustomAlertsService.generalAlert({
+                        title: 'Error',
+                        text: `Ha ocurrido un error al ${text}`,
+                        icon: "error",
+                        isToast: true,
+                    })
+                }
+            })
+        }
+    })
+
+}
+
+const selectRoute = () => {
+    if (props.folder && !props.isSharedResource) {
+        return `/${props.currentYear}/projects/${props.project.id}/folders/${props.folder.id}`
+    } else if (props.folder && props.isSharedResource) {
+        return `/shared/${props.folder.id}`
+    } else {
+        return `/${props.currentYear}/projects/${props.project.id}`
+    }
+}
+
+</script>
 
 <style scoped>
 .validity-font {
