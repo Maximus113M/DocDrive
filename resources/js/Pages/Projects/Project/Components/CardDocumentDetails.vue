@@ -91,9 +91,9 @@
                         <div class="mb-3 inputs-file">
                             <div class="font-bold">Categorías</div>
                             <select v-model="documentForm.category" class="form-select">
-                                <option v-for="category in categoryList" :value="category.id"
-                                    :key="category.id">{{
-                                        category.name }}</option>
+                                <option v-for="category in props.documentCategories" :value="category.id"
+                                    :key="category.id">
+                                    {{category.name }}</option>
                             </select>
                         </div>
 
@@ -130,7 +130,7 @@ const props = defineProps({
 const documentForm = useForm({
     name: props.document.name,
     visualizationRoleSelected: props.document.visualization_role_id,
-    category: null
+    category: props.document.categories?.length > 0 ? props.document.categories[0].id : null,
 })
 const isAssociatedUser = ref(null);
 const authUser = usePage().props.value.auth.user;
@@ -149,7 +149,9 @@ const showDocumentRoute = props.project ? route('file.index', {
 
 onMounted(() => {
     isAssociatedUser.value = verifiyAssociatedUser()
-    console.log(props.project)
+    console.log('--------------------------------------')
+    console.log(props.document);
+    
 })
 
 

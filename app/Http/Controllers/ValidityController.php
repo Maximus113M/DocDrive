@@ -300,7 +300,7 @@ class ValidityController extends Controller
         } else {
 
             $projects = Project::where("name", "like", "%{$consulta}%")->get();
-            $documents = Document::where("name", "like", "%{$consulta}%")->with(['project', 'folder.project'])->get();
+            $documents = Document::where("name", "like", "%{$consulta}%")->with(['project', 'folder.project', 'categories'])->get();
             $folders = Folder::where("name", "like", "%{$consulta}%")
                 ->where(function ($query) {
                     $query->whereNotNull('father_id')
@@ -308,7 +308,7 @@ class ValidityController extends Controller
                 })->with('project')->get();
             $documentsForCategory = Document::whereHas('categories', function ($query) use ($consulta) {
                 $query->where('name', "like", "%{$consulta}%");
-            })->with(['project', 'folder.project'])->get();
+            })->with(['project', 'folder.project', 'categories'])->get();
         }
 
         /**
@@ -328,7 +328,8 @@ class ValidityController extends Controller
             "isAuthenticated" => AuthServiceProvider::checkAuthenticated(),
             "role" => AuthServiceProvider::getRole(),
             "visualizationsRole" => VisualizationRole::all(),
-            "documentsCategory" => $documentsForCategory
+            "documentsForCategory" => $documentsForCategory,
+            "documentCategories" => DocumentCategory::all(),
         ]);
     }
 }

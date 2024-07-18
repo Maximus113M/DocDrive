@@ -149,7 +149,7 @@ class ProjectController extends Controller
      */
     public function index($validityYear, $projectID)
     {
-        $project = Project::with('users')->find($projectID);
+        $project = Project::with(['users', 'documents.categories'])->find($projectID);
         $userRole = AuthServiceProvider::getRole();
         if ($userRole == RoleServiceProvider::INVESTIGATOR || $userRole == RoleServiceProvider::COLLABORATOR) {
             $usersID = $project->users->pluck('id')->toArray();

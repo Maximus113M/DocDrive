@@ -110,7 +110,7 @@
             </div>
             <div v-for="document in props.project.documents">
                 <CardDocumentDetails :visualizations-role="props.visualizationsRole" :currentYear="Number(currentYear)"
-                    :document="document" :project="project" :document-categories="categoryList"/>
+                    :document="document" :project="project" :documentCategories="categoryList"/>
             </div>
         </div>
     </div>

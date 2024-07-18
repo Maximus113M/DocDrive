@@ -22583,13 +22583,14 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   setup: function setup(__props, _ref) {
+    var _props$document$categ;
     var __expose = _ref.expose;
     __expose();
     var props = __props;
     var documentForm = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.useForm)({
       name: props.document.name,
       visualizationRoleSelected: props.document.visualization_role_id,
-      category: null
+      category: ((_props$document$categ = props.document.categories) === null || _props$document$categ === void 0 ? void 0 : _props$document$categ.length) > 0 ? props.document.categories[0].id : null
     });
     var isAssociatedUser = (0,vue__WEBPACK_IMPORTED_MODULE_3__.ref)(null);
     var authUser = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_0__.usePage)().props.value.auth.user;
@@ -22604,7 +22605,8 @@ __webpack_require__.r(__webpack_exports__);
     });
     (0,vue__WEBPACK_IMPORTED_MODULE_3__.onMounted)(function () {
       isAssociatedUser.value = verifiyAssociatedUser();
-      console.log(props.project);
+      console.log('--------------------------------------');
+      console.log(props.document);
     });
     var onClicks = function onClicks(event) {
       event.preventDefault();
@@ -23243,6 +23245,8 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */ });
 /* harmony import */ var _Layouts_Authenticated_vue__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @/Layouts/Authenticated.vue */ "./resources/js/Layouts/Authenticated.vue");
 /* harmony import */ var _Pages_Search_components_ContentIndex_vue__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! @/Pages/Search/components/ContentIndex.vue */ "./resources/js/Pages/Search/components/ContentIndex.vue");
+/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+
 
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
@@ -23280,7 +23284,11 @@ __webpack_require__.r(__webpack_exports__);
       type: Array,
       required: true
     },
-    documentsCategory: {
+    documentsForCategory: {
+      type: Array,
+      required: true
+    },
+    documentCategories: {
       type: Array,
       required: true
     }
@@ -23292,7 +23300,8 @@ __webpack_require__.r(__webpack_exports__);
     var __returned__ = {
       props: props,
       AuthLayout: _Layouts_Authenticated_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
-      ContentIndex: _Pages_Search_components_ContentIndex_vue__WEBPACK_IMPORTED_MODULE_1__["default"]
+      ContentIndex: _Pages_Search_components_ContentIndex_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
+      onMounted: vue__WEBPACK_IMPORTED_MODULE_2__.onMounted
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
       enumerable: false,
@@ -23323,6 +23332,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _services_customAlerts__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @/services/customAlerts */ "./resources/js/services/customAlerts.js");
 /* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
 /* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
+function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _unsupportedIterableToArray(arr) || _nonIterableSpread(); }
+function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method."); }
+function _unsupportedIterableToArray(o, minLen) { if (!o) return; if (typeof o === "string") return _arrayLikeToArray(o, minLen); var n = Object.prototype.toString.call(o).slice(8, -1); if (n === "Object" && o.constructor) n = o.constructor.name; if (n === "Map" || n === "Set") return Array.from(o); if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray(o, minLen); }
+function _iterableToArray(iter) { if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter); }
+function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) return _arrayLikeToArray(arr); }
+function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len = arr.length; for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i]; return arr2; }
 
 
 
@@ -23360,7 +23375,11 @@ __webpack_require__.r(__webpack_exports__);
       type: Array,
       required: true
     },
-    documentsCategory: {
+    documentsForCategory: {
+      type: Array,
+      required: true
+    },
+    documentCategories: {
       type: Array,
       required: true
     }
@@ -23380,6 +23399,9 @@ __webpack_require__.r(__webpack_exports__);
     });
     (0,vue__WEBPACK_IMPORTED_MODULE_7__.onMounted)(function () {
       validityList.value = props.validities;
+      console.log('INICIO DE BUSQUEDA');
+      console.log(props.documentsForCategory);
+      console.log(props.documentCategories);
     });
     // onUpdated(() => {
     //     if (searchValue.value.length === 0) {
@@ -23395,6 +23417,10 @@ __webpack_require__.r(__webpack_exports__);
     //     }
     // })
 
+    var categoryList = (0,vue__WEBPACK_IMPORTED_MODULE_7__.ref)([{
+      name: 'Ninguna',
+      id: -1
+    }].concat(_toConsumableArray(props.documentCategories)));
     var saveValidity = function saveValidity() {
       form.post(route(checkedSharedFolder.value.checked ? 'shared.folder.store' : 'validity.store'), {
         onSuccess: function onSuccess() {
@@ -23450,6 +23476,7 @@ __webpack_require__.r(__webpack_exports__);
       searchValue: searchValue,
       modal: modal,
       form: form,
+      categoryList: categoryList,
       saveValidity: saveValidity,
       showSuccessMessage: showSuccessMessage,
       closeModal: closeModal,
@@ -27483,7 +27510,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       return $setup.documentForm.category = $event;
     }),
     "class": "form-select"
-  }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)(_ctx.categoryList, function (category) {
+  }, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.props.documentCategories, function (category) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("option", {
       value: category.id,
       key: category.id
@@ -27912,8 +27939,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       currentYear: Number($props.currentYear),
       document: document,
       project: $props.project,
-      "document-categories": $setup.categoryList
-    }, null, 8 /* PROPS */, ["visualizations-role", "currentYear", "document", "project", "document-categories"])]);
+      documentCategories: $setup.categoryList
+    }, null, 8 /* PROPS */, ["visualizations-role", "currentYear", "document", "project", "documentCategories"])]);
   }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" MODAL NEW FILE-FOLDER "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_21, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_22, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [_hoisted_24, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
     onSubmit: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)($setup.upload, ["prevent"])
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_26, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
@@ -28108,7 +28135,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
   }, {
     "default": (0,vue__WEBPACK_IMPORTED_MODULE_0__.withCtx)(function () {
       return [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ContentIndex"], {
-        documentsCategory: $props.documentsCategory,
+        documentCategories: $setup.props.documentCategories,
         projects: $setup.props.projects,
         documents: $setup.props.documents,
         folders: $setup.props.folders,
@@ -28116,8 +28143,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         sharedResources: $setup.props.sharedResources,
         isAuthenticated: $setup.props.isAuthenticated,
         role: $setup.props.role,
-        "visualizations-role": $props.visualizationsRole
-      }, null, 8 /* PROPS */, ["documentsCategory", "projects", "documents", "folders", "validities", "sharedResources", "isAuthenticated", "role", "visualizations-role"])];
+        "visualizations-role": $props.visualizationsRole,
+        "documents-for-category": $setup.props.documentsForCategory
+      }, null, 8 /* PROPS */, ["documentCategories", "projects", "documents", "folders", "validities", "sharedResources", "isAuthenticated", "role", "visualizations-role", "documents-for-category"])];
     }),
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["role"]);
@@ -28263,7 +28291,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "all": "unset"
     },
     placeholder: "Buscar"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.searchValue]])])]), $setup.props.validities.length < 1 && $setup.props.sharedResources.length < 1 && $setup.props.projects.length < 1 && $setup.props.folders.length < 1 && $setup.props.documents.length < 1 && $setup.props.documentsCategory < 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_7, [].concat(_hoisted_9))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [$setup.props.validities.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.props.validities, function (v) {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.searchValue]])])]), $setup.props.validities.length < 1 && $setup.props.sharedResources.length < 1 && $setup.props.projects.length < 1 && $setup.props.folders.length < 1 && $setup.props.documents.length < 1 && $setup.props.documentsForCategory < 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_7, [].concat(_hoisted_9))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [$setup.props.validities.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.props.validities, function (v) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       key: v.id
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ValidityCard"], {
@@ -28301,17 +28329,19 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       "visualizations-role": $setup.props.visualizationsRole,
       currentYear: document.project ? Number(document.project.startDate.split('-')[0]) : Number(document.folder[0].project.startDate.split('-')[0]),
       document: document,
-      project: document.project ? document.project : document.folder[0].project
-    }, null, 8 /* PROPS */, ["visualizations-role", "currentYear", "document", "project"])]);
-  }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.props.documentsCategory.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_25, [_hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.props.documentsCategory, function (document) {
+      project: document.project ? document.project : document.folder[0].project,
+      "document-categories": $setup.categoryList
+    }, null, 8 /* PROPS */, ["visualizations-role", "currentYear", "document", "project", "document-categories"])]);
+  }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.props.documentsForCategory.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_25, [_hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.props.documentsForCategory, function (document) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       key: document.id
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["CardDocumentDetails"], {
       "visualizations-role": $setup.props.visualizationsRole,
       currentYear: document.project ? Number(document.project.startDate.split('-')[0]) : Number(document.folder[0].project.startDate.split('-')[0]),
       document: document,
-      project: document.project ? document.project : document.folder[0].project
-    }, null, 8 /* PROPS */, ["visualizations-role", "currentYear", "document", "project"])]);
+      project: document.project ? document.project : document.folder[0].project,
+      "document-categories": $setup.categoryList
+    }, null, 8 /* PROPS */, ["visualizations-role", "currentYear", "document", "project", "document-categories"])]);
   }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)])]);
 }
 
