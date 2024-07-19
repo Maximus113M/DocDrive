@@ -334,6 +334,7 @@ class ValidityController extends Controller
             "visualizationsRole" => VisualizationRole::all(),
             "documentsForCategory" => $documentsForCategory,
             "documentCategories" => DocumentCategory::all(),
+            "query" => $consulta,
         ]);
     }
 }

@@ -1,6 +1,5 @@
 <template>
-    <div class="w-full h-full p-5 relative">
-        <!-- TODO -->
+    <div class="w-full h-fit p-5 relative">
         <!-- Buscador -->
         <div class="w-full absolute left-0 top-5 flex-wrap sm:flex justify-between px-4">
 
@@ -10,15 +9,19 @@
                     <Icon name="back" />
                     </Link>
                 </div>
-                <div class="text-2xl font-bold text-color-gray">
+                <div class="text-xl font-bold">
                     Resultados
                 </div>
-            </div>
+                <div class="text-xl font-bold text-gray-600 ml-2">
+                    {{ `"${query}"` }}
+                </div>
 
-            <div class="flex pl-1 pr-3 py-2 rounded-2xl border-1 border-gray-300">
+            </div>
+            <!-- TODO HACER ALGUN DIA EL BUSCADOR :v -->
+            <!-- <div class="flex pl-1 pr-3 py-2 rounded-2xl border-1 border-gray-300">
                 <Icon name="search" />
                 <input type="text" v-model="searchValue" style="all: unset" placeholder="Buscar">
-            </div>
+            </div> -->
         </div>
 
         <div class="w-full h-full flex justify-center items-center"
@@ -80,7 +83,8 @@
                     <div v-for="document in props.documentsForCategory" :key="document.id">
                         <CardDocumentDetails :visualizations-role="props.visualizationsRole" :currentYear="document.project ? Number(document.project.startDate.split('-')[0])
                             : Number(document.folder[0].project.startDate.split('-')[0])" :document="document"
-                            :project="document.project ? document.project : document.folder[0].project" :document-categories="categoryList"/>
+                            :project="document.project ? document.project : document.folder[0].project"
+                            :document-categories="categoryList" />
                     </div>
                 </div>
             </div>
@@ -111,6 +115,7 @@ const props = defineProps({
     visualizationsRole: { type: Array, required: true },
     documentsForCategory: { type: Array, required: true },
     documentCategories: { type: Array, required: true },
+    query: { type: String, required: true },
 });
 
 const checkedValidity = ref(null)
@@ -123,7 +128,9 @@ const modal = ref(null)
 const form = useForm({
     year: null,
     name: null,
-})
+});
+
+const query = ref('');
 
 onMounted(() => {
     validityList.value = props.validities;
@@ -131,6 +138,11 @@ onMounted(() => {
     console.log('INICIO DE BUSQUEDA')
     console.log(props.documentsForCategory)
     console.log(props.documentCategories)
+    if (props.query) {
+        query.value = props.query.replace(' ', '+')
+        console.log(query.value)
+    }
+
 });
 // onUpdated(() => {
 //     if (searchValue.value.length === 0) {
@@ -146,7 +158,7 @@ onMounted(() => {
 //     }
 // })
 
-const categoryList = ref([{ name: 'Ninguna', id: -1 }, ...props.documentCategories]);
+const categoryList = ref([...props.documentCategories]);
 
 
 const saveValidity = () => {
