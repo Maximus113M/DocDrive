@@ -21514,6 +21514,15 @@ var dialogTheme = '#39A900';
       }
     });
     var editCategory = function editCategory() {
+      if (props.currentCategory.id === 1) {
+        _services_customAlerts__WEBPACK_IMPORTED_MODULE_2__.CustomAlertsService.generalAlert({
+          title: 'Actualización invalida',
+          text: "Esta categor\xEDa no puede ser actualizada",
+          isToast: true,
+          icon: 'warning'
+        });
+        return;
+      }
       form.put(route('document-category.update', {
         'categoryID': props.currentCategory.id
       }), {
@@ -21665,6 +21674,15 @@ var tableTheme = '#39A900';
       };
     };
     var showDeleteConfirm = function showDeleteConfirm(categoryId) {
+      if (categoryId === 1) {
+        _services_customAlerts__WEBPACK_IMPORTED_MODULE_8__.CustomAlertsService.generalAlert({
+          title: 'Eliminación invalida',
+          text: "Esta categor\xEDa no puede ser eliminada",
+          isToast: true,
+          icon: 'warning'
+        });
+        return;
+      }
       _services_customAlerts__WEBPACK_IMPORTED_MODULE_8__.CustomAlertsService.deleteConfirmAlert({
         title: 'Eliminar categoría',
         text: '¿Deseas eliminar la categoría seleccionada? Esta acción no se puede revertir'
@@ -25991,7 +26009,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     type: "text",
     "class": "form-control",
     id: "name"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.name]]), $setup.form.errors.name ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.AppFunctions.getErrorTranslate($setup.AppFunctions.Errors.Field)), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.name]]), $setup.form.errors.name ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.AppFunctions.getErrorTranslate($setup.AppFunctions.Errors.Category)), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     disabled: $setup.form.processing,
     type: "submit",
     "class": "btn py-2 text-white",
@@ -26079,7 +26097,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     type: "text",
     "class": "form-control",
     id: "name"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.name]]), $setup.form.errors.name ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.AppFunctions.getErrorTranslate($setup.AppFunctions.Errors.Field)), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
+  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.form.name]]), $setup.form.errors.name ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)($setup.AppFunctions.getErrorTranslate($setup.AppFunctions.Errors.Category)), 1 /* TEXT */)) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_11, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("button", {
     disabled: $setup.form.processing,
     type: "submit",
     "class": "btn py-2 text-white",
@@ -30593,7 +30611,8 @@ _defineProperty(AppFunctions, "Errors", Object.freeze({
   startDate: 'startDate',
   endDate: 'endDate',
   Investigator: 'investigators',
-  File: 'file'
+  File: 'file',
+  Category: 'category'
 }));
 _defineProperty(AppFunctions, "getErrorTranslate", function (error) {
   switch (error) {
@@ -30611,6 +30630,8 @@ _defineProperty(AppFunctions, "getErrorTranslate", function (error) {
       return 'Debes seleccionar al menos un investigador';
     case 'file':
       return 'Debes seleccionar un archivo';
+    case 'category':
+      return 'Categoría invalida o existente';
   }
 });
 var Constants = /*#__PURE__*/_createClass(function Constants() {

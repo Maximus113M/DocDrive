@@ -16,8 +16,9 @@
                         <div class="mb-3">
                             <label for="name" class="font-bold">Nombre</label>
                             <input v-model="form.name" type="text" class="form-control" id="name">
-                            <div class="text-red-400" v-if="form.errors.name">{{
-                                AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}</div>
+                            <div class="text-red-400" v-if="form.errors.name">
+                                {{AppFunctions.getErrorTranslate(AppFunctions.Errors.Category) }}
+                            </div>
                         </div>
                         <div class="row justify-center p-3 mt-5">
                             <button :disabled="form.processing" type="submit" class="btn py-2 text-white"

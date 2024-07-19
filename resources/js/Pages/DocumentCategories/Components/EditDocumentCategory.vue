@@ -17,7 +17,9 @@
                         <div class="mb-3">
                             <label for="name" class="font-bold">Nombre</label>
                             <input v-model="form.name" type="text" class="form-control" id="name" >
-                            <div class="text-red-400" v-if="form.errors.name">{{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}</div>
+                            <div class="text-red-400" v-if="form.errors.name">
+                                {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Category) }}
+                            </div>
                         </div>
                         
                         <div class="row justify-center p-3 mt-5">
@@ -65,6 +67,15 @@ onBeforeUpdate(() => {
 })
 
 const editCategory = () => {
+    if(props.currentCategory.id === 1){
+        CustomAlertsService.generalAlert({
+                title: 'Actualización invalida',
+                text: `Esta categoría no puede ser actualizada`,
+                isToast: true,
+                icon: 'warning'
+            });
+        return;
+    }
     form.put(route('document-category.update', { 'categoryID': props.currentCategory.id }), {
         onSuccess: () => {
             closeModal();
@@ -72,7 +83,7 @@ const editCategory = () => {
                 title: 'Actualización exitosa',
                 text: `La categoría ha sido actualizada exitosamente`,
                 isToast: true,
-            })
+            });
         },
         onError: () => {
             CustomAlertsService.generalAlert({
@@ -80,9 +91,9 @@ const editCategory = () => {
                 text: `Ha ocurrido un error al actualizar la categoría seleccionada`,
                 icon: "error",
                 isToast: true,
-            })
+            });
         }
-    })
+    });
 }
 
 const closeModal = () => {

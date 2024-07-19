@@ -7,6 +7,7 @@ export class AppFunctions{
         endDate: 'endDate',
         Investigator: 'investigators',
         File: 'file',
+        Category: 'category'
       });
 
     static getErrorTranslate= (error)=>{
@@ -25,6 +26,8 @@ export class AppFunctions{
                 return 'Debes seleccionar al menos un investigador';
             case 'file':
                 return 'Debes seleccionar un archivo';
+            case 'category':
+                return 'Categoría invalida o existente';
         }    
     }
 }
