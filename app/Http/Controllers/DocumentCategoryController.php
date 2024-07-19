@@ -22,7 +22,7 @@ class DocumentCategoryController extends Controller
             "categories" => DocumentCategory::all(),
             "isAuthenticated" => AuthServiceProvider::checkAuthenticated(),
             "role" => AuthServiceProvider::getRole()
-        ]);
+        ])->with("currentRoute", 'categories');
     }
 
 

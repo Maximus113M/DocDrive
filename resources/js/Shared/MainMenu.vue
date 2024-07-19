@@ -1,8 +1,8 @@
 <template>
   <div class="flex-col relative h-full">
-    
-    <div class="mb-3">
-      <Link class="group flex items-center py-3 text-decoration-none" method="get"  :href="route('validity.index')"
+
+    <div class="mb-2">
+      <Link class="group flex items-center py-3 text-decoration-none" method="get" :href="route('validity.index')"
         @click="selectedIndex = 0">
       <Icon name="dashboard" class="mr-2 w-7 h-7"
         :class="selectedIndex === 0 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
@@ -11,7 +11,7 @@
       </Link>
     </div>
 
-    <div v-if="role === 'admin'" class="mb-3">
+    <div v-if="role === 'admin'" class="mb-2">
       <Link class="group flex items-center py-3 text-decoration-none" method="get" :href="route('investigator.index')"
         @click="selectedIndex = 1">
       <Icon name="investigators" class="mr-2 w-7 h-7"
@@ -22,7 +22,7 @@
       </Link>
     </div>
 
-    <div v-if="role === 'admin' || role === 'investigator'" class="mb-3">
+    <div v-if="role === 'admin' || role === 'investigator'" class="mb-2">
       <Link class="group flex items-center py-3 text-decoration-none" method="get" :href="route('collaborator.index')"
         @click="selectedIndex = 2">
       <Icon name="collaborators" class="mr-2 w-7 h-7"
@@ -33,9 +33,9 @@
       </Link>
     </div>
 
-    <div v-if="role === 'admin'" class="mb-3">
-      <Link class="group flex items-center py-3 text-decoration-none" method="get" :href="route('document-category.index')"
-        @click="selectedIndex = 3">
+    <div v-if="role === 'admin'" class="mb-2">
+      <Link class="group flex items-center py-3 text-decoration-none" method="get"
+        :href="route('document-category.index')" @click="selectedIndex = 3">
       <Icon name="document-categories" class="mr-2 w-7 h-7"
         :class="selectedIndex === 3 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
       <div :class="selectedIndex === 3 ? 'text-white text-lg font-bold' : 'text-gray-300 group-hover:text-white'">
@@ -43,58 +43,82 @@
       </div>
       </Link>
     </div>
-    
-    <div v-if="role != 'guest'" class="mb-3">
+
+    <div v-if="role != 'guest'" class="mb-2">
       <Link class="group flex items-center py-3 text-decoration-none" method="get" :href="route('user.edit')"
-      @click="selectedIndex = 4">
+        @click="selectedIndex = 4">
       <Icon name="settings" class="mr-2 w-7 h-7"
-      :class="selectedIndex === 4 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
+        :class="selectedIndex === 4 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
       <div :class="selectedIndex === 4 ? 'text-white text-lg font-bold' : 'text-gray-300 group-hover:text-white'">
         Ajustes
       </div>
-    </Link>
-  </div>
-
-  <div v-if="role == 'guest'" class="mb-3">
-    <Link class="group flex items-center py-3 text-decoration-none"  method="get" :href="route('login')" >
-    <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex lg:ml-2">
-      <div class="font-bold no-underline cursor-pointer text-lime-600 bg-white px-5 py-2 rounded-lg">
-      Ingresar</div>
+      </Link>
     </div>
-    </Link>
-  </div>
-  
-  <div v-if="isSideMenu" class="flex justify-center opacity-30 lg:mt-4 lg:mb-5  xxl:my-5 select-none">
-    <img src="/images/logos/logo-sena-blanco-fix.png" width="140px" alt="logo-sena">
-  </div>
 
-  <div v-if="role != 'guest'" class="md:mt-5">
-    <Link class="group flex items-center py-3 text-decoration-none" method="post" :href="route('logout')" @click="selectedIndex = 4">
+    <div v-if="role == 'guest'" class="mb-2">
+      <Link class="group flex items-center py-3 text-decoration-none" method="get" :href="route('login')">
+      <div class="hidden space-x-8 sm:-my-px sm:ml-10 sm:flex lg:ml-2">
+        <div class="font-bold no-underline cursor-pointer text-lime-600 bg-white px-5 py-2 rounded-lg">
+          Ingresar</div>
+      </div>
+      </Link>
+    </div>
+
+    <div v-if="isSideMenu" class="flex justify-center opacity-30 lg:mt-4 lg:mb-5  xxl:my-5 select-none">
+      <img src="/images/logos/logo-sena-blanco-fix.png" width="140px" alt="logo-sena">
+    </div>
+
+    <div v-if="role != 'guest'" class="md:mt-5">
+      <Link class="group flex items-center py-3 text-decoration-none" method="post" :href="route('logout')"
+        @click="selectedIndex = 4">
       <Icon name="logout" class="mr-2 w-7 h-7"
         :class="selectedIndex === 5 ? 'fill-white' : 'fill-gray-300 group-hover:fill-white'" />
       <div :class="selectedIndex === 5 ? 'text-white text-lg font-bold' : 'text-gray-300 group-hover:text-white'">Cerrar
         Sesión
       </div>
-    </Link>
-  </div>
+      </Link>
+    </div>
 
   </div>
 </template>
 
 <script setup>
 import Icon from '@/Shared/Icon.vue'
-import { Link } from '@inertiajs/inertia-vue3';
-import { ref, onMounted} from 'vue';
+import { Link, usePage } from '@inertiajs/inertia-vue3';
+import { ref, onMounted } from 'vue';
 
 defineProps({
   role: String,
-  isSideMenu: Boolean
-})
-
-onMounted(()=>{
-})
+  isSideMenu: Boolean,
+});
 
 const selectedIndex = ref(0)
+
+onMounted(() => {
+  const routes = usePage().props.value.currentRoute
+  console.log(routes)
+
+  switch (routes) {
+
+    case 'investigators':
+      selectedIndex.value = 1;
+      break;
+    case 'collaborators':
+      selectedIndex.value = 2;
+      break;
+    case 'categories':
+      selectedIndex.value = 3;
+      break;
+    case 'settings':
+      selectedIndex.value = 4;
+      break;
+
+    default:
+      selectedIndex.value = 0;
+      break;
+  }
+})
+
 
 </script>
 

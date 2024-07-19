@@ -15,6 +15,7 @@ const props = defineProps({
     visualizationsRole: { type: Array, required: true },
     documentsForCategory: { type: Array, required: true },
     documentCategories: { type: Array, required: true },
+    query: { type: String, required: true },
 })
 
 
@@ -26,7 +27,7 @@ const props = defineProps({
             <ContentIndex :documentCategories="props.documentCategories" :projects="props.projects" :documents="props.documents" :folders="props.folders"
                 :validities="props.validities" :sharedResources="props.sharedResources"
                 :isAuthenticated="props.isAuthenticated" :role="props.role" :visualizations-role="visualizationsRole" 
-                :documents-for-category="props.documentsForCategory" #content />
+                :documents-for-category="props.documentsForCategory" :query="props.query" #content />
     </AuthLayout>
 
 </template>
