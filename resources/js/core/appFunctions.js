@@ -1,4 +1,4 @@
-export class AppFunctions{
+export class AppFunctions {
     static Errors = Object.freeze({
         Field: 'field',
         Email: 'email',
@@ -8,9 +8,9 @@ export class AppFunctions{
         Investigator: 'investigators',
         File: 'file',
         Category: 'category'
-      });
+    });
 
-    static getErrorTranslate= (error)=>{
+    static getErrorTranslate = (error) => {
         switch (error) {
             case 'field':
                 return 'Debes completar este campo';
@@ -28,7 +28,20 @@ export class AppFunctions{
                 return 'Debes seleccionar un archivo';
             case 'category':
                 return 'Categoría invalida o existente';
-        }    
+        }
+    }
+
+    static getRoleName = (role) => {
+        switch (role) {
+            case 'admin':
+                return 'Administrador';
+            case 'investigator':
+                return 'Investigador';
+            case 'collaborator':
+                return 'Colaborador';
+            default:
+                return 'Visitante';
+        }
     }
 }
 

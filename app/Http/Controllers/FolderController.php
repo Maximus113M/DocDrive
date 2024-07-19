@@ -64,10 +64,10 @@ class FolderController extends Controller
      */
     public function show($validityYear, $projectID, $folderID)
     {
-        $project = Project::with('users')->find($projectID);
+        $project = Project::with(['users'])->find($projectID);
         $userRole = AuthServiceProvider::getRole();
-        $folder = Folder::find($folderID);
-        $childrenFolders = Folder::where('father_id', '=', $folder->id)->get();
+        $folder = Folder::with(['documents.categories'])->find($folderID);
+        $childrenFolders = Folder::where('father_id', '=', $folder->id)->with(['documents.categories'])->get();
         if ($userRole == RoleServiceProvider::INVESTIGATOR || $userRole == RoleServiceProvider::COLLABORATOR) {
             $usersID = $project->users->pluck('id')->toArray();
             $filteredDocuments = $folder->documents->filter(function ($document) use ($usersID) {

@@ -54,7 +54,7 @@ class CollaboratorController extends Controller
             "collaborators" => CollaboratorController::getCollaborators(),
             "isAuthenticated" => AuthServiceProvider::checkAuthenticated(),
             "role" => AuthServiceProvider::getRole()
-        ]);
+        ])->with("currentRoute", 'collaborators');
     }
 
 
