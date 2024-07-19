@@ -67,7 +67,7 @@
         <div class="w-full px-5 pt-1 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
 
             <button v-if="authUser != null && (authUser?.role.name == 'admin'
-                || (isAssociatedUser))" class="col" data-bs-toggle="modal" data-bs-target="#modalNewDocument">
+                || (isAssociatedUser))" class="col" data-bs-toggle="modal" data-bs-target="#modalNewDocument" @click="resetForms">
                 <div class="folder border-3 rounded-4 py-3 bg-white">
                     <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
                         fill="#000000">
@@ -106,11 +106,11 @@
 
             <div v-for="folder in props.project.folders">
                 <ProjectCard :folder="folder" :project="project" :current-year="currentYear"
-                    :visualizations-role="props.visualizationsRole" />
+                    :visualizations-role="props.visualizationsRole" :is-folder="true" />
             </div>
             <div v-for="document in props.project.documents">
                 <CardDocumentDetails :visualizations-role="props.visualizationsRole" :currentYear="Number(currentYear)"
-                    :document="document" :project="project" :documentCategories="categoryList"/>
+                    :document="document" :project="project" :documentCategories="documentCategories"/>
             </div>
         </div>
     </div>
@@ -171,7 +171,7 @@
                         <div class="mb-3 inputs-file">
                             <div class="font-bold">Categorías</div>
                             <select v-model="formUploadFile.category" class="form-select">
-                                <option v-for="category in categoryList" :value="category.id"
+                                <option v-for="category in props.documentCategories" :value="category.id"
                                     :key="category.id">{{
                                         category.name }}</option>
                             </select>
@@ -320,8 +320,6 @@ const backRoute = () => {
         return `/${props.currentYear}/projects`
     }
 }
-
-const categoryList = ref([{ name: 'Ninguna', id: -1 }, ...props.documentCategories]);
 
 const users = ref([])
 
@@ -607,6 +605,10 @@ const closeModalAssociateUsers = () => {
     const modalBootstrap = bootstrap.Modal.getInstance(modal)
     modalBootstrap.hide()
     formAssociateUser.reset()
+}
+
+const resetForms= ()=>{
+    formUploadFile.reset();
 }
 
 //Accordion

@@ -20,5 +20,6 @@ class DatabaseSeeder extends Seeder
         $this->call(InvestigatorSeeder::class);
         $this->call(CollaboratorSeeder::class);
         $this->call(ValiditySeeder::class);
+        $this->call(DocumentCategorySeeder::class);
     }
 }

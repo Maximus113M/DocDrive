@@ -58,7 +58,7 @@
     <!-- DOCUMENT DESIGN -->
 
     <!-- MODAL EDITAR-->
-    <div class="modal fade" :id="`modal-update-${props.document.id}`" tabindex="-1" aria-labelledby="exampleModalLabel"
+    <div class="modal fade" :id="`modal-update-document-${props.document.id}`" tabindex="-1" aria-labelledby="exampleModalLabel"
         aria-hidden="true">
         <div class="modal-dialog" style="width: 350px;">
             <div class="modal-content position-relative p-3" style="max-height: 800px;">
@@ -149,9 +149,8 @@ const showDocumentRoute = props.project ? route('file.index', {
 
 onMounted(() => {
     isAssociatedUser.value = verifiyAssociatedUser()
-    console.log('--------------------------------------')
-    console.log(props.document);
-    
+    // console.log('--------------------------------------')
+    // console.log(props.document);
 })
 
 
@@ -214,7 +213,7 @@ const showMessage = () => {
     }
 }
 
-const idModal = "modal-update-".concat(props.document.id)
+const idModal = "modal-update-document-".concat(props.document.id)
 
 
 const openModalUpdate = () => {

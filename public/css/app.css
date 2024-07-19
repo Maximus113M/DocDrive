@@ -1807,6 +1807,9 @@ select{
 .pl-1{
   padding-left: 0.25rem;
 }
+.pl-2{
+  padding-left: 0.5rem;
+}
 .pl-3{
   padding-left: 0.75rem;
 }
@@ -1833,9 +1836,6 @@ select{
 }
 .pt-8{
   padding-top: 2rem;
-}
-.pl-2{
-  padding-left: 0.5rem;
 }
 .text-left{
   text-align: left;

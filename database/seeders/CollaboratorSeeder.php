@@ -15,7 +15,7 @@ class CollaboratorSeeder extends Seeder
      */
     public function run()
     {   
-        for($i= 0; $i < 40; $i++){
+        for($i= 0; $i < 4; $i++){
             $index=$i+1;
             $admin = User::create([
                 'name' => "Colaborador $index",

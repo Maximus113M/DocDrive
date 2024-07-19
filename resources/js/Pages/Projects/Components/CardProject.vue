@@ -55,11 +55,11 @@
             <Icon name="project" />
 
 
-            <div v-if="!folder" class="validity-font">
+            <div v-if="!props.isFolder" class="validity-font">
                 Proyecto
             </div>
             <div class="max-h-12 max-w-44 overflow-hidden text-center">
-                <h6 v-if="!folder" class="text-black text-wrap text-ellipsis"><strong> {{ props.project.name.length > 40
+                <h6 v-if="!props.isFolder" class="text-black text-wrap text-ellipsis"><strong> {{ props.project.name.length > 40
                     ?
                     `${props.project.name.substring(0, 40)}...` : props.project.name }} </strong></h6>
                 <h6 v-else class="text-black text-wrap text-ellipsis"><strong> {{ props.folder.name.length > 40 ?
@@ -75,7 +75,7 @@
     <!--  -->
 
     <!-- MODAL EDIT PROJECT -->
-    <div class="modal fade" :id="!props.folder ? `modal-update-${props.project.id}` : `modal-update-${props.folder.id}`"
+    <div class="modal fade" :id="!props.isFolder ? `modal-update-${props.project.id}` : `modal-update-${props.folder.id}`"
         tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="min-width: 600px;">
             <div class="modal-content position-relative p-3">
@@ -95,14 +95,14 @@
                             </div>
                         </div>
 
-                        <div v-if="!props.folder" class="mb-3">
+                        <div v-if="!props.isFolder" class="mb-3">
                             <label for="startDate" class="font-bold form-label">Ingrese la fecha de inicio:</label>
                             <input v-model="form.startDate" type="date" class="form-control" id="startDate">
                             <div v-if="form.errors.startDate" class="text-center">
                                 {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.startDate) }}
                             </div>
                         </div>
-                        <div v-if="!props.folder" class="mb-3">
+                        <div v-if="!props.isFolder" class="mb-3">
                             <label for="endDate" class="font-bold form-label">Ingrese la fecha de fin:</label>
                             <input v-model="form.endDate" type="date" class="form-control" id="endDate">
                             <div v-if="form.errors.endDate" class="text-red-400">
@@ -121,7 +121,7 @@
                             </div>
                         </div>
 
-                        <div v-if="!props.folder" class="col-span-2 mb-3">
+                        <div v-if="!props.isFolder" class="col-span-2 mb-3">
                             <label for="description" class="font-bold form-label">Ingrese la descripción:</label>
                             <textarea v-model="form.description" type="text-area" class="form-control h-48 max-h-48"
                                 id="description" />
@@ -130,7 +130,7 @@
                             </div>
                         </div>
 
-                        <div class="col-span-2 mb-2">
+                        <div v-if="!props.isFolder" class="col-span-2 mb-2">
                             <div class="font-bold">Objetivos</div>
                             <div class="col-12 flex">
                                 <input type="text" v-model="target" placeholder="Agregar"
@@ -171,9 +171,8 @@
 <script setup>
 import { Link, useForm, usePage } from '@inertiajs/inertia-vue3';
 import FoldersDropdown from '@/Shared/FoldersDropdown.vue';
-import BreezeDropdownLink from '@/Components/DropdownLink.vue';
 import Icon from '@/Shared/Icon.vue';
-import { onMounted, ref, onBeforeMount } from 'vue';
+import { onMounted, ref } from 'vue';
 import { CustomAlertsService } from '@/services/customAlerts';
 import { AppFunctions } from '@/core/appFunctions';
 
@@ -182,7 +181,8 @@ const props = defineProps({
     project: { type: Object },
     currentYear: { type: String },
     visualizationsRole: { type: Array },
-    isSharedResource: { type: Boolean }
+    isSharedResource: { type: Boolean },
+    isFolder: { type: Boolean, required: true },
 });
 
 const isAssociatedUser = ref(null);
@@ -191,10 +191,6 @@ const authUser = usePage().props.value.auth.user ?? null;
 const target = ref('');
 const targetList = ref([]);
 const toJsonTargets = ref({})
-
-onBeforeMount(() => {
-    //setTargets();
-});
 
 onMounted(() => {
     isAssociatedUser.value = verifiyAssociatedUser()
@@ -239,11 +235,11 @@ const removeTarget = (index) => {
 }
 
 const form = useForm({
-    name: !props.folder ? props.project.name : props.folder.name,
-    description: !props.folder ? props.project.description : props.folder.description,
-    startDate: !props.folder ? props.project.startDate : null,
-    endDate: !props.folder ? props.project.endDate : null,
-    visualizationRoleSelected: !props.folder ? props.project.visualization_role_id : props.folder.visualization_role_id,
+    name: !props.isFolder ? props.project.name : props.folder.name,
+    description: !props.isFolder ? props.project.description : props.folder.description,
+    startDate: !props.isFolder ? props.project.startDate : null,
+    endDate: !props.isFolder ? props.project.endDate : null,
+    visualizationRoleSelected: !props.isFolder ? props.project.visualization_role_id : props.folder.visualization_role_id,
     isSharedResource: !props.isSharedResource ?? null,
     target: null,
 });
@@ -251,7 +247,7 @@ const form = useForm({
 const onClicks = (event) => {
     event.preventDefault();
 }
-const idModal = "modal-update-".concat(props.folder ? props.folder.id : props.project.id)
+const idModal = "modal-update-".concat(props.isFolder ? props.folder.id : props.project.id)
 
 const verifiyAssociatedUser = () => {
     if (!props.project) {

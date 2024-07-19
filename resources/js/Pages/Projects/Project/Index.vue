@@ -12,7 +12,6 @@ import AuthLayout from '@/Layouts/Authenticated.vue';
 import ProjectContent from '@/Pages/Projects/Project/Components/ProjectContent.vue'
 import { usePage } from '@inertiajs/inertia-vue3';
 
-
 const {  project } = defineProps({
     folder: Object,
     project: Object,
@@ -21,7 +20,7 @@ const {  project } = defineProps({
     investigators: {type: Array, required: true},
     collaborators: { type: Array, required: true },
     documentCategories: { type: Array, required: true },
-})
+});
 
 const authUser = usePage().props.value.auth.user ?? null;
 const role = authUser ? authUser.role.name : 'guest';

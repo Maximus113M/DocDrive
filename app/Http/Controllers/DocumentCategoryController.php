@@ -45,7 +45,11 @@ class DocumentCategoryController extends Controller
 
 
     public function update($categoryId)
-    {
+    {   
+        if($categoryId == 1){
+            return redirect()->back()->with("message", "Esta categoría no puede ser actualizada.");
+        }
+
         $validator = Validator::make(request()->all(), [
             'name' => 'required|string|max:100',
         ]);
@@ -69,6 +73,10 @@ class DocumentCategoryController extends Controller
 
     public function destroy($categoryId)
     {
+        if($categoryId == 1){
+            return redirect()->back()->with("message", "Esta categoría no puede ser eliminada.");
+        }
+
         $category= DocumentCategory::find($categoryId);
 
         if (!$category) {

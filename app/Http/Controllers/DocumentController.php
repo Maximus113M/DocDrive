@@ -53,15 +53,12 @@ class DocumentController extends Controller
         if(request("category")){
             $category= request("category");
             error_log("$category");
-            if($category === -1){
-                error_log("Nel $category");
-                //$document->categories()->detach();
-            }else{
-                error_log("Category $category");
-                $document->categories()->attach($category);
-            }
-        }
 
+            $document->categories()->attach($category);
+        }else{
+            $document->categories()->attach(1);
+        }
+            
         return redirect()->back()->with("message", "Documento creado correctamente");
     }
 
@@ -226,13 +223,13 @@ class DocumentController extends Controller
         if(request("category")){
             $category= request("category");
             error_log("$category");
-            if($category === -1){
-                error_log("Nel $category");
-                $document->categories()->detach();
-            }else{
-                error_log("Category $category");
-                $document->categories()->attach($category);
-            }
+
+            $document->categories()->detach();
+            $document->categories()->attach($category);
+            
+        }else{
+            $document->categories()->detach();
+            $document->categories()->attach(1);
         }
         $document->update();
 

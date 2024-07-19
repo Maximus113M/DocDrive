@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Document;
 use App\Models\Folder;
 use App\Models\Project;
+use App\Models\DocumentCategory;
 use App\Models\VisualizationRole;
 use App\Providers\AuthServiceProvider;
 use App\Providers\RoleServiceProvider;
@@ -103,7 +104,8 @@ class FolderController extends Controller
             "currentYear" => $validityYear,
             "visualizationsRole" => VisualizationRole::all(),
             "investigators" => InvestigatorController::getInvestigators(),
-            "collaborators" => CollaboratorController::getCollaborators()
+            "collaborators" => CollaboratorController::getCollaborators(),
+            "documentCategories" => DocumentCategory::all(),
         ]);
     }
 
