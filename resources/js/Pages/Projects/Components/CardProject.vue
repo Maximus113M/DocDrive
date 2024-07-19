@@ -91,7 +91,7 @@
                             <label for="name" class="font-bold form-label">Ingrese el nombre:</label>
                             <input v-model="form.name" type="text" class="form-control" id="name">
                             <div v-if="form.errors.name" class="text-red-400 text-center">
-                                {{ AppFunctions.getErrorTranslate(AppFunctions.Errors.Field) }}
+                                {{ form.errors.name }}
                             </div>
                         </div>
 
