@@ -69,7 +69,6 @@ class RegisteredUserController extends Controller
     {
         $route = null;
         $message = null;
-        $password = null;
         if ($role == RoleServiceProvider::INVESTIGATOR) {
             $route = "investigator.index";
             $message = "¡El investigador se ha actualizado correctamente!";
@@ -93,13 +92,15 @@ class RegisteredUserController extends Controller
             return redirect()->route($route)->withErrors($validator)->withInput();
         }
 
-
+        $password = request("password");
         $user = User::find($userID);
-        if (!$password) {
+        if ($password == null) {
             $password = $user->password;
+        } else {
+            $password = Hash::make($password);
         }
 
-        error_log($password);
+        error_log("Password". $password);
 
 
         $user->name = request("name");
@@ -114,7 +115,7 @@ class RegisteredUserController extends Controller
     }
 
     /**
-     * ACtualiz los datos del usuario autenticado
+     * Actualiza los datos del usuario autenticado
      */
     public function updateProfile()
     {
@@ -127,7 +128,7 @@ class RegisteredUserController extends Controller
     public function changePassword()
     {
         $validator = Validator::make(request()->all(), [
-            'oldPassword' => ['required', Password::defaults()],
+            'oldPassword' => ['required',],
             'password' => ['required', Password::defaults()],
         ]);
 

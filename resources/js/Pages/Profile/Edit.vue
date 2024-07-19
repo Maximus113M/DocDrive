@@ -70,6 +70,7 @@ const changePassword = () => {
             closeModal()
         },
         onError: (e) => {
+            console.log(e);
             CustomAlertsService.generalAlert({
                 title: 'Error',
                 text: 'Ha ocurrido un error al cambiar la contraseña',

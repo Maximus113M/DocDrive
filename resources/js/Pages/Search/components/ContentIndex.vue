@@ -58,7 +58,7 @@
                 <div class="row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
                     <div v-for="folder in props.folders" :key="folder.id">
                         <CardProject :visualizationsRole="props.visualizationsRole" :project="folder.project"
-                            :folder="folder" :current-year="folder.project.startDate.split('-')[0]" />
+                            :folder="folder" :current-year="folder.project.startDate.split('-')[0]" :is-folder="true" />
                     </div>
                 </div>
             </div>
