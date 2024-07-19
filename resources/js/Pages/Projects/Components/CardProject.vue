@@ -205,12 +205,10 @@ const setTargets = () => {
             let target = toJsonTargets.value[key];
             targetList.value.push(target);
         }
-
+        console.log(toJsonTargets.value);
+        console.log(targetList.value);
+        debugger
     }
-    console.log(toJsonTargets.value);
-    console.log(targetList.value);
-
-    debugger
 }
 
 const addNewTarget = () => {

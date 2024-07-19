@@ -45,7 +45,7 @@ class RegisteredUserController extends Controller
 
         Auth::login($user);
 
-        return redirect(RouteServiceProvider::HOME);
+        return redirect(RouteServiceProvider::HOME); 
     }
 
     /**
@@ -58,7 +58,7 @@ class RegisteredUserController extends Controller
         $user->role;
         return Inertia::render("Profile/Edit", [
             "user" => $user
-        ]);
+        ])->with("currentRoute", 'settings');
     }
 
 

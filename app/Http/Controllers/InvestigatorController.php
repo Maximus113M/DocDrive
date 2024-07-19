@@ -57,8 +57,8 @@ class InvestigatorController extends Controller
         return Inertia::render("Investigator/Index", [
             "investigators" => InvestigatorController::getInvestigators(),
             "isAuthenticated" => AuthServiceProvider::checkAuthenticated(),
-            "role" => AuthServiceProvider::getRole()
-        ]);
+            "role" => AuthServiceProvider::getRole(),
+        ])->with("currentRoute", 'investigators');
     }
 
 

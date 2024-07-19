@@ -1,5 +1,4 @@
 <script setup>
-import NavMenu from '@/Components/SideMenu.vue'
 import LayoutDropdown from '@/Shared/LayoutDropdown.vue';
 import MainMenu from '@/Shared/MainMenu.vue';
 import Icon from '@/Shared/Icon.vue';
@@ -7,14 +6,15 @@ import BreezeDropdownLink from '@/Components/DropdownLink.vue';
 import BreezeDropdown from '@/Components/Dropdown.vue';
 import { usePage } from '@inertiajs/inertia-vue3';
 import { onMounted } from 'vue';
+import { AppFunctions } from '@/core/appFunctions';
 
 
-defineProps({
+const props= defineProps({
     role: String
 })
 
 onMounted(() => {
-    //console.log(usePage().props.value.ziggy);
+    console.log(props.role)
 })
 
 </script>
@@ -32,7 +32,7 @@ onMounted(() => {
                         <!-- TODO INSERTAR IMAGEN o dejar Icon, definir -->
                         <div class="hidden flex-col md:block">
                             <div class="bg-white rounded-full p-3">
-                                <Icon :name="role" />
+                                <Icon :name="props.role" />
                             </div>
 
                         </div>
@@ -47,7 +47,7 @@ onMounted(() => {
 
                                     <div class="md:hidden mt-2 px-8 py-4 rounded shadow-lg"
                                         style="background-color: #39A900;">
-                                        <MainMenu :role="role" :is-side-menu="false" />
+                                        <MainMenu :role="props.role" :is-side-menu="false" />
                                     </div>
                                 </template>
                             </LayoutDropdown>
@@ -73,8 +73,7 @@ onMounted(() => {
                                             <Icon :name="role" />
                                             <button type="button"
                                                 class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition ease-in-out duration-150">
-                                                {{ role === 'guest' ? "Visitante" : role }}
-
+                                                {{ AppFunctions.getRoleName(role) }}
                                                 <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
                                                     viewBox="0 0 20 20" fill="currentColor">
                                                     <path fill-rule="evenodd"
