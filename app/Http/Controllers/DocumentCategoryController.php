@@ -29,7 +29,7 @@ class DocumentCategoryController extends Controller
     public function store()
     {
         $validator = Validator::make(request()->all(), [
-            'name' => 'required|string|max:100',
+            'name' => 'required|string|max:100|unique:document_categories',
         ]);
 
         if ($validator->fails()) {
@@ -51,7 +51,7 @@ class DocumentCategoryController extends Controller
         }
 
         $validator = Validator::make(request()->all(), [
-            'name' => 'required|string|max:100',
+            'name' => 'required|string|max:100|unique:document_categories,name,'.$categoryId,
         ]);
 
         if ($validator->fails()) {

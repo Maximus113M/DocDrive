@@ -114,6 +114,15 @@ const selectedCategoryToEdit = (category) => {
 }
 
 const showDeleteConfirm = (categoryId) => {
+    if(categoryId === 1){
+        CustomAlertsService.generalAlert({
+                title: 'Eliminación invalida',
+                text: `Esta categoría no puede ser eliminada`,
+                isToast: true,
+                icon: 'warning'
+            });
+        return;
+    }
     CustomAlertsService.deleteConfirmAlert({
         title: 'Eliminar categoría',
         text: '¿Deseas eliminar la categoría seleccionada? Esta acción no se puede revertir'
