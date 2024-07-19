@@ -1,3 +1,4 @@
+@import 'datatables.net-bs5';
 @tailwind base;
 @tailwind components;
 @tailwind utilities;

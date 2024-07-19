@@ -3,7 +3,12 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Mail\ResetPasswordMail;
+use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
 use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
@@ -35,20 +40,26 @@ class PasswordResetLinkController extends Controller
         $request->validate([
             'email' => 'required|email',
         ]);
-
-        // We will send the password reset link to this user. Once we have attempted
-        // to send the link, we will examine the response then see the message we
-        // need to show to the user. Finally, we'll send out a proper response.
-        $status = Password::sendResetLink(
-            $request->only('email')
-        );
-
-        if ($status == Password::RESET_LINK_SENT) {
-            return back()->with('status', __($status));
+        
+        $email = $request->get("email");
+        $token = Hash::make($email . "|" . now());
+        $encodedToken = base64_encode($token);
+        $url = url('/reset-password/' . $encodedToken); 
+        $existsToken = DB::table("password_resets")->where("email", $email)->exists();
+        if ($existsToken) {
+            DB::table("password_resets")->where("email", $email)->delete();
         }
-
-        throw ValidationException::withMessages([
-            'email' => [trans($status)],
+        DB::table("password_resets")->insert([
+            "email" => $email,
+            "token" => $encodedToken,
+            "created_at" => now(),
         ]);
+
+        $user = User::where("email", $email)->first();
+
+        Mail::to($user)->send(new ResetPasswordMail($url, $user->name));
+        
+        return redirect()->route('login')->with('message', 'Te hemos enviado un enlace a tu correo para restablecer tu contraseña!');
+
     }
 }

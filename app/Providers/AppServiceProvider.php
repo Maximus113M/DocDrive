@@ -2,6 +2,7 @@
 
 namespace App\Providers;
 
+use App\Models\Project;
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -25,4 +26,13 @@ class AppServiceProvider extends ServiceProvider
     {
         //
     }
+
+    /**
+     * Verifica si un proyecto está incompleto
+     */
+    static public function projectIsIncomplete(Project $project) : bool
+    {
+        return !isset($project->startDate, $project->endDate, $project->target, $project->description);
+    }
+
 }
