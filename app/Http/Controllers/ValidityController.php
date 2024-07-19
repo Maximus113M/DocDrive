@@ -72,6 +72,10 @@ class ValidityController extends Controller
 
         $validity = Validity::find($validityID);
 
+        if (count($validity->projects) > 0) {
+            return redirect()->route("validity.index")->with("errorMessage", "No se puede actualizar una vigencia con proyectos asociados!");
+        }
+
         $validity->update([
             "year" => request("year"),
         ]);

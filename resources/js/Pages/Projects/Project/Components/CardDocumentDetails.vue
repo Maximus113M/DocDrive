@@ -148,6 +148,7 @@ const showDocumentRoute = props.project ? route('file.index', {
     })
 
 onMounted(() => {
+    console.log(props.currentYear);
     isAssociatedUser.value = verifiyAssociatedUser()
     // console.log('--------------------------------------')
     // console.log(props.document);

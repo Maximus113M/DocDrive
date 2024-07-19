@@ -126,7 +126,10 @@ const openModalDelete = () => {
 
 const updateValidity = () => {
     form.put(route("validity.update", { "validityID": props.id }), {
-        onSuccess: () => closeModal()
+        onSuccess: () => {
+            showMessage()
+            closeModal()
+        }
     })
 }
 
