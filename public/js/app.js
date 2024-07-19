@@ -23131,6 +23131,10 @@ __webpack_require__.r(__webpack_exports__);
     documentCategories: {
       type: Array,
       required: true
+    },
+    query: {
+      type: String,
+      required: true
     }
   },
   setup: function setup(__props, _ref) {
@@ -23222,6 +23226,10 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     documentCategories: {
       type: Array,
       required: true
+    },
+    query: {
+      type: String,
+      required: true
     }
   },
   setup: function setup(__props, _ref) {
@@ -23237,11 +23245,16 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       year: null,
       name: null
     });
+    var query = (0,vue__WEBPACK_IMPORTED_MODULE_7__.ref)('');
     (0,vue__WEBPACK_IMPORTED_MODULE_7__.onMounted)(function () {
       validityList.value = props.validities;
       console.log('INICIO DE BUSQUEDA');
       console.log(props.documentsForCategory);
       console.log(props.documentCategories);
+      if (props.query) {
+        query.value = props.query.replace(' ', '+');
+        console.log(query.value);
+      }
     });
     // onUpdated(() => {
     //     if (searchValue.value.length === 0) {
@@ -23257,10 +23270,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
     //     }
     // })
 
-    var categoryList = (0,vue__WEBPACK_IMPORTED_MODULE_7__.ref)([{
-      name: 'Ninguna',
-      id: -1
-    }].concat(_toConsumableArray(props.documentCategories)));
+    var categoryList = (0,vue__WEBPACK_IMPORTED_MODULE_7__.ref)(_toConsumableArray(props.documentCategories));
     var saveValidity = function saveValidity() {
       form.post(route(checkedSharedFolder.value.checked ? 'shared.folder.store' : 'validity.store'), {
         onSuccess: function onSuccess() {
@@ -23316,6 +23326,7 @@ function _arrayLikeToArray(arr, len) { if (len == null || len > arr.length) len 
       searchValue: searchValue,
       modal: modal,
       form: form,
+      query: query,
       categoryList: categoryList,
       saveValidity: saveValidity,
       showSuccessMessage: showSuccessMessage,
@@ -27649,8 +27660,9 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
         isAuthenticated: $setup.props.isAuthenticated,
         role: $setup.props.role,
         "visualizations-role": $props.visualizationsRole,
-        "documents-for-category": $setup.props.documentsForCategory
-      }, null, 8 /* PROPS */, ["documentCategories", "projects", "documents", "folders", "validities", "sharedResources", "isAuthenticated", "role", "visualizations-role", "documents-for-category"])];
+        "documents-for-category": $setup.props.documentsForCategory,
+        query: $setup.props.query
+      }, null, 8 /* PROPS */, ["documentCategories", "projects", "documents", "folders", "validities", "sharedResources", "isAuthenticated", "role", "visualizations-role", "documents-for-category", "query"])];
     }),
     _: 1 /* STABLE */
   }, 8 /* PROPS */, ["role"]);
@@ -27675,7 +27687,7 @@ var _withScopeId = function _withScopeId(n) {
   return (0,vue__WEBPACK_IMPORTED_MODULE_0__.pushScopeId)("data-v-3cd4cd54"), n = n(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.popScopeId)(), n;
 };
 var _hoisted_1 = {
-  "class": "w-full h-full p-5 relative"
+  "class": "w-full h-fit p-5 relative"
 };
 var _hoisted_2 = {
   "class": "w-full absolute left-0 top-5 flex-wrap sm:flex justify-between px-4"
@@ -27688,11 +27700,11 @@ var _hoisted_4 = {
 };
 var _hoisted_5 = /*#__PURE__*/_withScopeId(function () {
   return /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", {
-    "class": "text-2xl font-bold text-color-gray"
+    "class": "text-xl font-bold"
   }, " Resultados ", -1 /* HOISTED */);
 });
 var _hoisted_6 = {
-  "class": "flex pl-1 pr-3 py-2 rounded-2xl border-1 border-gray-300"
+  "class": "text-xl font-bold text-gray-600 ml-2"
 };
 var _hoisted_7 = {
   key: 0,
@@ -27775,7 +27787,7 @@ var _hoisted_27 = {
   "class": "row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5"
 };
 function render(_ctx, _cache, $props, $setup, $data, $options) {
-  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" TODO "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Buscador "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Link"], {
+  return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_1, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" Buscador "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_2, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_3, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_4, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Link"], {
     method: "get",
     href: _ctx.route('validity.index')
   }, {
@@ -27785,18 +27797,7 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       })];
     }),
     _: 1 /* STABLE */
-  }, 8 /* PROPS */, ["href"])]), _hoisted_5]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["Icon"], {
-    name: "search"
-  }), (0,vue__WEBPACK_IMPORTED_MODULE_0__.withDirectives)((0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
-    type: "text",
-    "onUpdate:modelValue": _cache[0] || (_cache[0] = function ($event) {
-      return $setup.searchValue = $event;
-    }),
-    style: {
-      "all": "unset"
-    },
-    placeholder: "Buscar"
-  }, null, 512 /* NEED_PATCH */), [[vue__WEBPACK_IMPORTED_MODULE_0__.vModelText, $setup.searchValue]])])]), $setup.props.validities.length < 1 && $setup.props.sharedResources.length < 1 && $setup.props.projects.length < 1 && $setup.props.folders.length < 1 && $setup.props.documents.length < 1 && $setup.props.documentsForCategory < 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_7, [].concat(_hoisted_9))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [$setup.props.validities.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.props.validities, function (v) {
+  }, 8 /* PROPS */, ["href"])]), _hoisted_5, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_6, (0,vue__WEBPACK_IMPORTED_MODULE_0__.toDisplayString)("\"".concat($setup.query, "\"")), 1 /* TEXT */)]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" TODO HACER ALGUN DIA EL BUSCADOR :v "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" <div class=\"flex pl-1 pr-3 py-2 rounded-2xl border-1 border-gray-300\">\r\n                <Icon name=\"search\" />\r\n                <input type=\"text\" v-model=\"searchValue\" style=\"all: unset\" placeholder=\"Buscar\">\r\n            </div> ")]), $setup.props.validities.length < 1 && $setup.props.sharedResources.length < 1 && $setup.props.projects.length < 1 && $setup.props.folders.length < 1 && $setup.props.documents.length < 1 && $setup.props.documentsForCategory < 1 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_7, [].concat(_hoisted_9))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", null, [$setup.props.validities.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_10, [_hoisted_11, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_12, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.props.validities, function (v) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
       key: v.id
     }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ValidityCard"], {
@@ -27825,7 +27826,8 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
       visualizationsRole: $setup.props.visualizationsRole,
       project: folder.project,
       folder: folder,
-      "current-year": folder.project.startDate.split('-')[0]
+      "current-year": folder.project.startDate.split('-')[0],
+      "is-folder": true
     }, null, 8 /* PROPS */, ["visualizationsRole", "project", "folder", "current-year"])]);
   }), 128 /* KEYED_FRAGMENT */))])])) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), $setup.props.documents.length > 0 ? ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", _hoisted_22, [_hoisted_23, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.props.documents, function (document) {
     return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
