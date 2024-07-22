@@ -1,17 +1,25 @@
 <template>
-    <div class="w-full">
+    <div class="pb-10">
         <!-- Buscador -->
-        <div class="py-3">
-            <div class="ml-5 flex justify-start items-center">
-                <!--<Link class="mr-3" method="get" :href="!folder ? route('validity.projects', { 'validityYear': props.currentYear })
-                    : route('project.index', { 'validityYear': currentYear, 'projectID': props.project.id })">-->
+        <div class="flex flex-wrap justify-end py-3 pl-5 pr-3">
+
+            <div class="col-12 col-lg-8 col-xl-9 flex justify-start items-center">
                 <Link class="mr-3" method="get" :href="backRoute()">
                 <Icon name="back" />
                 </Link>
 
-                <div class="text-2xl font-bold text-color-gray">
+                <div class="text-xl font-bold">
                     {{ !folder ? `Vigencias/${props.currentYear}/${props.project.name}`
                         : `Vigencias/${props.currentYear}/${props.project.name}${folder.documentPath}${folder.name}` }}
+                </div>
+            </div>
+
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <div class="flex justify-end pr-3 xl:pr-5">
+                    <div class="flex max-w-72 py-2 rounded-2xl border-1 border-gray-300">
+                        <Icon name="search" />
+                        <input @keyup="search" type="text" style="all: unset" placeholder="Buscar">
+                    </div>
                 </div>
             </div>
         </div>
@@ -20,7 +28,7 @@
             <article class="pt-3 pb-1 px-3 question cursor-pointer mb-2"
                 @click="expandedDescription = !expandedDescription">
                 <header class="flex justify-between items-center pb-2">
-                    <div class="font-semibold text-xl ">
+                    <div class="font-semibold text-xl w-full">
                         Descripción
                     </div>
 
@@ -30,7 +38,7 @@
 
                 <div :style="`max-height: ${expandedDescription ? '200px' : '0'}`" class="content overflow-y-scroll">
                     <p :style="`opacity: ${expandedDescription ? '1' : '0'}`" class="mt-2 info">
-                        {{ props.project.description.length > 0 ? props.project.description
+                        {{ props.project.description?.length > 0 ? props.project.description
                             : 'El proyecto aún no tiene descripción' }}
                     </p>
                 </div>
@@ -38,7 +46,7 @@
 
             <article class="pt-3 pb-1 px-3 question cursor-pointer mb-3" @click="expandedTargets = !expandedTargets">
                 <header class="flex justify-between items-center pb-2">
-                    <div class="font-semibold text-xl ">
+                    <div class="font-semibold text-xl w-full">
                         Objetivos
                     </div>
 
@@ -67,7 +75,8 @@
         <div class="w-full px-5 pt-1 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
 
             <button v-if="authUser != null && (authUser?.role.name == 'admin'
-                || (isAssociatedUser))" class="col" data-bs-toggle="modal" data-bs-target="#modalNewDocument" @click="resetForms">
+                || (isAssociatedUser))" class="col" data-bs-toggle="modal" data-bs-target="#modalNewDocument"
+                @click="resetForms">
                 <div class="folder border-3 rounded-4 py-3 bg-white">
                     <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
                         fill="#000000">
@@ -104,13 +113,13 @@
                 </div>
             </button>
 
-            <div v-for="folder in props.project.folders">
+            <div v-for="folder in folderList">
                 <ProjectCard :folder="folder" :project="project" :current-year="currentYear"
                     :visualizations-role="props.visualizationsRole" :is-folder="true" />
             </div>
-            <div v-for="document in props.project.documents">
+            <div v-for="document in documentList">
                 <CardDocumentDetails :visualizations-role="props.visualizationsRole" :currentYear="Number(currentYear)"
-                    :document="document" :project="project" :documentCategories="documentCategories"/>
+                    :document="document" :project="project" :documentCategories="documentCategories" />
             </div>
         </div>
     </div>
@@ -203,7 +212,6 @@
     </div>
 
 
-
     <!-- MODAL associate USERS -->
     <div class="modal fade" id="modalAssociateUser" tabindex="-1" aria-hidden="true">
         <div class="modal-dialog" style="width: 420px; height: 660px;">
@@ -221,10 +229,10 @@
                     <form @submit.prevent="associateUser">
                         <div class="px-4 py-2 mb-3 border-2 rounded-lg">
 
-                            <div class="row justify-center mb-3 mt-1">
-                                <div class="col-11 flex pl-1 pr-3 py-2 rounded-2xl border-1 border-gray-300">
+                            <div class="flex justify-center mb-3 mt-1">
+                                <div class="col-12 flex py-2 rounded-2xl border-1 border-gray-300">
                                     <Icon name="search" />
-                                    <input @keyup="search" type="text" style="all: unset" placeholder="Buscar">
+                                    <input @keyup="searchUsers" type="text" style="all: unset" placeholder="Buscar">
                                 </div>
                             </div>
                             <div class="h-64">
@@ -290,7 +298,6 @@
     </div>
 
 
-
 </template>
 
 <script setup>
@@ -298,7 +305,7 @@ import ProjectCard from '@/Pages/Projects/Components/CardProject.vue';
 import CardDocumentDetails from '@/Pages/Projects/Project/Components/CardDocumentDetails.vue';
 import { CustomAlertsService } from '@/services/customAlerts';
 import { Link, useForm, usePage } from '@inertiajs/inertia-vue3'
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, onBeforeMount } from 'vue';
 import Icon from '@/Shared/Icon.vue';
 import { AppFunctions, Constants } from '@/core/appFunctions';
 
@@ -310,25 +317,15 @@ const props = defineProps({
     investigators: { type: Array, required: true },
     collaborators: { type: Array, required: true },
     documentCategories: { type: Array, required: true },
-})
-const backRoute = () => {
-    if (props.folder && props.folder.father_id) {
-        return `/${props.currentYear}/projects/${props.project.id}/folders/${props.folder.father_id}`
-    } else if (props.folder) {
-        return `/${props.currentYear}/projects/${props.project.id}`
-    } else {
-        return `/${props.currentYear}/projects`
-    }
-}
+});
 
-const users = ref([])
+const users = ref([]);
 
-const visualizationsRole = ref([])
-
+const visualizationsRole = ref([]);
 const formAssociateUser = useForm({
     usersID: [],
     role: ''
-})
+});
 
 const formUploadFile = useForm({
     document: null,
@@ -337,16 +334,15 @@ const formUploadFile = useForm({
     folder_id: props.folder != null ? props.folder.id : null,
     link: null,
     category: null,
-})
+});
 
-const checkedUploadFile = ref(null)
-const checkedCreateFolder = ref(null)
-const checkedUploadLink = ref(null)
+const checkedUploadFile = ref(null);
+const checkedCreateFolder = ref(null);
+const checkedUploadLink = ref(null);
 
 
 const isAssociatedUser = ref(null);
 const authUser = usePage().props.value.auth.user;
-
 
 const nameRoleVisualization = {
     "private": "Privado",
@@ -354,17 +350,25 @@ const nameRoleVisualization = {
     "general-public": "Publico en general"
 }
 
-let role = ""
+let role = "";
 const currentColor = ref('');
 const defaultColor = ref('');
 
+const folderList = ref([]);
+const documentList = ref([]);
+
 //PAGINATION
-const paginatedList = ref([])
+const paginatedList = ref([]);
 const totalPages = ref(0);
 const paginatorIndex = ref(1);
 const pageElements = 8;
 
 const targetList = ref([]);
+
+onBeforeMount(() => {
+    folderList.value = [...props.project.folders];
+    documentList.value = [...props.project.documents];
+})
 
 onMounted(() => {
     isAssociatedUser.value = verifiyAssociatedUser();
@@ -375,6 +379,17 @@ onMounted(() => {
     }
 });
 
+const backRoute = () => {
+    if (props.folder && props.folder.father_id) {
+        return `/${props.currentYear}/projects/${props.project.id}/folders/${props.folder.father_id}`
+    } else if (props.folder) {
+        return `/${props.currentYear}/projects/${props.project.id}`
+    } else {
+        return `/${props.currentYear}/projects`
+    }
+}
+
+//PAGINATION
 const getCurrentPageList = (index) => {
     if (index != paginatorIndex.value) {
         paginatorIndex.value = index;
@@ -407,8 +422,26 @@ const decreasePaginatorIndex = () => {
 }
 //END PAGINATION
 
-//FILTER
+//GENERAL FILTER  
 const search = (e) => {
+    const inputSearch = e.target.value;
+    if (e.target.value.length === 0) {
+        console.log('Search Empty')
+        folderList.value = [...props.project.folders];
+        documentList.value = [...props.project.documents];
+        return;
+    }
+    folderList.value.length = 0;
+    documentList.value.length = 0;
+
+    folderList.value = [...props.project.folders.filter((user) =>
+        user.name.toLowerCase().includes(inputSearch.toLowerCase()))];
+    documentList.value = [...props.project.documents.filter((user) =>
+        user.name.toLowerCase().includes(inputSearch.toLowerCase()))];
+}
+
+//FILTER Users  
+const searchUsers = (e) => {
     const inputSearch = e.target.value
     let filtered = [];
     if (role === 'investigator') {
@@ -607,7 +640,7 @@ const closeModalAssociateUsers = () => {
     formAssociateUser.reset()
 }
 
-const resetForms= ()=>{
+const resetForms = () => {
     formUploadFile.reset();
 }
 

@@ -1400,15 +1400,18 @@ select{
 .h-80{
   height: 20rem;
 }
+.h-fit{
+  height: -moz-fit-content;
+  height: fit-content;
+}
 .h-full{
   height: 100%;
 }
 .h-screen{
   height: 100vh;
 }
-.h-fit{
-  height: -moz-fit-content;
-  height: fit-content;
+.h-svh{
+  height: 100svh;
 }
 .max-h-12{
   max-height: 3rem;
@@ -1470,6 +1473,25 @@ select{
 .w-full{
   width: 100%;
 }
+.w-fit{
+  width: -moz-fit-content;
+  width: fit-content;
+}
+.w-40{
+  width: 10rem;
+}
+.w-80{
+  width: 20rem;
+}
+.min-w-52{
+  min-width: 13rem;
+}
+.min-w-72{
+  min-width: 18rem;
+}
+.min-w-64{
+  min-width: 16rem;
+}
 .max-w-44{
   max-width: 11rem;
 }
@@ -1481,6 +1503,24 @@ select{
 }
 .max-w-xl{
   max-width: 36rem;
+}
+.max-w-48{
+  max-width: 12rem;
+}
+.max-w-56{
+  max-width: 14rem;
+}
+.max-w-60{
+  max-width: 15rem;
+}
+.max-w-64{
+  max-width: 16rem;
+}
+.max-w-72{
+  max-width: 18rem;
+}
+.max-w-80{
+  max-width: 20rem;
 }
 .flex-1{
   flex: 1 1 0%;
@@ -1561,6 +1601,12 @@ select{
 .justify-between{
   justify-content: space-between;
 }
+.justify-around{
+  justify-content: space-around;
+}
+.justify-evenly{
+  justify-content: space-evenly;
+}
 .space-x-8 > :not([hidden]) ~ :not([hidden]){
   --tw-space-x-reverse: 0;
   margin-right: calc(2rem * var(--tw-space-x-reverse));
@@ -1593,9 +1639,6 @@ select{
 }
 .text-wrap{
   text-wrap: wrap;
-}
-.break-all{
-  word-break: break-all;
 }
 .rounded{
   border-radius: 0.25rem;
@@ -1844,6 +1887,12 @@ select{
 .pt-8{
   padding-top: 2rem;
 }
+.pl-5{
+  padding-left: 1.25rem;
+}
+.pr-2{
+  padding-right: 0.5rem;
+}
 .text-left{
   text-align: left;
 }
@@ -1971,6 +2020,10 @@ select{
 .text-white{
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity));
+}
+.text-gray-950{
+  --tw-text-opacity: 1;
+  color: rgb(3 7 18 / var(--tw-text-opacity));
 }
 .underline{
   text-decoration-line: underline;
@@ -2240,6 +2293,15 @@ select{
   .sm\:h-20{
     height: 5rem;
   }
+  .sm\:h-screen{
+    height: 100vh;
+  }
+  .sm\:h-full{
+    height: 100%;
+  }
+  .sm\:min-h-0{
+    min-height: 0px;
+  }
   .sm\:flex-1{
     flex: 1 1 0%;
   }
@@ -2360,6 +2422,20 @@ select{
   .lg\:px-8{
     padding-left: 2rem;
     padding-right: 2rem;
+  }
+  .lg\:pr-5{
+    padding-right: 1.25rem;
+  }
+  .lg\:pr-6{
+    padding-right: 1.5rem;
+  }
+}
+@media (min-width: 1280px){
+  .xl\:pr-6{
+    padding-right: 1.5rem;
+  }
+  .xl\:pr-5{
+    padding-right: 1.25rem;
   }
 }
 @media (prefers-color-scheme: dark){
