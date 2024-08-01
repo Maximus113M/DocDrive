@@ -1400,15 +1400,15 @@ select{
 .h-80{
   height: 20rem;
 }
+.h-fit{
+  height: -moz-fit-content;
+  height: fit-content;
+}
 .h-full{
   height: 100%;
 }
 .h-screen{
   height: 100vh;
-}
-.h-fit{
-  height: -moz-fit-content;
-  height: fit-content;
 }
 .max-h-12{
   max-height: 3rem;
