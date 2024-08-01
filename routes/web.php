@@ -65,7 +65,7 @@ Route::get('/shared/{folderID}/document/{documentID}', [DocumentController::clas
     ->name('shared.file.index');
 
 // RUTA PARA HACER LA BUSQUEDA
-Route::get('/search/{consulta}', [ValidityController::class,'search'])
+Route::get('/search/{consulta}', [ValidityController::class, 'search'])
     ->name('search.index');
 
 // RUTAS PROTEGIDAS PARA EL ADMIN
@@ -112,7 +112,7 @@ Route::middleware(['auth', 'role:admin'])->group(function () {
         ->name('document-category.store');
     // RUTA PARA EDITAR UNA CATEGORIA DE DOCUMENTO
     Route::put('/document-category/{categoryID}/update', [DocumentCategoryController::class, 'update'])
-    ->name('document-category.update');
+        ->name('document-category.update');
     // RUTA PARA ELIMINAR UNA CATEGORIA DE DOCUMENTO
     Route::delete('/document-category/{categoryID}/destroy', [DocumentCategoryController::class, 'destroy'])
         ->name('document-category.destroy');
@@ -170,11 +170,11 @@ Route::middleware(['auth', 'role:admin|investigator'])->group(function () {
     // RUTA PARA ACTUALIZAR UNA CARPETA DENTRO DEL RECURSO COMPARTIDO
     Route::put('/folder/{folderID}/update', [FolderController::class, 'updateSharedFolder'])
         ->name('shared.folder.update');
-    
+
     // RUTA PARA ELIMINAR UN DOCUMENTO
     Route::delete('/project/{projectID}/document/{documentID}/destroy', [DocumentController::class, 'destroy'])
         ->name('document.destroy');
-    
+
     // RUTA PARA DESASOCIAR UN DOCUMENTO A UN RECURSO COMPARTIDO
     /*Route::delete('/shared/{folderID}/document/{documentID}/destroy', [DocumentController::class, 'disassociatedDocument'])
         ->name('shared.document.destroy');*/
@@ -186,8 +186,6 @@ Route::middleware(['auth', 'role:admin|investigator'])->group(function () {
     //RUTA PARA ASOCIAR DOCUMENTOS AL RECURSO COMPARTIDO
     Route::post('/shared/{folderID}/document', [DocumentController::class, 'associatedDocument'])
         ->name('shared.document.associated');
-
-    
 });
 
 
