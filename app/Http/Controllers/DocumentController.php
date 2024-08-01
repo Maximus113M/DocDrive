@@ -135,16 +135,57 @@ class DocumentController extends Controller
 
         $rutaCompleta = Storage::path($rutaArreglada);
 
+        $explodeRuta = explode('.', $rutaCompleta);
+        $explodeName = explode('/', $explodeRuta[0]);
+        
+        $name = $explodeName[count($explodeName)-1];
         if (!file_exists($rutaCompleta)) {
             abort(404, "Documento no existe");
         }
 
-        $type = mime_content_type($rutaCompleta);
+        $type = $this->getMime($rutaCompleta);
+
 
         return response()->file($rutaCompleta, [
             'Content-Type' => $type,
-            'Content-Disposition' => 'inline; filename="' . $document->name . '"', 
+            'Content-Disposition' => 'inline; filename="' . $name . '"', 
         ]);
+    }
+
+    /**
+     * Extrae el mime
+     */
+    private function getMime(string $ruta)
+    {
+        $type = null;
+        $extension = pathinfo($ruta, PATHINFO_EXTENSION);
+        switch ($extension) {
+            case 'xlsx':
+                $type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+                break;
+            case 'xls':
+                $type = 'application/vnd.ms-excel';
+                break;
+            case 'csv':
+                $type = 'text/csv';
+                break;
+            case 'tsv':
+                $type = 'text/tab-separated-values';
+                break;
+            case 'ods':
+                $type = 'application/vnd.oasis.opendocument.spreadsheet';
+                break;
+            case 'xml':
+                $type = 'application/xml';
+                break;
+            case 'xlsb':
+                $type = 'application/vnd.ms-excel.sheet.binary.macroEnabled.12';
+                break;
+            default:
+                $type = mime_content_type($ruta); // Fallback type
+                break;
+        }
+        return $type;
     }
 
     /**
