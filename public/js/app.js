@@ -22672,8 +22672,12 @@ var pageElements = 8;
       return props.project;
     }, function (_) {
       console.log('Changes Dectected, Reload');
-      folderList.value = _toConsumableArray(props.project.folders);
-      documentList.value = _toConsumableArray(props.project.documents);
+      folderList.value.length = 0;
+      documentList.value.length = 0;
+      setTimeout(function () {
+        folderList.value = _toConsumableArray(props.project.folders);
+        documentList.value = _toConsumableArray(props.project.documents);
+      }, 100);
     });
     var backRoute = function backRoute() {
       if (props.folder && props.folder.father_id) {
@@ -22830,7 +22834,6 @@ var pageElements = 8;
       });
     };
     var verifiyAssociatedUser = function verifiyAssociatedUser() {
-      console.log(props.project);
       if (!authUser || !props.project.users) {
         return false;
       }
@@ -29217,18 +29220,18 @@ var _hoisted_28 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElement
 })], -1 /* HOISTED */);
 var _hoisted_29 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
   xmlns: "http://www.w3.org/2000/svg",
-  height: "48px",
+  height: "58px",
   viewBox: "0 -960 960 960",
-  width: "48px",
+  width: "58px",
   fill: "#EA3323"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
   d: "M331-431h37v-83h48q15.73 0 26.36-10.64Q453-535.28 453-551v-48q0-15.72-10.64-26.36Q431.73-636 416-636h-85v205Zm37-120v-48h48v48h-48Zm129 120h84q15 0 26-10.64 11-10.63 11-26.36v-131q0-15.72-11-26.36Q596-636 581-636h-84v205Zm37-37v-131h47v131h-47Zm133 37h37v-83h50v-37h-50v-48h50v-37h-87v205ZM260-200q-24 0-42-18t-18-42v-560q0-24 18-42t42-18h560q24 0 42 18t18 42v560q0 24-18 42t-42 18H260ZM140-80q-24 0-42-18t-18-42v-620h60v620h620v60H140Z"
 })], -1 /* HOISTED */);
 var _hoisted_30 = /*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("svg", {
   xmlns: "http://www.w3.org/2000/svg",
-  height: "48px",
+  height: "58px",
   viewBox: "0 -960 960 960",
-  width: "48px",
+  width: "58px",
   fill: "#0000F5"
 }, [/*#__PURE__*/(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("path", {
   d: "M319-250h322v-60H319v60Zm0-170h322v-60H319v60ZM220-80q-24 0-42-18t-18-42v-680q0-24 18-42t42-18h361l219 219v521q0 24-18 42t-42 18H220Zm331-554h189L551-820v186Z"

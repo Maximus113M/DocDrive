@@ -374,10 +374,15 @@ onMounted(() => {
     }
 });
 
-watch(()=>props.project,(_)=>{
-    console.log('Changes Dectected, Reload')
-    folderList.value = [...props.project.folders];
-    documentList.value = [...props.project.documents];
+watch(() => props.project, (_) => {
+    console.log('Changes Dectected, Reload');
+    folderList.value.length = 0;
+    documentList.value.length = 0
+    setTimeout(() => {
+        folderList.value = [...props.project.folders];
+        documentList.value = [...props.project.documents];
+    }, 100);
+
 });
 
 
@@ -544,7 +549,6 @@ const changeDisplayCheckBox = (inputs, display) => {
 }
 
 const verifiyAssociatedUser = () => {
-    console.log(props.project);
     if (!authUser || !props.project.users) {
         return false;
     }
