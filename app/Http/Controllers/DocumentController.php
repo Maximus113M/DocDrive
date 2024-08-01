@@ -50,15 +50,15 @@ class DocumentController extends Controller
         if (request("folder_id") !== null) {
             $document->folder()->attach(request("folder_id"));
         }
-        if(request("category")){
-            $category= request("category");
+        if (request("category")) {
+            $category = request("category");
             error_log("$category");
 
             $document->categories()->attach($category);
-        }else{
+        } else {
             $document->categories()->attach(1);
         }
-            
+
         return redirect()->back()->with("message", "Documento creado correctamente");
     }
 
@@ -73,7 +73,7 @@ class DocumentController extends Controller
         $validator = Validator::make(request()->all(), [
             'link' => 'required|url',
             'visualizationRoleSelected' => 'required',
-            'name' => ['required','string', 'unique:documents']
+            'name' => ['required', 'string', 'unique:documents']
         ]);
 
 
@@ -135,16 +135,62 @@ class DocumentController extends Controller
 
         $rutaCompleta = Storage::path($rutaArreglada);
 
+        $explodeRuta = explode('.', $rutaCompleta);
+        $explodeName = explode('/', $explodeRuta[0]);
+
+        $name = $explodeName[count($explodeName) - 1];
         if (!file_exists($rutaCompleta)) {
             abort(404, "Documento no existe");
         }
 
-        $type = mime_content_type($rutaCompleta);
-
-        return response()->file($rutaCompleta, [
+        $nombreArchivo = basename($rutaCompleta);
+        $extension = pathinfo($rutaCompleta, PATHINFO_EXTENSION);
+        $type = $this->getMime($rutaCompleta, $extension);
+        if (!$type) {
+            abort(404, "Documento no encontrado");
+        }
+        $visualizationType = 'attachment';
+        if ($extension == 'pdf') {
+            $visualizationType = 'inline';
+        }
+        return Storage::download($rutaArreglada, $name,  [
             'Content-Type' => $type,
-            'Content-Disposition' => 'inline; filename="' . $document->name . '"', 
+            'Content-Disposition' => $visualizationType . '; filename="' . $nombreArchivo . '"'
         ]);
+    }
+
+    /**
+     * Extrae el mime
+     */
+    private function getMime(string $ruta, string $extension)
+    {
+        switch ($extension) {
+            case 'xlsx':
+                $type = 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet';
+                break;
+            case 'xls':
+                $type = 'application/vnd.ms-excel';
+                break;
+            case 'csv':
+                $type = 'text/csv';
+                break;
+            case 'tsv':
+                $type = 'text/tab-separated-values';
+                break;
+            case 'ods':
+                $type = 'application/vnd.oasis.opendocument.spreadsheet';
+                break;
+            case 'xml':
+                $type = 'application/xml';
+                break;
+            case 'xlsb':
+                $type = 'application/vnd.ms-excel.sheet.binary.macroEnabled.12';
+                break;
+            default:
+                $type = mime_content_type($ruta); // Fallback type
+                break;
+        }
+        return $type;
     }
 
     /**
@@ -181,6 +227,7 @@ class DocumentController extends Controller
         $rutaArreglada = str_replace('/storage/', '', $document->documentPath);
         Storage::delete($rutaArreglada);
         $document->folder()->detach();
+        $document->categories()->detach();
         $document->delete();
 
         return redirect()->back()->with("message", "Documento eliminado correctamente");
@@ -220,14 +267,13 @@ class DocumentController extends Controller
         $document = Document::find($documentID);
         $document->name = request("name");
         $document->visualization_role_id = request("visualizationRoleSelected");
-        if(request("category")){
-            $category= request("category");
+        if (request("category")) {
+            $category = request("category");
             error_log("$category");
 
             $document->categories()->detach();
             $document->categories()->attach($category);
-            
-        }else{
+        } else {
             $document->categories()->detach();
             $document->categories()->attach(1);
         }
@@ -252,7 +298,7 @@ class DocumentController extends Controller
 
         $folder = Folder::find($folderID);
         $documentsID = $folder->documents->pluck('id')->toArray();
-        $this->disassociatedDocuments($folder, request("documentsID"));        
+        $this->disassociatedDocuments($folder, request("documentsID"));
 
         foreach (request("documentsID") as $documentID) {
             if (!in_array($documentID, $documentsID)) {
@@ -275,7 +321,7 @@ class DocumentController extends Controller
     }
 
 
-     /**
+    /**
      * Remover los ids repetidos de los documents para tener los ids no seleccionados a eliminar
      */
     private function removeDuplicates($inputDocumentsID, $documentsID)

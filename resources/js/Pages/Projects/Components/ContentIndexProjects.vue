@@ -1,37 +1,52 @@
 <template>
-    <div class="w-full p-5 relative">
+    <div class="pb-10">
         <!-- Buscador -->
-        <div class="absolute left-0 top-5">
-            <div class="flex justify-between items-center">
-                <Link class="ml-5 mr-3" method="get" :href="route('validity.index')">
+        <div class="flex flex-wrap justify-end py-3 pl-5 pr-3">
+
+            <div class="col-12 col-lg-8 col-xl-9 flex justify-start items-center">
+                <Link class="mr-3" method="get" :href="route('validity.index')">
                 <Icon name="back" />
                 </Link>
 
-                <div class="text-2xl font-bold text-color-gray">
+                <div class="text-xl font-bold">
                     {{ `Vigencias/${currentYear}` }}
                 </div>
             </div>
+
+            <div class="col-12 col-sm-6 col-lg-4 col-xl-3">
+                <div class="flex justify-end pr-3 xl:pr-5">
+                    <div class="flex max-w-72 py-2 rounded-2xl border-1 border-gray-300">
+                        <Icon name="search" />
+                        <input @keyup="search" type="text" style="all: unset" placeholder="Buscar">
+                    </div>
+                </div>
+            </div>
+
         </div>
 
-        <div class="pt-3 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
+        <div class="px-5">
+            <div class="pt-3 row row-cols-2 row-cols-md-2 row-cols-lg-3 row-cols-xl-4 row-cols-xxl-5 g-5">
 
-            <button v-if="role == 'admin'" class="col" data-bs-toggle="modal" data-bs-target="#modalSaveProject">
-                <div class="folder border-3 rounded-4 py-3 bg-white"
-                    style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.06);">
-                    <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
-                        fill="#000000">
-                        <path
-                            d="M453-280h60v-166h167v-60H513v-174h-60v174H280v60h173v166Zm27.27 200q-82.74 0-155.5-31.5Q252-143 197.5-197.5t-86-127.34Q80-397.68 80-480.5t31.5-155.66Q143-709 197.5-763t127.34-85.5Q397.68-880 480.5-880t155.66 31.5Q709-817 763-763t85.5 127Q880-563 880-480.27q0 82.74-31.5 155.5Q817-252 763-197.68q-54 54.31-127 86Q563-80 480.27-80Z" />
-                    </svg>
-                    <h6 class="py-1 text-gray-400">
-                        <strong>Nuevo Proyecto</strong>
-                    </h6>
+                <button v-if="role == 'admin'" class="col" data-bs-toggle="modal" data-bs-target="#modalSaveProject">
+                    <div class="folder border-3 rounded-4 py-3 bg-white"
+                        style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.06);">
+                        <svg xmlns="http://www.w3.org/2000/svg" height="84px" viewBox="0 -960 960 960" width="84px"
+                            fill="#000000">
+                            <path
+                                d="M453-280h60v-166h167v-60H513v-174h-60v174H280v60h173v166Zm27.27 200q-82.74 0-155.5-31.5Q252-143 197.5-197.5t-86-127.34Q80-397.68 80-480.5t31.5-155.66Q143-709 197.5-763t127.34-85.5Q397.68-880 480.5-880t155.66 31.5Q709-817 763-763t85.5 127Q880-563 880-480.27q0 82.74-31.5 155.5Q817-252 763-197.68q-54 54.31-127 86Q563-80 480.27-80Z" />
+                        </svg>
+                        <h6 class="py-1 text-gray-400">
+                            <strong>Nuevo Proyecto</strong>
+                        </h6>
+                    </div>
+                </button>
+
+                <div v-for="project in projects">
+                    <ProjectCard :visualizationsRole="visualizationsRole" :project="project" :current-year="currentYear"
+                        :is-folder="false" />
                 </div>
-            </button>
-
-            <div v-for="project in projects">
-                <ProjectCard :visualizationsRole="visualizationsRole" :project="project" :current-year="currentYear" />
             </div>
+
         </div>
     </div>
 
@@ -109,7 +124,8 @@
                                             class="col-12 col-xl-11 h-40 max-h-40 overflow-y-auto py-2 rounded-xl border-1 border-gray-300">
                                             <div v-for="(target, index) in targetList" class="flex pl-2 pr-3">
                                                 <div class="mr-2">
-                                                    <Icon name="cancel" @click="removeTarget(index)" class="cursor-pointer"/>
+                                                    <Icon name="cancel" @click="removeTarget(index)"
+                                                        class="cursor-pointer" />
                                                 </div>
 
                                                 <div class="flex">
@@ -131,7 +147,7 @@
                                     <div class="row justify-center mb-4 mt-1">
                                         <div class="col-11 flex pl-1 pr-3 py-2 rounded-2xl border-1 border-gray-300">
                                             <Icon name="search" />
-                                            <input @keyup="search" type="text" style="all: unset"
+                                            <input @keyup="searchUsers" type="text" style="all: unset"
                                                 placeholder="Buscar" />
                                         </div>
                                     </div>
@@ -165,17 +181,17 @@
                                                     1
                                                 </div>
                                             </li>
-                                            <li v-if="totalPages > 2" class="page-item" aria-current="page">
+                                            <li v-if="usersTotalPages > 2" class="page-item" aria-current="page">
                                                 <div class="page-link"
-                                                    :style="paginatorIndex !== 1 && paginatorIndex !== totalPages ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;'">
-                                                    {{ paginatorIndex != 1 && paginatorIndex != totalPages ?
+                                                    :style="paginatorIndex !== 1 && paginatorIndex !== usersTotalPages ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;'">
+                                                    {{ paginatorIndex != 1 && paginatorIndex != usersTotalPages ?
                                                         paginatorIndex : '...' }}
                                                 </div>
                                             </li>
-                                            <li v-if="totalPages > 1" class="page-item" aria-current="page">
-                                                <div class="page-link" @click="getCurrentPageList(totalPages)"
-                                                    :style="paginatorIndex === totalPages ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;'">
-                                                    {{ totalPages }}
+                                            <li v-if="usersTotalPages > 1" class="page-item" aria-current="page">
+                                                <div class="page-link" @click="getCurrentPageList(usersTotalPages)"
+                                                    :style="paginatorIndex === usersTotalPages ? 'color: #FFFFFF; background-color: #39A900;' : 'color: #39A900; background-color: #FFFFFF;'">
+                                                    {{ usersTotalPages }}
                                                 </div>
                                             </li>
                                             <li class="page-item">
@@ -216,30 +232,32 @@
 import ProjectCard from '@/Pages/Projects/Components/CardProject.vue';
 import { CustomAlertsService } from '@/services/customAlerts';
 import { Link, useForm, usePage } from '@inertiajs/inertia-vue3'
-import { ref, onBeforeMount, onUpdated } from 'vue';
+import { ref, onBeforeMount, watch } from 'vue';
 import Icon from '@/Shared/Icon.vue';
 import { AppFunctions } from '@/core/appFunctions';
 
 const props = defineProps({
-    projects: Object,
+    projects: { type: Array, required: true },
     investigators: { type: Array, required: true },
     role: String,
     validityID: Number,
     visualizationsRole: Object,
     currentYear: String,
-})
-const now = new Date()
-const month = (now.getMonth() + 1) > 9 ? now.getMonth() + 1 : "0".concat(now.getMonth() + 1)
+});
+const now = new Date();
+const month = (now.getMonth() + 1) > 9 ? now.getMonth() + 1 : "0".concat(now.getMonth() + 1);
+const day= `${now.getDate() < 10? "0".concat(now.getDate()) : now.getDate()}`;
+ 
 const form = useForm({
     name: null,
-    startDate: props.currentYear.concat(`-${month}-${now.getDate()}`),
-    endDate: props.currentYear.concat(`-${month}-${now.getDate()}`),
+    startDate: props.currentYear.concat(`-${month}-${day}`),
+    endDate: props.currentYear.concat(`-${month}-${day}`),
     description: null,
     investigatorsID: [],
     validityID: null,
     visualizationRoleSelected: null,
     target: null,
-})
+});
 
 const nameRoleVisualization = {
     "private": "Privado",
@@ -251,10 +269,10 @@ const modal = ref(null);
 
 const target = ref('');
 const targetList = ref([]);
-const toJsonTargets = ref({})
+const toJsonTargets = ref({});
 
 const addNewTarget = () => {
-    if(target.value.trim().length < 1 ) return;
+    if (target.value.trim().length < 1) return;
 
     targetList.value.push(target.value);
     target.value = '';
@@ -274,14 +292,22 @@ const removeTarget = (index) => {
     });
 }
 
+const projects = ref([]);
+
 onBeforeMount(() => {
-    totalPages.value = Math.ceil(props.investigators.length / pageElements);
+    usersTotalPages.value = Math.ceil(props.investigators.length / pageElements);
     getCurrentPageList(1);
+    projects.value = [...props.projects];
+});
+
+watch(()=>props.projects,(value)=>{
+    console.log('Changes Dectected, Reload')
+    projects.value = [...value];
 });
 
 //Pagination
 const paginatedList = ref([])
-const totalPages = ref(0);
+const usersTotalPages = ref(0);
 const paginatorIndex = ref(1);
 const pageElements = 10;
 
@@ -301,7 +327,7 @@ const getCurrentPageList = (index) => {
 }
 
 const incrementPaginatorIndex = () => {
-    if (paginatorIndex.value < totalPages.value) {
+    if (paginatorIndex.value < usersTotalPages.value) {
         paginatorIndex.value++;
         console.log(paginatorIndex.value)
         getCurrentPageList(paginatorIndex.value);
@@ -317,21 +343,35 @@ const decreasePaginatorIndex = () => {
 }
 //End Pagination
 
-//FILTER
+//GENERAL FILTER  
 const search = (e) => {
+    const inputSearch = e.target.value;
+    if (e.target.value.length === 0) {
+        console.log('Search Empty')
+        projects.value = [...props.projects];
+        return;
+    }
+    projects.value.length = 0;
+
+    projects.value = [...props.projects.filter((user) =>
+        user.name.toLowerCase().includes(inputSearch.toLowerCase()))];
+}
+
+//FILTER
+const searchUsers = (e) => {
     const inputSearch = e.target.value
     let filtered = props.investigators.filter((user) =>
         user.name.toLowerCase().includes(inputSearch.toLowerCase()));
 
     if (filtered.length <= pageElements) {
-        totalPages.value = 1
+        usersTotalPages.value = 1
     } else {
-        totalPages.value = Math.ceil(filtered.length / pageElements);
+        usersTotalPages.value = Math.ceil(filtered.length / pageElements);
     }
     let indexBase = (paginatorIndex.value * pageElements) - pageElements;
     let indexEnd = paginatorIndex.value * pageElements;
 
-    if (indexEnd / pageElements > totalPages.value) {
+    if (indexEnd / pageElements > usersTotalPages.value) {
         indexBase = 0
         indexEnd = pageElements
     }
@@ -341,7 +381,7 @@ const search = (e) => {
 }
 
 const saveProject = () => {
-    form.target= JSON.stringify(toJsonTargets.value);
+    form.target = JSON.stringify(toJsonTargets.value);
     debugger
     form.validityID = props.validityID
     form.post(route('project.store'), {

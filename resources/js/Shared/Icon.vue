@@ -163,14 +163,14 @@
 
   <!-- FILES -->
   <!-- PDF -->
-  <svg v-else-if="name === 'pdf'" xmlns="http://www.w3.org/2000/svg" height="48px" viewBox="0 -960 960 960" width="48px"
+  <svg v-else-if="name === 'pdf'" xmlns="http://www.w3.org/2000/svg" height="58px" viewBox="0 -960 960 960" width="58px"
     fill="#EA3323">
     <path
       d="M331-431h37v-83h48q15.73 0 26.36-10.64Q453-535.28 453-551v-48q0-15.72-10.64-26.36Q431.73-636 416-636h-85v205Zm37-120v-48h48v48h-48Zm129 120h84q15 0 26-10.64 11-10.63 11-26.36v-131q0-15.72-11-26.36Q596-636 581-636h-84v205Zm37-37v-131h47v131h-47Zm133 37h37v-83h50v-37h-50v-48h50v-37h-87v205ZM260-200q-24 0-42-18t-18-42v-560q0-24 18-42t42-18h560q24 0 42 18t18 42v560q0 24-18 42t-42 18H260ZM140-80q-24 0-42-18t-18-42v-620h60v620h620v60H140Z" />
   </svg>
   <!-- Word -->
-  <svg v-else-if="name === 'word' || name == 'docx'" xmlns="http://www.w3.org/2000/svg" height="48px"
-    viewBox="0 -960 960 960" width="48px" fill="#0000F5">
+  <svg v-else-if="name === 'word' || name == 'docx'" xmlns="http://www.w3.org/2000/svg" height="58px"
+    viewBox="0 -960 960 960" width="58px" fill="#0000F5">
     <path
       d="M319-250h322v-60H319v60Zm0-170h322v-60H319v60ZM220-80q-24 0-42-18t-18-42v-680q0-24 18-42t42-18h361l219 219v521q0 24-18 42t-42 18H220Zm331-554h189L551-820v186Z" />
   </svg>
@@ -219,6 +219,19 @@
   <svg v-else-if="name == 'link'" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24">
     <path fill="#39A900"
       d="M11 17H7q-2.075 0-3.537-1.463T2 12t1.463-3.537T7 7h4v2H7q-1.25 0-2.125.875T4 12t.875 2.125T7 15h4zm-3-4v-2h8v2zm5 4v-2h4q1.25 0 2.125-.875T20 12t-.875-2.125T17 9h-4V7h4q2.075 0 3.538 1.463T22 12t-1.463 3.538T17 17z" />
+  </svg>
+
+  <svg v-else-if="name == 'pptx'" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 16 16">
+    <path fill="#39A900" fill-rule="evenodd"
+      d="M14 4.5V11h-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.5 11.85h1.6q.434 0 .732.179q.302.175.46.477t.158.677t-.16.677q-.159.299-.464.474a1.45 1.45 0 0 1-.732.173H2.29v1.342H1.5zm2.06 1.714a.8.8 0 0 0 .085-.381q0-.34-.185-.521q-.185-.182-.513-.182h-.659v1.406h.66a.8.8 0 0 0 .374-.082a.57.57 0 0 0 .238-.24m1.302-1.714h1.6q.434 0 .732.179q.302.175.46.477t.158.677t-.16.677q-.158.299-.464.474a1.45 1.45 0 0 1-.732.173h-.803v1.342h-.79zm2.06 1.714a.8.8 0 0 0 .085-.381q0-.34-.185-.521q-.184-.182-.513-.182H5.65v1.406h.66a.8.8 0 0 0 .374-.082a.57.57 0 0 0 .238-.24m2.852 2.285v-3.337h1.137v-.662H7.846v.662H8.98v3.337zm3.796-3.999h.893l-1.274 2.007l1.254 1.992h-.908l-.85-1.415h-.035l-.853 1.415h-.861l1.24-2.016l-1.228-1.983h.931l.832 1.439h.035z" />
+  </svg>
+
+  <svg v-else-if="name == 'xlsx' || name == 'xlsm' || name == 'xlsb' || name == 'xltx'" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 48 48">
+    <g fill="none" stroke="#39A900" stroke-linecap="round" stroke-width="4">
+      <path stroke-linejoin="round" d="M8 15V6a2 2 0 0 1 2-2h28a2 2 0 0 1 2 2v36a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-9" />
+      <path d="M31 15h3m-6 8h6m-6 8h6" />
+      <path stroke-linejoin="round" d="M4 15h18v18H4zm6 6l6 6m0-6l-6 6" />
+    </g>
   </svg>
 
   <svg v-else xmlns="http://www.w3.org/2000/svg" width="68px" height="68px" viewBox="0 0 24 24">

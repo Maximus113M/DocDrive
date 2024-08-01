@@ -5,16 +5,10 @@ import Icon from '@/Shared/Icon.vue';
 import BreezeDropdownLink from '@/Components/DropdownLink.vue';
 import BreezeDropdown from '@/Components/Dropdown.vue';
 import { usePage } from '@inertiajs/inertia-vue3';
-import { onMounted } from 'vue';
 import { AppFunctions } from '@/core/appFunctions';
-
 
 const props= defineProps({
     role: String
-})
-
-onMounted(() => {
-    console.log(props.role)
 })
 
 </script>

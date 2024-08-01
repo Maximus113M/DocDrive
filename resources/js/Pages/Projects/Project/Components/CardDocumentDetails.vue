@@ -2,7 +2,8 @@
     <!-- DOCUMENT DESIGN -->
     <div class="col position-relative" style="max-width: 300px;">
 
-        <a class="no-underline" target="_blank" :href="documentType === 'link' ? document.documentPath : showDocumentRoute">
+        <a class="no-underline" target="_blank"
+            :href="documentType === 'link' ? document.documentPath : showDocumentRoute">
             <!-- BODY -->
             <div class="d-flex flex-column justify-center align-items-center border-3 rounded-4 py-1 bg-white h-40"
                 style="box-shadow: 5px 5px 10px 2px rgba(0, 0, 0, 0.06);">
@@ -58,8 +59,8 @@
     <!-- DOCUMENT DESIGN -->
 
     <!-- MODAL EDITAR-->
-    <div class="modal fade" :id="`modal-update-document-${props.document.id}`" tabindex="-1" aria-labelledby="exampleModalLabel"
-        aria-hidden="true">
+    <div class="modal fade" :id="`modal-update-document-${props.document.id}`" tabindex="-1"
+        aria-labelledby="exampleModalLabel" aria-hidden="true">
         <div class="modal-dialog" style="width: 350px;">
             <div class="modal-content position-relative p-3" style="max-height: 800px;">
                 <div class="d-flex flex-row justify-center px-3">
@@ -93,7 +94,7 @@
                             <select v-model="documentForm.category" class="form-select">
                                 <option v-for="category in props.documentCategories" :value="category.id"
                                     :key="category.id">
-                                    {{category.name }}</option>
+                                    {{ category.name }}</option>
                             </select>
                         </div>
 
@@ -148,10 +149,10 @@ const showDocumentRoute = props.project ? route('file.index', {
     })
 
 onMounted(() => {
-    console.log(props.currentYear);
     isAssociatedUser.value = verifiyAssociatedUser()
-    console.log('--------------------------------------')
-    console.log(props.document);
+    // console.log('--------------------------------------')
+    // console.log(props.document);
+    // console.log(props.currentYear);
 })
 
 
