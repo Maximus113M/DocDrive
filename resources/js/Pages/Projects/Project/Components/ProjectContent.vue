@@ -305,7 +305,7 @@ import ProjectCard from '@/Pages/Projects/Components/CardProject.vue';
 import CardDocumentDetails from '@/Pages/Projects/Project/Components/CardDocumentDetails.vue';
 import { CustomAlertsService } from '@/services/customAlerts';
 import { Link, useForm, usePage } from '@inertiajs/inertia-vue3'
-import { ref, onMounted, onBeforeMount } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import Icon from '@/Shared/Icon.vue';
 import { AppFunctions, Constants } from '@/core/appFunctions';
 
@@ -354,8 +354,8 @@ let role = "";
 const currentColor = ref('');
 const defaultColor = ref('');
 
-const folderList = ref([]);
-const documentList = ref([]);
+const folderList = ref([...props.project.folders]);
+const documentList = ref([...props.project.documents]);
 
 //PAGINATION
 const paginatedList = ref([]);
@@ -365,11 +365,6 @@ const pageElements = 8;
 
 const targetList = ref([]);
 
-onBeforeMount(() => {
-    folderList.value = [...props.project.folders];
-    documentList.value = [...props.project.documents];
-})
-
 onMounted(() => {
     isAssociatedUser.value = verifiyAssociatedUser();
     validateVisualizationRole();
@@ -378,6 +373,13 @@ onMounted(() => {
         targetList.value.push(targets[key]);
     }
 });
+
+watch(()=>props.project,(_)=>{
+    console.log('Changes Dectected, Reload')
+    folderList.value = [...props.project.folders];
+    documentList.value = [...props.project.documents];
+});
+
 
 const backRoute = () => {
     if (props.folder && props.folder.father_id) {

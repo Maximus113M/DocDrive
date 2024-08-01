@@ -20845,9 +20845,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _Components_DropdownLink_vue__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! @/Components/DropdownLink.vue */ "./resources/js/Components/DropdownLink.vue");
 /* harmony import */ var _Components_Dropdown_vue__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! @/Components/Dropdown.vue */ "./resources/js/Components/Dropdown.vue");
 /* harmony import */ var _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_5__ = __webpack_require__(/*! @inertiajs/inertia-vue3 */ "./node_modules/@inertiajs/inertia-vue3/dist/index.js");
-/* harmony import */ var vue__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! vue */ "./node_modules/vue/dist/vue.esm-bundler.js");
-/* harmony import */ var _core_appFunctions__WEBPACK_IMPORTED_MODULE_7__ = __webpack_require__(/*! @/core/appFunctions */ "./resources/js/core/appFunctions.js");
-
+/* harmony import */ var _core_appFunctions__WEBPACK_IMPORTED_MODULE_6__ = __webpack_require__(/*! @/core/appFunctions */ "./resources/js/core/appFunctions.js");
 
 
 
@@ -20864,9 +20862,6 @@ __webpack_require__.r(__webpack_exports__);
     var __expose = _ref.expose;
     __expose();
     var props = __props;
-    (0,vue__WEBPACK_IMPORTED_MODULE_6__.onMounted)(function () {
-      console.log(props.role);
-    });
     var __returned__ = {
       props: props,
       LayoutDropdown: _Shared_LayoutDropdown_vue__WEBPACK_IMPORTED_MODULE_0__["default"],
@@ -20877,9 +20872,8 @@ __webpack_require__.r(__webpack_exports__);
       get usePage() {
         return _inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_5__.usePage;
       },
-      onMounted: vue__WEBPACK_IMPORTED_MODULE_6__.onMounted,
       get AppFunctions() {
-        return _core_appFunctions__WEBPACK_IMPORTED_MODULE_7__.AppFunctions;
+        return _core_appFunctions__WEBPACK_IMPORTED_MODULE_6__.AppFunctions;
       }
     };
     Object.defineProperty(__returned__, '__isScriptSetup', {
@@ -22105,10 +22099,11 @@ var pageElements = 10;
     var props = __props;
     var now = new Date();
     var month = now.getMonth() + 1 > 9 ? now.getMonth() + 1 : "0".concat(now.getMonth() + 1);
+    var day = "".concat(now.getDate() < 10 ? "0".concat(now.getDate()) : now.getDate());
     var form = (0,_inertiajs_inertia_vue3__WEBPACK_IMPORTED_MODULE_2__.useForm)({
       name: null,
-      startDate: props.currentYear.concat("-".concat(month, "-").concat(now.getDate())),
-      endDate: props.currentYear.concat("-".concat(month, "-").concat(now.getDate())),
+      startDate: props.currentYear.concat("-".concat(month, "-").concat(day)),
+      endDate: props.currentYear.concat("-".concat(month, "-").concat(day)),
       description: null,
       investigatorsID: [],
       validityID: null,
@@ -22147,6 +22142,12 @@ var pageElements = 10;
       usersTotalPages.value = Math.ceil(props.investigators.length / pageElements);
       getCurrentPageList(1);
       projects.value = _toConsumableArray(props.projects);
+    });
+    (0,vue__WEBPACK_IMPORTED_MODULE_3__.watch)(function () {
+      return props.projects;
+    }, function (value) {
+      console.log('Changes Dectected, Reload');
+      projects.value = _toConsumableArray(value);
     });
 
     //Pagination
@@ -22246,6 +22247,7 @@ var pageElements = 10;
       props: props,
       now: now,
       month: month,
+      day: day,
       form: form,
       nameRoleVisualization: nameRoleVisualization,
       modal: modal,
@@ -22282,7 +22284,7 @@ var pageElements = 10;
       },
       ref: vue__WEBPACK_IMPORTED_MODULE_3__.ref,
       onBeforeMount: vue__WEBPACK_IMPORTED_MODULE_3__.onBeforeMount,
-      onUpdated: vue__WEBPACK_IMPORTED_MODULE_3__.onUpdated,
+      watch: vue__WEBPACK_IMPORTED_MODULE_3__.watch,
       Icon: _Shared_Icon_vue__WEBPACK_IMPORTED_MODULE_4__["default"],
       get AppFunctions() {
         return _core_appFunctions__WEBPACK_IMPORTED_MODULE_5__.AppFunctions;
@@ -22650,18 +22652,14 @@ var pageElements = 8;
     var role = "";
     var currentColor = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)('');
     var defaultColor = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)('');
-    var folderList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)([]);
-    var documentList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)([]);
+    var folderList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(_toConsumableArray(props.project.folders));
+    var documentList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(_toConsumableArray(props.project.documents));
 
     //PAGINATION
     var paginatedList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)([]);
     var totalPages = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(0);
     var paginatorIndex = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(1);
     var targetList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)([]);
-    (0,vue__WEBPACK_IMPORTED_MODULE_4__.onBeforeMount)(function () {
-      folderList.value = _toConsumableArray(props.project.folders);
-      documentList.value = _toConsumableArray(props.project.documents);
-    });
     (0,vue__WEBPACK_IMPORTED_MODULE_4__.onMounted)(function () {
       isAssociatedUser.value = verifiyAssociatedUser();
       validateVisualizationRole();
@@ -22669,6 +22667,13 @@ var pageElements = 8;
       for (var key in targets) {
         targetList.value.push(targets[key]);
       }
+    });
+    (0,vue__WEBPACK_IMPORTED_MODULE_4__.watch)(function () {
+      return props.project;
+    }, function (_) {
+      console.log('Changes Dectected, Reload');
+      folderList.value = _toConsumableArray(props.project.folders);
+      documentList.value = _toConsumableArray(props.project.documents);
     });
     var backRoute = function backRoute() {
       if (props.folder && props.folder.father_id) {
@@ -22982,7 +22987,7 @@ var pageElements = 8;
       },
       ref: vue__WEBPACK_IMPORTED_MODULE_4__.ref,
       onMounted: vue__WEBPACK_IMPORTED_MODULE_4__.onMounted,
-      onBeforeMount: vue__WEBPACK_IMPORTED_MODULE_4__.onBeforeMount,
+      watch: vue__WEBPACK_IMPORTED_MODULE_4__.watch,
       Icon: _Shared_Icon_vue__WEBPACK_IMPORTED_MODULE_5__["default"],
       get AppFunctions() {
         return _core_appFunctions__WEBPACK_IMPORTED_MODULE_6__.AppFunctions;

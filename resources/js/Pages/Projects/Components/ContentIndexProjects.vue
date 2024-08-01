@@ -232,7 +232,7 @@
 import ProjectCard from '@/Pages/Projects/Components/CardProject.vue';
 import { CustomAlertsService } from '@/services/customAlerts';
 import { Link, useForm, usePage } from '@inertiajs/inertia-vue3'
-import { ref, onBeforeMount, onUpdated } from 'vue';
+import { ref, onBeforeMount, watch } from 'vue';
 import Icon from '@/Shared/Icon.vue';
 import { AppFunctions } from '@/core/appFunctions';
 
@@ -246,10 +246,12 @@ const props = defineProps({
 });
 const now = new Date();
 const month = (now.getMonth() + 1) > 9 ? now.getMonth() + 1 : "0".concat(now.getMonth() + 1);
+const day= `${now.getDate() < 10? "0".concat(now.getDate()) : now.getDate()}`;
+ 
 const form = useForm({
     name: null,
-    startDate: props.currentYear.concat(`-${month}-${now.getDate()}`),
-    endDate: props.currentYear.concat(`-${month}-${now.getDate()}`),
+    startDate: props.currentYear.concat(`-${month}-${day}`),
+    endDate: props.currentYear.concat(`-${month}-${day}`),
     description: null,
     investigatorsID: [],
     validityID: null,
@@ -296,6 +298,11 @@ onBeforeMount(() => {
     usersTotalPages.value = Math.ceil(props.investigators.length / pageElements);
     getCurrentPageList(1);
     projects.value = [...props.projects];
+});
+
+watch(()=>props.projects,(value)=>{
+    console.log('Changes Dectected, Reload')
+    projects.value = [...value];
 });
 
 //Pagination

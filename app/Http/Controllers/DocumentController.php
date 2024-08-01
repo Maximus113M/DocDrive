@@ -181,6 +181,7 @@ class DocumentController extends Controller
         $rutaArreglada = str_replace('/storage/', '', $document->documentPath);
         Storage::delete($rutaArreglada);
         $document->folder()->detach();
+        $document->categories()->detach();
         $document->delete();
 
         return redirect()->back()->with("message", "Documento eliminado correctamente");
