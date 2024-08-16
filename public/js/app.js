@@ -22652,8 +22652,8 @@ var pageElements = 8;
     var role = "";
     var currentColor = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)('');
     var defaultColor = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)('');
-    var folderList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(_toConsumableArray(props.project.folders));
-    var documentList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(_toConsumableArray(props.project.documents));
+    var folderList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(_toConsumableArray(Object.values(props.project.folders)));
+    var documentList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(_toConsumableArray(Object.values(props.project.documents)));
 
     //PAGINATION
     var paginatedList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)([]);

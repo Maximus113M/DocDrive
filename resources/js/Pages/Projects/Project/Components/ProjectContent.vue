@@ -354,8 +354,8 @@ let role = "";
 const currentColor = ref('');
 const defaultColor = ref('');
 
-const folderList = ref([...props.project.folders]);
-const documentList = ref([...props.project.documents]);
+const folderList = ref([...Object.values(props.project.folders)]);
+const documentList = ref([...Object.values(props.project.documents)]);
 
 //PAGINATION
 const paginatedList = ref([]);
@@ -382,7 +382,7 @@ watch(() => props.project, (_) => {
         folderList.value = [...props.project.folders];
         documentList.value = [...props.project.documents];
     }, 100);
-
+    
 });
 
 
