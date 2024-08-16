@@ -199,4 +199,6 @@ Route::post('/profile/update', [RegisteredUserController::class, 'updateProfile'
 Route::post('/profile/password', [RegisteredUserController::class, 'changePassword'])
     ->name('update.password')->middleware('auth');
 
+
+
 require __DIR__ . '/auth.php';

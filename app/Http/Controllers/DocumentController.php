@@ -24,7 +24,7 @@ class DocumentController extends Controller
             abort(403, "No tienes permisos para estar aqui");
         }
         $validator = Validator::make(request()->all(), [
-            'document' => 'required|file|max:20240',
+            'document' => 'required|file|max:150000',
             'visualizationRoleSelected' => 'required',
             'name' => ['required', 'string', 'unique:documents']
         ]);

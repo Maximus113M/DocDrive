@@ -226,12 +226,18 @@
       d="M14 4.5V11h-1V4.5h-2A1.5 1.5 0 0 1 9.5 3V1H4a1 1 0 0 0-1 1v9H2V2a2 2 0 0 1 2-2h5.5zM1.5 11.85h1.6q.434 0 .732.179q.302.175.46.477t.158.677t-.16.677q-.159.299-.464.474a1.45 1.45 0 0 1-.732.173H2.29v1.342H1.5zm2.06 1.714a.8.8 0 0 0 .085-.381q0-.34-.185-.521q-.185-.182-.513-.182h-.659v1.406h.66a.8.8 0 0 0 .374-.082a.57.57 0 0 0 .238-.24m1.302-1.714h1.6q.434 0 .732.179q.302.175.46.477t.158.677t-.16.677q-.158.299-.464.474a1.45 1.45 0 0 1-.732.173h-.803v1.342h-.79zm2.06 1.714a.8.8 0 0 0 .085-.381q0-.34-.185-.521q-.184-.182-.513-.182H5.65v1.406h.66a.8.8 0 0 0 .374-.082a.57.57 0 0 0 .238-.24m2.852 2.285v-3.337h1.137v-.662H7.846v.662H8.98v3.337zm3.796-3.999h.893l-1.274 2.007l1.254 1.992h-.908l-.85-1.415h-.035l-.853 1.415h-.861l1.24-2.016l-1.228-1.983h.931l.832 1.439h.035z" />
   </svg>
 
-  <svg v-else-if="name == 'xlsx' || name == 'xlsm' || name == 'xlsb' || name == 'xltx'" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 48 48">
+  <svg v-else-if="name == 'xlsx' || name == 'xlsm' || name == 'xlsb' || name == 'xltx'"
+    xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 48 48">
     <g fill="none" stroke="#39A900" stroke-linecap="round" stroke-width="4">
       <path stroke-linejoin="round" d="M8 15V6a2 2 0 0 1 2-2h28a2 2 0 0 1 2 2v36a2 2 0 0 1-2 2H10a2 2 0 0 1-2-2v-9" />
       <path d="M31 15h3m-6 8h6m-6 8h6" />
       <path stroke-linejoin="round" d="M4 15h18v18H4zm6 6l6 6m0-6l-6 6" />
     </g>
+  </svg>
+
+  <svg v-else-if="name == 'mp4'" xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 24 24">
+    <path fill="#39A900"
+      d="M15 8v8H5V8zm1-2H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-3.5l4 4v-11l-4 4V7a1 1 0 0 0-1-1" />
   </svg>
 
   <svg v-else xmlns="http://www.w3.org/2000/svg" width="68px" height="68px" viewBox="0 0 24 24">
