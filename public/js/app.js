@@ -22652,8 +22652,8 @@ var pageElements = 8;
     var role = "";
     var currentColor = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)('');
     var defaultColor = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)('');
-    var folderList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(_toConsumableArray(Object.values(props.project.folders)));
-    var documentList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(_toConsumableArray(Object.values(props.project.documents)));
+    var folderList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(_toConsumableArray(props.project.folders));
+    var documentList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(_toConsumableArray(props.project.documents));
 
     //PAGINATION
     var paginatedList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)([]);
@@ -22719,6 +22719,8 @@ var pageElements = 8;
     };
     //END PAGINATION
 
+    console.log(documentList.value);
+
     //GENERAL FILTER  
     var search = function search(e) {
       var inputSearch = e.target.value;
@@ -22736,6 +22738,7 @@ var pageElements = 8;
       documentList.value = _toConsumableArray(props.project.documents.filter(function (user) {
         return user.name.toLowerCase().includes(inputSearch.toLowerCase());
       }));
+      console.log(documentList.value);
     };
 
     //FILTER Users  
@@ -27461,22 +27464,26 @@ function render(_ctx, _cache, $props, $setup, $data, $options) {
     "data-bs-toggle": "modal",
     "data-bs-target": "#modalAssociateUser"
   }, [].concat(_hoisted_22))) : (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)("v-if", true), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.folderList, function (folder) {
-    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ProjectCard"], {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+      key: folder.id
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["ProjectCard"], {
       folder: folder,
       project: $props.project,
       "current-year": $props.currentYear,
       "visualizations-role": $setup.props.visualizationsRole,
       "is-folder": true
     }, null, 8 /* PROPS */, ["folder", "project", "current-year", "visualizations-role"])]);
-  }), 256 /* UNKEYED_FRAGMENT */)), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.documentList, function (document) {
-    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", null, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["CardDocumentDetails"], {
+  }), 128 /* KEYED_FRAGMENT */)), ((0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(true), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)(vue__WEBPACK_IMPORTED_MODULE_0__.Fragment, null, (0,vue__WEBPACK_IMPORTED_MODULE_0__.renderList)($setup.documentList, function (document) {
+    return (0,vue__WEBPACK_IMPORTED_MODULE_0__.openBlock)(), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementBlock)("div", {
+      key: document.id
+    }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createVNode)($setup["CardDocumentDetails"], {
       "visualizations-role": $setup.props.visualizationsRole,
       currentYear: Number($props.currentYear),
       document: document,
       project: $props.project,
       documentCategories: $props.documentCategories
     }, null, 8 /* PROPS */, ["visualizations-role", "currentYear", "document", "project", "documentCategories"])]);
-  }), 256 /* UNKEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" MODAL NEW FILE-FOLDER "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [_hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
+  }), 128 /* KEYED_FRAGMENT */))])]), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createCommentVNode)(" MODAL NEW FILE-FOLDER "), (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_23, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_24, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_25, [_hoisted_26, (0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_27, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("form", {
     onSubmit: (0,vue__WEBPACK_IMPORTED_MODULE_0__.withModifiers)($setup.upload, ["prevent"])
   }, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_28, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("div", _hoisted_29, [(0,vue__WEBPACK_IMPORTED_MODULE_0__.createElementVNode)("input", {
     onclick: $setup.changeInputCheck,
