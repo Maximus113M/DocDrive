@@ -113,11 +113,11 @@
                 </div>
             </button>
 
-            <div v-for="folder in folderList">
+            <div v-for="folder in folderList" :key="folder.id">
                 <ProjectCard :folder="folder" :project="project" :current-year="currentYear"
                     :visualizations-role="props.visualizationsRole" :is-folder="true" />
             </div>
-            <div v-for="document in documentList">
+            <div v-for="document in documentList" :key="document.id">
                 <CardDocumentDetails :visualizations-role="props.visualizationsRole" :currentYear="Number(currentYear)"
                     :document="document" :project="project" :documentCategories="documentCategories" />
             </div>
@@ -382,7 +382,7 @@ watch(() => props.project, (_) => {
         folderList.value = [...props.project.folders];
         documentList.value = [...props.project.documents];
     }, 100);
-
+    
 });
 
 
@@ -429,6 +429,8 @@ const decreasePaginatorIndex = () => {
 }
 //END PAGINATION
 
+console.log(documentList.value);
+
 //GENERAL FILTER  
 const search = (e) => {
     const inputSearch = e.target.value;
@@ -445,6 +447,7 @@ const search = (e) => {
         user.name.toLowerCase().includes(inputSearch.toLowerCase()))];
     documentList.value = [...props.project.documents.filter((user) =>
         user.name.toLowerCase().includes(inputSearch.toLowerCase()))];
+    console.log(documentList.value);
 }
 
 //FILTER Users  
