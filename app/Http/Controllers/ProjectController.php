@@ -182,6 +182,8 @@ class ProjectController extends Controller
             return $folder["father_id"] === null;
         });
         $project->setRelation('folders', $filteredFolders);
+        error_log("Project $project");
+
         return Inertia::render("Projects/Project/Index", [
             // "folders" => $project->folders,
             // "documents" => $project->documents,
@@ -214,7 +216,7 @@ class ProjectController extends Controller
     {
         $project = Project::find($projectID);
         if (!$project) {
-            abort(403, "No tienes persmisos para estar aqui");
+            abort(403, "No tienes permisos para estar aqui");
         }
         $usersID =  $project->users->pluck('id')->toArray();
         $roleAuth = AuthServiceProvider::getRole();

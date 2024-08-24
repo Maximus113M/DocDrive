@@ -354,7 +354,7 @@ let role = "";
 const currentColor = ref('');
 const defaultColor = ref('');
 
-const folderList = ref([...props.project.folders]);
+const folderList = ref([...Object.values(props.project.folders)]);
 const documentList = ref([...props.project.documents]);
 
 //PAGINATION
@@ -366,6 +366,8 @@ const pageElements = 8;
 const targetList = ref([]);
 
 onMounted(() => {
+    console.log("#########################")
+    console.log(props.project.folders)
     isAssociatedUser.value = verifiyAssociatedUser();
     validateVisualizationRole();
     const targets = JSON.parse(props.project.target);
@@ -379,7 +381,7 @@ watch(() => props.project, (_) => {
     folderList.value.length = 0;
     documentList.value.length = 0
     setTimeout(() => {
-        folderList.value = [...props.project.folders];
+        folderList.value = [...Object.values(props.project.folders)];
         documentList.value = [...props.project.documents];
     }, 100);
     
