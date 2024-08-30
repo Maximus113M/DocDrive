@@ -22652,8 +22652,8 @@ var pageElements = 8;
     var role = "";
     var currentColor = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)('');
     var defaultColor = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)('');
-    var folderList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(_toConsumableArray(props.project.folders));
-    var documentList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(_toConsumableArray(props.project.documents));
+    var folderList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(_toConsumableArray(Object.values(props.project.folders)));
+    var documentList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(_toConsumableArray(Object.values(props.project.documents)));
 
     //PAGINATION
     var paginatedList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)([]);
@@ -22661,6 +22661,8 @@ var pageElements = 8;
     var paginatorIndex = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)(1);
     var targetList = (0,vue__WEBPACK_IMPORTED_MODULE_4__.ref)([]);
     (0,vue__WEBPACK_IMPORTED_MODULE_4__.onMounted)(function () {
+      console.log("#########################");
+      console.log(props.project.folders);
       isAssociatedUser.value = verifiyAssociatedUser();
       validateVisualizationRole();
       var targets = JSON.parse(props.project.target);
@@ -22675,7 +22677,7 @@ var pageElements = 8;
       folderList.value.length = 0;
       documentList.value.length = 0;
       setTimeout(function () {
-        folderList.value = _toConsumableArray(props.project.folders);
+        folderList.value = _toConsumableArray(Object.values(props.project.folders));
         documentList.value = _toConsumableArray(props.project.documents);
       }, 100);
     });
@@ -22875,6 +22877,7 @@ var pageElements = 8;
           });
         }
       });
+      formUploadFile.reset();
     };
     var associateUser = function associateUser() {
       formAssociateUser.role = role;
