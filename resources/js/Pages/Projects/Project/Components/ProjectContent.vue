@@ -355,7 +355,7 @@ const currentColor = ref('');
 const defaultColor = ref('');
 
 const folderList = ref([...Object.values(props.project.folders)]);
-const documentList = ref([...props.project.documents]);
+const documentList = ref([...Object.values(props.project.documents)]);
 
 //PAGINATION
 const paginatedList = ref([]);
@@ -596,6 +596,7 @@ const upload = () => {
             })
         }
     })
+    formUploadFile.reset();
 }
 
 const associateUser = () => {
