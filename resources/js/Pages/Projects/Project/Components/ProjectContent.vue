@@ -374,6 +374,13 @@ onMounted(() => {
     for (let key in targets) {
         targetList.value.push(targets[key]);
     }
+
+    const miModal = document.getElementById("modalNewDocument");
+    if (miModal) {
+        miModal.addEventListener('hidden.bs.modal', function () {
+            closeModal();
+        });
+    }
 });
 
 watch(() => props.project, (_) => {
@@ -568,7 +575,6 @@ const verifiyAssociatedUser = () => {
 
 
 const upload = () => {
-
     let ruta = null;
     if (checkedUploadFile.value.checked) {
         ruta = "document.upload"
@@ -584,7 +590,6 @@ const upload = () => {
     }), {
         onSuccess: () => {
             showSuccessMessage()
-            closeModal()
         },
         onError: (e) => {
             console.log(e);
@@ -596,7 +601,7 @@ const upload = () => {
             })
         }
     })
-    formUploadFile.reset();
+    closeModal();
 }
 
 const associateUser = () => {
@@ -642,6 +647,10 @@ const closeModal = () => {
     const modal = document.getElementById("modalNewDocument")
     const modalBootstrap = bootstrap.Modal.getInstance(modal)
     modalBootstrap.hide()
+
+    const fileInput = document.getElementById("formFile")
+    fileInput.value = ""
+
     formUploadFile.reset()
 }
 
@@ -652,9 +661,15 @@ const closeModalAssociateUsers = () => {
     formAssociateUser.reset()
 }
 
+let miModal = document.getElementById("modalNewDocument")
+console.log(miModal);
+
+
 const resetForms = () => {
     formUploadFile.reset();
 }
+
+
 
 //Accordion
 const expandedDescription = ref(false);
