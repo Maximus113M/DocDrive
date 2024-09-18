@@ -7,9 +7,11 @@ use App\Models\Folder;
 use App\Models\Project;
 use App\Providers\AuthServiceProvider;
 use App\Providers\RoleServiceProvider;
+use Exception;
 use Illuminate\Contracts\Cache\Store;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 
@@ -20,46 +22,55 @@ class DocumentController extends Controller
      */
     public function store($validityYear, $projectID)
     {
-        if (!AuthServiceProvider::checkAuthenticated()) {
-            abort(403, "No tienes permisos para estar aqui");
-        }
-        $validator = Validator::make(request()->all(), [
-            'document' => 'required|file|max:300000',
-            'visualizationRoleSelected' => 'required',
-            'name' => ['required', 'string', 'unique:documents']
-        ]);
+        try {
 
-        if ($validator->fails()) {
-            return redirect()->back()->withErrors($validator)->withInput();
-        }
 
-        $file = request()->file("document");
-        $path = $this->uploadDocument($file, $validityYear, $projectID, request("folder_id") ?? null);
-        if (!$path) {
-            return redirect()->back()->with("errorMessage", "Documento ya existe");;
-        }
-        $document = new Document();
-        $document->name = request("name");
-        $document->documentPath = $path;
-        $document->format = $file->extension() ?? $this->getExtension($document->name);
-        if (request("folder_id") == null) {
-            $document->project_id = $projectID;
-        }
-        $document->visualization_role_id = request("visualizationRoleSelected");
-        $document->save();
-        if (request("folder_id") !== null) {
-            $document->folder()->attach(request("folder_id"));
-        }
-        if (request("category")) {
-            $category = request("category");
-            error_log("$category");
+            if (!AuthServiceProvider::checkAuthenticated()) {
+                abort(403, "No tienes permisos para estar aqui");
+            }
+            $validator = Validator::make(request()->all(), [
+                'document' => 'required|file|max:300000',
+                'visualizationRoleSelected' => 'required',
+                'name' => ['required', 'string', 'unique:documents']
+            ]);
 
-            $document->categories()->attach($category);
-        } else {
-            $document->categories()->attach(1);
-        }
+            if ($validator->fails()) {
+                return redirect()->back()->withErrors($validator)->withInput();
+            }
 
-        return redirect()->back()->with("message", "Documento creado correctamente");
+            $file = request()->file("document");
+            $path = $this->uploadDocument($file, $validityYear, $projectID, request("folder_id") ?? null);
+            if (!$path) {
+                return redirect()->back()->with("errorMessage", "Documento ya existe");;
+            }
+            $document = new Document();
+            $document->name = request("name");
+            $document->documentPath = $path;
+            $document->format = $file->extension() ?? $this->getExtension($document->name);
+            if (request("folder_id") == null) {
+                $document->project_id = $projectID;
+            }
+            $document->visualization_role_id = request("visualizationRoleSelected");
+            $document->save();
+            if (request("folder_id") !== null) {
+                $document->folder()->attach(request("folder_id"));
+            }
+            if (request("category")) {
+                $category = request("category");
+                error_log("$category");
+
+                $document->categories()->attach($category);
+            } else {
+                $document->categories()->attach(1);
+            }
+
+            return redirect()->back()->with("message", "Documento creado correctamente");
+
+        } catch (Exception $e) {
+            error_log($e->getMessage());
+            return redirect()->back()->with("errorMessage", "Hubo un error al crear el documento: ". $e->getMessage());
+
+        }
     }
 
     /**
